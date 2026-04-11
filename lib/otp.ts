@@ -22,15 +22,15 @@ export async function storeOTP(userId: string, otp: string) {
   }, { onConflict: 'user_id' })
 }
 
-export async function sendOTPEmail(email: string, otp: string) {
-  await resend.emails.send({
-    from:    process.env.RESEND_FROM_EMAIL!,
-    to:      email,
-    subject: 'Your University Project Hub Login Code',
-    html:    `<p>Your verification code is: <strong>${otp}</strong></p>
-              <p>This code expires in 10 minutes.</p>`,
-  })
-}
+// export async function sendOTPEmail(email: string, otp: string) {
+//   await resend.emails.send({
+//     from:    process.env.RESEND_FROM_EMAIL!,
+//     to:      email,
+//     subject: 'Your University Project Hub Login Code',
+//     html:    `<p>Your verification code is: <strong>${otp}</strong></p>
+//               <p>This code expires in 10 minutes.</p>`,
+//   })
+// }
 
 export async function verifyOTP(userId: string, inputCode: string): Promise<boolean> {
   const { data } = await supabase
@@ -53,4 +53,22 @@ export async function verifyOTP(userId: string, inputCode: string): Promise<bool
     .eq('user_id', userId)
 
   return true
+}
+
+export async function sendOTPEmail(email: string, otp: string) {
+  console.log('SENDING OTP TO:', email)
+  console.log('OTP CODE:', otp)
+  
+  try {
+    const result = await resend.emails.send({
+      from:    process.env.RESEND_FROM_EMAIL!,
+      to:      email,
+      subject: 'Your University Project Hub Login Code',
+      html:    `<p>Your verification code is: <strong>${otp}</strong></p>
+                <p>This code expires in 10 minutes.</p>`,
+    })
+    console.log('RESEND RESULT:', result)
+  } catch (err) {
+    console.log('RESEND ERROR:', err)
+  }
 }

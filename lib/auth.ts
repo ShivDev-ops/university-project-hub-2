@@ -17,11 +17,11 @@ export const authOptions: NextAuthOptions = {
       const email = user.email ?? ''
       console.log('SIGNIN EMAIL:', email)
       console.log('SIGNIN USER:', user)
-
-      // TEMPORARILY DISABLED FOR TESTING
+       // TEMPORARILY DISABLED FOR TESTING
       // if (!email.endsWith('@lpu.in')) {
       //   return '/auth/error?error=AccessDenied'
       // }
+
 
       const { data: existing, error: dbError } = await supabaseAdmin
         .from('profiles')
@@ -36,7 +36,6 @@ export const authOptions: NextAuthOptions = {
 
       if (!existing) {
         const userId = crypto.randomUUID()
-
         const { error: insertError } = await supabaseAdmin
           .from('profiles')
           .insert({
@@ -51,24 +50,24 @@ export const authOptions: NextAuthOptions = {
             score:            500,
           })
         console.log('INSERT ERROR:', insertError)
-
         const otp = generateOTP()
         await storeOTP(userId, otp)
         await sendOTPEmail(email, otp)
+        return '/verify'   // ← redirect new users to verify
       }
 
-      if (existing && !existing.verified) {
+      if (!existing.verified) {
         const { data: profile } = await supabaseAdmin
           .from('profiles')
           .select('user_id')
           .eq('email', email)
           .single()
-
         if (profile?.user_id) {
           const otp = generateOTP()
           await storeOTP(profile.user_id, otp)
           await sendOTPEmail(email, otp)
         }
+        return '/verify'   // ← redirect unverified users to verify
       }
 
       return true
