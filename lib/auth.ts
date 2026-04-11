@@ -1,3 +1,4 @@
+// File: lib/auth.ts
 import { NextAuthOptions } from 'next-auth'
 import AzureADProvider from 'next-auth/providers/azure-ad'
 import { supabaseAdmin } from '@/lib/supabase/admin'
@@ -14,40 +15,60 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       const email = user.email ?? ''
+      console.log('SIGNIN EMAIL:', email)
+      console.log('SIGNIN USER:', user)
 
-      if (!email.endsWith('@university.edu')) {
-        return '/auth/error?error=AccessDenied'
-      }
+      // TEMPORARILY DISABLED FOR TESTING
+      // if (!email.endsWith('@lpu.in')) {
+      //   return '/auth/error?error=AccessDenied'
+      // }
 
-      const { data: existing } = await supabaseAdmin
+      const { data: existing, error: dbError } = await supabaseAdmin
         .from('profiles')
         .select('verified, profile_complete, is_suspended')
         .eq('email', email)
         .single()
 
+      console.log('EXISTING PROFILE:', existing)
+      console.log('DB ERROR:', dbError)
+
       if (existing?.is_suspended) return '/suspended'
 
       if (!existing) {
-        await supabaseAdmin.from('profiles').insert({
-          user_id:          user.id,
-          email:            email,
-          full_name:        user.name,
-          avatar_url:       user.image,
-          verified:         false,
-          profile_complete: false,
-          is_admin:         false,
-          is_suspended:     false,
-          score:            500,
-        })
+        const userId = crypto.randomUUID()
+
+        const { error: insertError } = await supabaseAdmin
+          .from('profiles')
+          .insert({
+            user_id:          userId,
+            email:            email,
+            full_name:        user.name,
+            avatar_url:       user.image,
+            verified:         false,
+            profile_complete: false,
+            is_admin:         false,
+            is_suspended:     false,
+            score:            500,
+          })
+        console.log('INSERT ERROR:', insertError)
+
         const otp = generateOTP()
-        await storeOTP(user.id, otp)
+        await storeOTP(userId, otp)
         await sendOTPEmail(email, otp)
       }
 
       if (existing && !existing.verified) {
-        const otp = generateOTP()
-        await storeOTP(user.id, otp)
-        await sendOTPEmail(email, otp)
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('user_id')
+          .eq('email', email)
+          .single()
+
+        if (profile?.user_id) {
+          const otp = generateOTP()
+          await storeOTP(profile.user_id, otp)
+          await sendOTPEmail(email, otp)
+        }
       }
 
       return true
@@ -57,17 +78,21 @@ export const authOptions: NextAuthOptions = {
       if (account) token.id = token.sub
 
       if (account || trigger === 'update') {
-        const { data: profile } = await supabaseAdmin
+        const { data: profile, error: profileError } = await supabaseAdmin
           .from('profiles')
-          .select('verified, profile_complete, is_admin, is_suspended')
+          .select('verified, profile_complete, is_admin, is_suspended, user_id')
           .eq('email', token.email)
           .single()
+
+        console.log('JWT PROFILE:', profile)
+        console.log('JWT PROFILE ERROR:', profileError)
 
         if (profile) {
           token.verified         = profile.verified
           token.profile_complete = profile.profile_complete
           token.is_admin         = profile.is_admin
           token.is_suspended     = profile.is_suspended
+          token.dbUserId         = profile.user_id
         }
       }
       return token
@@ -75,7 +100,7 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       if (session.user) {
-        session.user.id               = token.sub!
+        session.user.id               = token.dbUserId as string ?? token.sub!
         session.user.verified         = token.verified as boolean
         session.user.profile_complete = token.profile_complete as boolean
         session.user.is_admin         = token.is_admin as boolean
@@ -84,10 +109,12 @@ export const authOptions: NextAuthOptions = {
       return session
     },
   },
+
   pages: {
     signIn: '/login',
     error:  '/auth/error',
   },
+
   session: {
     strategy: 'jwt',
   },

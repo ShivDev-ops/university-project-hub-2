@@ -1,3 +1,4 @@
+// File: lib/otp.ts
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 
@@ -14,20 +15,20 @@ export function generateOTP(): string {
 export async function storeOTP(userId: string, otp: string) {
   const expiresAt = new Date(Date.now() + 10 * 60 * 1000)
   await supabase.from('otp_codes').upsert({
-    user_id: userId,
-    code: otp,
+    user_id:    userId,
+    code:       otp,
     expires_at: expiresAt.toISOString(),
-    used: false,
+    used:       false,
   }, { onConflict: 'user_id' })
 }
 
 export async function sendOTPEmail(email: string, otp: string) {
   await resend.emails.send({
-    from: process.env.RESEND_FROM_EMAIL!,
-    to: email,
+    from:    process.env.RESEND_FROM_EMAIL!,
+    to:      email,
     subject: 'Your University Project Hub Login Code',
-    html: `<p>Your verification code is: <strong>${otp}</strong></p>
-           <p>This code expires in 10 minutes.</p>`,
+    html:    `<p>Your verification code is: <strong>${otp}</strong></p>
+              <p>This code expires in 10 minutes.</p>`,
   })
 }
 

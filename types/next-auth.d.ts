@@ -1,3 +1,4 @@
+// File: types/next-auth.d.ts
 import NextAuth from 'next-auth'
 
 declare module 'next-auth' {
@@ -21,5 +22,6 @@ declare module 'next-auth/jwt' {
     profile_complete: boolean
     is_admin:         boolean
     is_suspended:     boolean
+    dbUserId:         string
   }
 }
