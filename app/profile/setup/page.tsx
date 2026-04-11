@@ -29,7 +29,7 @@ export default function ProfileSetupPage() {
       return
     }
     setLoading(true)
-    const res = await fetch('/api/profile/setup', {
+    const res = await fetch('/api/user/profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
