@@ -1,17 +1,25 @@
-// types/next-auth.d.ts
 import NextAuth from 'next-auth'
 
 declare module 'next-auth' {
   interface Session {
     user: {
-      id:     string
-      name?:  string | null
-      email?: string | null
-      image?: string | null
+      id:               string
+      email:            string
+      name:             string
+      image:            string
+      verified:         boolean
+      profile_complete: boolean
+      is_admin:         boolean
+      is_suspended:     boolean
     }
   }
+}
 
+declare module 'next-auth/jwt' {
   interface JWT {
-    id?: string
+    verified:         boolean
+    profile_complete: boolean
+    is_admin:         boolean
+    is_suspended:     boolean
   }
 }
