@@ -1,3 +1,4 @@
+// File: app/api/send-otp/route.ts
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
@@ -14,8 +15,15 @@ export async function POST() {
     const otp = generateOTP()
     await storeOTP(session.user.id, otp)
     await sendOTPEmail(session.user.email, otp)
-    return NextResponse.json({ success: true })
-  } catch {
+
+    // Show OTP on screen in development only
+    const isDev = process.env.NODE_ENV === 'development'
+    return NextResponse.json({
+      success: true,
+      devOtp: isDev ? otp : undefined,
+    })
+  } catch (err) {
+    console.log('SEND OTP ERROR:', err)
     return NextResponse.json({ error: 'Failed to send OTP' }, { status: 500 })
   }
 }

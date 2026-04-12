@@ -12,28 +12,27 @@ export const authOptions: NextAuthOptions = {
       tenantId:     'common',
     }),
   ],
+
   callbacks: {
     async signIn({ user }) {
       const email = user.email ?? ''
       console.log('SIGNIN EMAIL:', email)
-      console.log('SIGNIN USER:', user)
-       // TEMPORARILY DISABLED FOR TESTING
-      // if (!email.endsWith('@lpu.in')) {
-      //   return '/auth/error?error=AccessDenied'
-      // }
 
+      // Uncomment when ready for production:
+      // if (!email.endsWith('@lpu.in')) return '/auth/error?error=AccessDenied'
 
-      const { data: existing, error: dbError } = await supabaseAdmin
+      const { data: existing } = await supabaseAdmin
         .from('profiles')
-        .select('verified, profile_complete, is_suspended')
+        .select('verified, profile_complete, is_suspended, user_id')
         .eq('email', email)
         .single()
 
       console.log('EXISTING PROFILE:', existing)
-      console.log('DB ERROR:', dbError)
 
+      // Suspended user
       if (existing?.is_suspended) return '/suspended'
 
+      // New user — create profile + send OTP
       if (!existing) {
         const userId = crypto.randomUUID()
         const { error: insertError } = await supabaseAdmin
@@ -53,38 +52,37 @@ export const authOptions: NextAuthOptions = {
         const otp = generateOTP()
         await storeOTP(userId, otp)
         await sendOTPEmail(email, otp)
-        return '/verify'   // ← redirect new users to verify
+        return '/verify'
       }
 
+      // Existing but not verified — resend OTP
       if (!existing.verified) {
-        const { data: profile } = await supabaseAdmin
-          .from('profiles')
-          .select('user_id')
-          .eq('email', email)
-          .single()
-        if (profile?.user_id) {
-          const otp = generateOTP()
-          await storeOTP(profile.user_id, otp)
-          await sendOTPEmail(email, otp)
-        }
-        return '/verify'   // ← redirect unverified users to verify
+        const otp = generateOTP()
+        await storeOTP(existing.user_id, otp)
+        await sendOTPEmail(email, otp)
+        return '/verify'
       }
 
-      return true
+      // Verified but profile incomplete
+      if (!existing.profile_complete) {
+        return '/onboarding'
+      }
+
+      // All good — go to dashboard
+      return '/dashboard'
     },
 
     async jwt({ token, account, trigger }) {
       if (account) token.id = token.sub
 
       if (account || trigger === 'update') {
-        const { data: profile, error: profileError } = await supabaseAdmin
+        const { data: profile } = await supabaseAdmin
           .from('profiles')
           .select('verified, profile_complete, is_admin, is_suspended, user_id')
           .eq('email', token.email)
           .single()
 
         console.log('JWT PROFILE:', profile)
-        console.log('JWT PROFILE ERROR:', profileError)
 
         if (profile) {
           token.verified         = profile.verified
