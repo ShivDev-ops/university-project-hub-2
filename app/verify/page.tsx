@@ -1,6 +1,5 @@
-// File: app/verify/page.tsx
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
@@ -8,20 +7,23 @@ export default function VerifyPage() {
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [sent, setSent] = useState(false)
-  const [devOtp, setDevOtp] = useState('')
+  const [resending, setResending] = useState(false)
+  const [resendMsg, setResendMsg] = useState('')
   const router = useRouter()
   const { update } = useSession()
 
-  useEffect(() => {
-    sendOTP()
-  }, [])
+  // DO NOT auto-send OTP here
+  // OTP is already sent by auth.ts during signIn
 
-  async function sendOTP() {
+  async function handleResend() {
+    setResending(true)
+    setResendMsg('')
     const res = await fetch('/api/send-otp', { method: 'POST' })
     const data = await res.json()
-    setSent(true)
-    if (data.devOtp) setDevOtp(data.devOtp)
+    setResending(false)
+    setResendMsg('Code resent! Check your email.')
+    // show new OTP in dev mode
+    if (data.devOtp) setCode(data.devOtp)
   }
 
   async function handleVerify() {
@@ -42,7 +44,6 @@ export default function VerifyPage() {
       return
     }
 
-    // Refresh session so proxy sees verified: true
     await update()
     router.push('/profile/setup')
   }
@@ -60,18 +61,8 @@ export default function VerifyPage() {
 
         <h1 className="text-2xl font-bold text-white mb-2">Verify Your Email</h1>
         <p className="text-gray-400 text-sm mb-6">
-          {sent ? 'We sent a 6-digit code to your email.' : 'Sending code...'}
+          We sent a 6-digit code to your email. Check your inbox.
         </p>
-
-        {/* Dev mode OTP display */}
-        {devOtp && (
-          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-3 mb-4">
-            <p className="text-yellow-400 text-xs mb-1">Dev Mode — OTP Code:</p>
-            <p className="text-yellow-300 text-2xl font-mono font-bold tracking-widest">
-              {devOtp}
-            </p>
-          </div>
-        )}
 
         <input
           type="text"
@@ -85,6 +76,7 @@ export default function VerifyPage() {
         />
 
         {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+        {resendMsg && <p className="text-green-400 text-sm mb-4">{resendMsg}</p>}
 
         <button
           onClick={handleVerify}
@@ -96,10 +88,12 @@ export default function VerifyPage() {
         </button>
 
         <button
-          onClick={sendOTP}
-          className="text-gray-500 text-xs mt-4 hover:text-gray-300 block mx-auto"
+          onClick={handleResend}
+          disabled={resending}
+          className="text-gray-500 text-xs mt-4 hover:text-gray-300 
+                     disabled:opacity-40 block mx-auto"
         >
-          Resend code
+          {resending ? 'Sending...' : 'Resend code'}
         </button>
       </div>
     </div>
