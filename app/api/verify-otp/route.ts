@@ -1,11 +1,15 @@
+// File: app/api/verify-otp/route.ts
 import { getServerSession } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { authOptions } from '@/lib/auth'
 import { verifyOTP } from '@/lib/otp'
+import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export async function POST(req: NextRequest) {
   const session = await getServerSession(authOptions)
+  console.log('VERIFY SESSION:', session)
 
+  // If no session, try to get user from email in request
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
   }
@@ -24,7 +28,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true })
-  } catch {
+  } catch (err) {
+    console.log('VERIFY OTP ERROR:', err)
     return NextResponse.json({ error: 'Verification failed' }, { status: 500 })
   }
 }
