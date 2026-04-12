@@ -2,7 +2,6 @@
 import { NextAuthOptions } from 'next-auth'
 import AzureADProvider from 'next-auth/providers/azure-ad'
 import { supabaseAdmin } from '@/lib/supabase/admin'
-import { generateOTP, storeOTP, sendOTPEmail } from '@/lib/otp'
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -18,7 +17,7 @@ export const authOptions: NextAuthOptions = {
       const email = user.email ?? ''
       console.log('SIGNIN EMAIL:', email)
 
-      // Uncomment when ready for production:
+      // Uncomment for production:
       // if (!email.endsWith('@lpu.in')) return '/auth/error?error=AccessDenied'
 
       const { data: existing } = await supabaseAdmin
@@ -32,7 +31,8 @@ export const authOptions: NextAuthOptions = {
       // Suspended user
       if (existing?.is_suspended) return '/suspended'
 
-      // New user — create profile + send OTP
+      // New user — create profile only
+      // OTP will be sent by /api/send-otp when verify page loads
       if (!existing) {
         const userId = crypto.randomUUID()
         const { error: insertError } = await supabaseAdmin
@@ -49,17 +49,12 @@ export const authOptions: NextAuthOptions = {
             score:            500,
           })
         console.log('INSERT ERROR:', insertError)
-        const otp = generateOTP()
-        await storeOTP(userId, otp)
-        await sendOTPEmail(email, otp)
         return '/verify'
       }
 
-      // Existing but not verified — resend OTP
+      // Existing but not verified
+      // OTP will be sent by /api/send-otp when verify page loads
       if (!existing.verified) {
-        const otp = generateOTP()
-        await storeOTP(existing.user_id, otp)
-        await sendOTPEmail(email, otp)
         return '/verify'
       }
 
@@ -68,7 +63,7 @@ export const authOptions: NextAuthOptions = {
         return '/onboarding'
       }
 
-      // All good — go to dashboard
+      // All good
       return '/dashboard'
     },
 
@@ -114,5 +109,10 @@ export const authOptions: NextAuthOptions = {
 
   session: {
     strategy: 'jwt',
+    maxAge:   30 * 24 * 60 * 60, // 30 days
+  },
+
+  jwt: {
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 }
