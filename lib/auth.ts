@@ -13,37 +13,34 @@ export const authOptions: NextAuthOptions = {
       tenantId:     'common',
     }),
 
-    CredentialsProvider({
-      name: 'credentials',
-      credentials: {
-        username: { label: 'Username', type: 'text' },
-        password: { label: 'Password', type: 'password' },
-      },
-      async authorize(credentials) {
-        if (!credentials?.username || !credentials?.password) return null
+   CredentialsProvider({
+  name: 'credentials',
+  credentials: {
+    email:    { label: 'Email',    type: 'email' },
+    password: { label: 'Password', type: 'password' },
+  },
+  async authorize(credentials) {
+    if (!credentials?.email || !credentials?.password) return null
 
-        const { data: profile } = await supabaseAdmin
-          .from('profiles')
-          .select('user_id, email, full_name, avatar_url, password_hash, verified, profile_complete')
-          .eq('username', credentials.username)
-          .single()
+    const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id, email, full_name, avatar_url, password_hash')
+      .eq('email', credentials.email)
+      .single()
 
-        if (!profile?.password_hash) return null
+    if (!profile?.password_hash) return null
 
-        const isValid = await bcrypt.compare(
-          credentials.password,
-          profile.password_hash
-        )
-        if (!isValid) return null
+    const isValid = await bcrypt.compare(credentials.password, profile.password_hash)
+    if (!isValid) return null
 
-        return {
-          id:    profile.user_id,
-          email: profile.email,
-          name:  profile.full_name,
-          image: profile.avatar_url,
-        }
-      },
-    }),
+    return {
+      id:    profile.user_id,
+      email: profile.email,
+      name:  profile.full_name,
+      image: profile.avatar_url,
+    }
+  },
+}),
   ],
 
   callbacks: {
