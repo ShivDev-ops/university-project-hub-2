@@ -1,6 +1,8 @@
 // File: lib/auth.ts
 import { NextAuthOptions } from 'next-auth'
 import AzureADProvider from 'next-auth/providers/azure-ad'
+import CredentialsProvider from 'next-auth/providers/credentials'
+import bcrypt from 'bcryptjs'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 
 export const authOptions: NextAuthOptions = {
@@ -10,10 +12,45 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.AZURE_AD_CLIENT_SECRET!,
       tenantId:     'common',
     }),
+
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.username || !credentials?.password) return null
+
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('user_id, email, full_name, avatar_url, password_hash, verified, profile_complete')
+          .eq('username', credentials.username)
+          .single()
+
+        if (!profile?.password_hash) return null
+
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          profile.password_hash
+        )
+        if (!isValid) return null
+
+        return {
+          id:    profile.user_id,
+          email: profile.email,
+          name:  profile.full_name,
+          image: profile.avatar_url,
+        }
+      },
+    }),
   ],
 
   callbacks: {
-    async signIn({ user }) {
+    async signIn({ user, account }) {
+      // Credentials login — skip signIn callback
+      if (account?.provider === 'credentials') return true
+
       const email = user.email ?? ''
       console.log('SIGNIN EMAIL:', email)
 
@@ -28,11 +65,9 @@ export const authOptions: NextAuthOptions = {
 
       console.log('EXISTING PROFILE:', existing)
 
-      // Suspended user
       if (existing?.is_suspended) return '/suspended'
 
-      // New user — create profile only
-      // OTP will be sent by /api/send-otp when verify page loads
+      // New user
       if (!existing) {
         const userId = crypto.randomUUID()
         const { error: insertError } = await supabaseAdmin
@@ -52,18 +87,12 @@ export const authOptions: NextAuthOptions = {
         return '/verify'
       }
 
-      // Existing but not verified
-      // OTP will be sent by /api/send-otp when verify page loads
-      if (!existing.verified) {
-        return '/verify'
-      }
+      // Existing not verified
+      if (!existing.verified) return '/verify'
 
       // Verified but profile incomplete
-      if (!existing.profile_complete) {
-        return '/onboarding'
-      }
+      if (!existing.profile_complete) return '/onboarding'
 
-      // All good
       return '/dashboard'
     },
 

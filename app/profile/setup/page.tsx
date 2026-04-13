@@ -142,7 +142,7 @@ export default function ProfileSetupPage() {
         <div className="w-full max-w-2xl mb-12 flex justify-between items-end">
           <div>
             <h1 style={{fontFamily:'Syne', fontSize:'2.25rem', fontWeight:800, letterSpacing:'-0.05em', color:'#adc6ff', textTransform:'uppercase'}}>
-              NEON SCHOLAR
+              PROJECT-HUB
             </h1>
             <p style={{fontFamily:'DM Mono', fontSize:'10px', letterSpacing:'0.2em', color:'#8c909f', textTransform:'uppercase', marginTop:'4px'}}>
               Protocol: Profile_Setup_v1.0
