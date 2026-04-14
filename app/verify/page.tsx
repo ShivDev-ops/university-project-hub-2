@@ -28,44 +28,41 @@ export default function VerifyPage() {
     if (data.devOtp) setDevOtp(data.devOtp)
   }
 
-  async function handleVerify() {
-    setLoading(true)
-    setError('')
+async function handleVerify() {
+  setLoading(true)
+  setError('')
 
-    const res = await fetch('/api/verify-otp', {
+  const res = await fetch('/api/verify-otp', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code }),
+  })
+
+  const data = await res.json()
+
+  if (!res.ok) {
+    setError(data.error || 'Verification failed')
+    setLoading(false)
+    return
+  }
+
+  // Save credentials if coming from registration
+  const regUsername = sessionStorage.getItem('reg_username')
+  const regPassword = sessionStorage.getItem('reg_password')
+
+  if (regUsername && regPassword) {
+    await fetch('/api/auth/save-credentials', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ username: regUsername, password: regPassword }),
     })
-
-    const data = await res.json()
-
-    if (!res.ok) {
-      setError(data.error || 'Verification failed')
-      setLoading(false)
-      return
-    }
-
-    // Save username + password if coming from registration
-    const regUsername = sessionStorage.getItem('reg_username')
-    const regPassword = sessionStorage.getItem('reg_password')
-
-    if (regUsername && regPassword) {
-      await fetch('/api/auth/save-credentials', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: regUsername,
-          password: regPassword,
-        }),
-      })
-      sessionStorage.removeItem('reg_username')
-      sessionStorage.removeItem('reg_password')
-    }
-
-    await update()
-    router.push('/profile/setup')
+    sessionStorage.removeItem('reg_username')
+    sessionStorage.removeItem('reg_password')
   }
+
+  await update()
+  router.push('/set-credentials')  // ← always go to set-credentials after verify
+}
 
   return (
     <>
