@@ -52,7 +52,7 @@ export default function RegisterPage() {
   }
 
   function handleMicrosoftSignIn() {
-    signIn('azure-ad', { callbackUrl: '/dashboard' })
+    signIn('azure-ad')
   }
 
   return (
