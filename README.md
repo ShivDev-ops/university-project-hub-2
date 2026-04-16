@@ -60,39 +60,29 @@ A full-stack web application that helps B.Tech students find teammates for unive
 ## 📁 Project Structure
 
 ```
-university-project-hub/
+university-project-hub2/
 ├── app/
 │   ├── api/
-│   │   ├── auth/[...nextauth]/route.ts   # NextAuth handler
-│   │   ├── send-otp/route.ts             # Send OTP email
-│   │   ├── verify-otp/route.ts           # Verify OTP code
-│   │   └── user/
-│   │       └── profile/route.ts          # Save profile setup
-│   ├── auth/error/page.tsx               # Auth error page
-│   ├── login/page.tsx                    # Login page
-│   ├── verify/page.tsx                   # OTP verification page
-│   ├── onboarding/page.tsx               # Onboarding page
-│   ├── profile/setup/page.tsx            # Profile setup page
-│   ├── dashboard/page.tsx                # Main dashboard
-│   ├── suspended/page.tsx                # Suspended account page
-│   ├── layout.tsx                        # Root layout + SessionProvider
-│   └── page.tsx                          # Public landing page
-├── lib/
-│   ├── supabase/
-│   │   ├── client.ts                     # Browser Supabase client
-│   │   ├── server.ts                     # Server Supabase client (SSR)
-│   │   └── admin.ts                      # Admin client (bypasses RLS)
-│   ├── auth.ts                           # NextAuth config + callbacks
-│   └── otp.ts                            # OTP helpers
-├── components/
-│   ├── SessionProviderWrapper.tsx         # NextAuth session provider
-│   └── LandingClient.tsx                 # Landing page client component
-├── hooks/
-│   └── useFingerprint.ts                 # FingerprintJS hook
-├── types/
-│   └── next-auth.d.ts                    # NextAuth type extensions
-└── proxy.ts                              # Route protection middleware
-```
+│   │   ├── auth/
+│   │   │   ├── [...nextauth]/route.ts       # Main NextAuth handler & logic
+│   │   │   ├── check-username/route.ts      # Username availability endpoint
+│   │   │   ├── error/page.tsx               # Auth error boundaries
+│   │   │   ├── forgot-password/route.ts     # Send OTP for password reset
+│   │   │   ├── reset-password/route.ts      # Update password securely
+│   │   │   ├── save-credentials/route.ts    # Commit new username/password 
+│   │   │   └── verify-reset-otp/route.ts    # Validate OTP for reset flow
+│   │   ├── send-otp/route.tsx               # Standard verification OTP dispatcher
+│   │   ├── user/
+│   │   │   ├── export/                      # User data export hook
+│   │   │   └── profile/route.ts             # Profile update/submit handler
+│   │   └── verify-otp/route.ts              # General OTP validator
+│   ├── dashboard/page.tsx                   # Main protected application view
+│   ├── forgot-password/page.tsx             # Forgot password UI
+│   ├── login/page.tsx                       # Login UI
+│   ├── onboarding/page.tsx                  # Pre-requisite info splash
+│   ├── profile/setup/page.tsx               # Profile creation wizard UI
+│   ├── register/page.tsx                    # Registration UI
+│   ├── set-credentials/page.tsx             # Post-OAuth credential setup UI
 
 ---
 
@@ -235,39 +225,53 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ---
 
-## 🔄 Authentication Flow
+## 🔄 Authentication & Onboarding Flow
 
-```
-User clicks "Continue with Microsoft"
-          ↓
-Azure AD OAuth → Microsoft login page
-          ↓
-NextAuth signIn callback runs
-          ↓
-Email domain check (@lpu.in only)
-          ↓
-First login? → Create profile row in Supabase
-          ↓
-Generate 6-digit OTP → Store in otp_codes table
-          ↓
-Send OTP via Resend email
-          ↓
-Redirect to /verify page
-          ↓
-User enters OTP code
-          ↓
-OTP verified → verified: true saved in DB
-          ↓
-Session refreshed via update()
-          ↓
-Redirect to /profile/setup
-          ↓
-User fills bio, skills, GitHub URL
-          ↓
-profile_complete: true saved in DB
-          ↓
-Redirect to /dashboard ✅
-```
+Our application uses a hybrid authentication system supporting both **Email/Password** and **Microsoft OAuth (Azure AD)**. Both login methods converge into a unified onboarding pipeline to guarantee that every user is verified, completes their profile, and claims a platform username and password.
+
+### 1️⃣ Core Login Pathways
+
+#### Path A: Credentials (Email & Password)
+1. **Login**: User enters their email and password on `/login`.
+2. **Auth Check**: NextAuth verifies credentials against the `bcrypt` hash stored in the database.
+3. **Session Created**: A secure JWT token is generated, containing the user's specific state (verified, profile completeness, admin status).
+
+#### Path B: Microsoft OAuth (Azure AD)
+1. **OAuth Redirect**: User clicks "Continue with Microsoft", navigating through the Azure AD sign-in page.
+2. **Profile Lookup**: System checks for an existing user profile associated with their email.
+3. **Account Creation**: If it's their first time, a new profile is created. They are then directed into the onboarding flow to set their username/password and verify their identity.
+
+---
+
+### 2️⃣ Route Protection & Interception (Middleware)
+
+Once authenticated, our Next.js middleware (`proxy.ts`) strictly enforces the user sequence on every protected request. Users are automatically redirected to complete the first missing step in their profile setup:
+
+- 🛑 **Suspended?** $\rightarrow$ Redirected to `/suspended` (Account locked)
+- 📧 **Not Verified?** $\rightarrow$ Redirected to `/verify` (Must complete OTP challenge)
+- 🔑 **Missing Credentials?** $\rightarrow$ Redirected to `/set-credentials` (OAuth users must claim a local username/password)
+- 📝 **Incomplete Profile?** $\rightarrow$ Redirected to `/onboarding` or `/profile/setup`
+- ✅ **All Clear?** $\rightarrow$ Granted full access to `/dashboard`
+
+---
+
+### 3️⃣ Verification Sub-Flows
+
+#### 📧 OTP Verification (`/verify`)
+- A **6-digit OTP** is generated and sent via **Resend**.
+- User inputs the code; the system validates expiration (10 mins) and matches it.
+- Database records `verified: true`, session refreshes, and the user advances.
+
+#### 🔑 Credential Setup (`/set-credentials`)
+- Mandatory step for OAuth users who lack a standard platform username and password.
+- User selects a unique username (checked live via API) and sets a password.
+- The hash is securely saved via backend insertion, allowing them to advance.
+
+#### 🔄 Password Reset (`/forgot-password`)
+- User enters an email to request a reset link.
+- System hashes and emails a secure OTP instance.
+- User submits the OTP alongside a new password.
+- Database updates the hash, and the user is redirected to login.
 
 ---
 
