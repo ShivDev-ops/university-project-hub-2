@@ -48,81 +48,94 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async signIn({ user, account }) {
-  if (account?.provider === 'credentials') return true
+      // Credentials provider — let it through, authorize() already validated
+      if (account?.provider === 'credentials') return true
 
-  const email = user.email ?? ''
-  console.log('SIGNIN EMAIL:', email)
+      const email = user.email ?? ''
+      console.log('SIGNIN EMAIL:', email)
 
-  const { data: existing } = await supabaseAdmin
-    .from('profiles')
-    .select('verified, profile_complete, is_suspended, user_id, username, password_hash')
-    .eq('email', email)
-    .single()
+      const { data: existing } = await supabaseAdmin
+        .from('profiles')
+        .select('is_suspended, user_id')
+        .eq('email', email)
+        .single()
 
-  console.log('EXISTING PROFILE:', existing)
+      console.log('EXISTING PROFILE:', existing)
 
-  // Suspended
-  if (existing?.is_suspended) return '/suspended'
+      // Block suspended users
+      if (existing?.is_suspended) {
+        return `/auth/error?error=suspended`
+      }
 
-  // Brand new user
-  if (!existing) {
-    const userId = crypto.randomUUID()
-    await supabaseAdmin.from('profiles').insert({
-      user_id:          userId,
-      email:            email,
-      full_name:        user.name,
-      avatar_url:       user.image,
-      verified:         false,
-      profile_complete: false,
-      is_admin:         false,
-      is_suspended:     false,
-      score:            500,
-    })
-    return '/verify'
-  }
-
-  // ← THIS IS THE KEY FIX
-  // Check credentials FIRST before anything else
-  // Any user without username+password must set them
-  if (!existing.username || !existing.password_hash) {
-    // If also not verified, verify first then set credentials
-    if (!existing.verified) return '/verify'
-    // Verified but no credentials
-    return '/set-credentials'
-  }
-
-  // Has credentials but not verified
-  if (!existing.verified) return '/verify'
-
-  // Profile incomplete
-  if (!existing.profile_complete) return '/profile/setup'
-
-  // All good
-  return '/dashboard'
-},
-    async jwt({ token, account, trigger }) {
-      if (account) token.id = token.sub
-
-      if (account || trigger === 'update') {
-        const { data: profile } = await supabaseAdmin
-          .from('profiles')
-          .select('verified, profile_complete, is_admin, is_suspended, user_id, username, password_hash')
-          .eq('email', token.email)
-          .single()
-
-        console.log('JWT PROFILE:', profile)
-
-        if (profile) {
-          token.verified         = profile.verified
-          token.profile_complete = profile.profile_complete
-          token.is_admin         = profile.is_admin
-          token.is_suspended     = profile.is_suspended
-          token.dbUserId         = profile.user_id
-          token.hasCredentials   = !!(profile.username && profile.password_hash)
+      // Brand new user — create profile, middleware handles redirect to /verify
+      if (!existing) {
+        const userId = crypto.randomUUID()
+        const { error } = await supabaseAdmin.from('profiles').insert({
+          user_id:          userId,
+          email:            email,
+          full_name:        user.name,
+          avatar_url:       user.image,
+          verified:         false,
+          profile_complete: false,
+          is_admin:         false,
+          is_suspended:     false,
+          score:            500,
+        })
+        if (error) {
+          console.error('PROFILE INSERT ERROR:', error)
+          return false
         }
       }
-      return token
+
+      // Always return true — middleware will handle all redirects
+      return true
     },
+
+    async jwt({ token, account, trigger, user }) {
+  if (account) token.id = token.sub
+
+  if (account || trigger === 'update') {
+    // Retry up to 3 times — handles Supabase propagation delay on new signups
+    let profile = null
+    for (let i = 0; i < 3; i++) {
+      const { data } = await supabaseAdmin
+        .from('profiles')
+        .select('verified, profile_complete, is_admin, is_suspended, user_id, username, password_hash')
+        .eq('email', token.email)
+        .single()
+
+      if (data) {
+        profile = data
+        break
+      }
+
+      // Wait 500ms before retrying
+      await new Promise(res => setTimeout(res, 500))
+    }
+
+    console.log('JWT PROFILE:', profile)
+
+    if (profile) {
+      token.verified         = profile.verified
+      token.profile_complete = profile.profile_complete
+      token.is_admin         = profile.is_admin
+      token.is_suspended     = profile.is_suspended
+      token.dbUserId         = profile.user_id
+      token.hasCredentials   = !!(profile.username && profile.password_hash)
+    } else {
+      // Profile still not found — set safe defaults for a brand new user
+      // Middleware will redirect to /verify which is correct
+      token.verified         = false
+      token.profile_complete = false
+      token.is_admin         = false
+      token.is_suspended     = false
+      token.hasCredentials   = false
+      console.error('JWT: profile not found after 3 retries, using defaults')
+    }
+  }
+
+  return token
+},
 
     async session({ session, token }) {
       if (session.user) {
