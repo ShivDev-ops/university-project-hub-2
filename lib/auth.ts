@@ -13,93 +13,100 @@ export const authOptions: NextAuthOptions = {
       tenantId:     'common',
     }),
 
-   CredentialsProvider({
-  name: 'credentials',
-  credentials: {
-    email:    { label: 'Email',    type: 'email' },
-    password: { label: 'Password', type: 'password' },
-  },
-  async authorize(credentials) {
-    if (!credentials?.email || !credentials?.password) return null
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        email:    { label: 'Email',    type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null
 
-    const { data: profile } = await supabaseAdmin
-      .from('profiles')
-      .select('user_id, email, full_name, avatar_url, password_hash')
-      .eq('email', credentials.email)
-      .single()
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('user_id, email, full_name, avatar_url, password_hash')
+          .eq('email', credentials.email)
+          .single()
 
-    if (!profile?.password_hash) return null
+        if (!profile?.password_hash) return null
 
-    const isValid = await bcrypt.compare(credentials.password, profile.password_hash)
-    if (!isValid) return null
+        const isValid = await bcrypt.compare(
+          credentials.password,
+          profile.password_hash
+        )
+        if (!isValid) return null
 
-    return {
-      id:    profile.user_id,
-      email: profile.email,
-      name:  profile.full_name,
-      image: profile.avatar_url,
-    }
-  },
-}),
+        return {
+          id:    profile.user_id,
+          email: profile.email,
+          name:  profile.full_name,
+          image: profile.avatar_url,
+        }
+      },
+    }),
   ],
 
   callbacks: {
     async signIn({ user, account }) {
-      // Credentials login — skip signIn callback
-      if (account?.provider === 'credentials') return true
+  if (account?.provider === 'credentials') return true
 
-      const email = user.email ?? ''
-      console.log('SIGNIN EMAIL:', email)
+  const email = user.email ?? ''
+  console.log('SIGNIN EMAIL:', email)
 
-      // Uncomment for production:
-      // if (!email.endsWith('@lpu.in')) return '/auth/error?error=AccessDenied'
+  const { data: existing } = await supabaseAdmin
+    .from('profiles')
+    .select('verified, profile_complete, is_suspended, user_id, username, password_hash')
+    .eq('email', email)
+    .single()
 
-      const { data: existing } = await supabaseAdmin
-        .from('profiles')
-        .select('verified, profile_complete, is_suspended, user_id')
-        .eq('email', email)
-        .single()
+  console.log('EXISTING PROFILE:', existing)
 
-      console.log('EXISTING PROFILE:', existing)
+  // Suspended
+  if (existing?.is_suspended) return '/suspended'
 
-      if (existing?.is_suspended) return '/suspended'
+  // Brand new user
+  if (!existing) {
+    const userId = crypto.randomUUID()
+    await supabaseAdmin.from('profiles').insert({
+      user_id:          userId,
+      email:            email,
+      full_name:        user.name,
+      avatar_url:       user.image,
+      verified:         false,
+      profile_complete: false,
+      is_admin:         false,
+      is_suspended:     false,
+      score:            500,
+    })
+    return '/verify'
+  }
 
-      // New user
-      if (!existing) {
-        const userId = crypto.randomUUID()
-        const { error: insertError } = await supabaseAdmin
-          .from('profiles')
-          .insert({
-            user_id:          userId,
-            email:            email,
-            full_name:        user.name,
-            avatar_url:       user.image,
-            verified:         false,
-            profile_complete: false,
-            is_admin:         false,
-            is_suspended:     false,
-            score:            500,
-          })
-        console.log('INSERT ERROR:', insertError)
-        return '/verify'
-      }
+  // ← THIS IS THE KEY FIX
+  // Check credentials FIRST before anything else
+  // Any user without username+password must set them
+  if (!existing.username || !existing.password_hash) {
+    // If also not verified, verify first then set credentials
+    if (!existing.verified) return '/verify'
+    // Verified but no credentials
+    return '/set-credentials'
+  }
 
-      // Existing not verified
-      if (!existing.verified) return '/verify'
+  // Has credentials but not verified
+  if (!existing.verified) return '/verify'
 
-      // Verified but profile incomplete
-      if (!existing.profile_complete) return '/onboarding'
+  // Profile incomplete
+  if (!existing.profile_complete) return '/profile/setup'
 
-      return '/dashboard'
-    },
-
+  // All good
+  return '/dashboard'
+},
     async jwt({ token, account, trigger }) {
       if (account) token.id = token.sub
 
       if (account || trigger === 'update') {
         const { data: profile } = await supabaseAdmin
           .from('profiles')
-          .select('verified, profile_complete, is_admin, is_suspended, user_id')
+          .select('verified, profile_complete, is_admin, is_suspended, user_id, username, password_hash')
           .eq('email', token.email)
           .single()
 
@@ -111,6 +118,7 @@ export const authOptions: NextAuthOptions = {
           token.is_admin         = profile.is_admin
           token.is_suspended     = profile.is_suspended
           token.dbUserId         = profile.user_id
+          token.hasCredentials   = !!(profile.username && profile.password_hash)
         }
       }
       return token
