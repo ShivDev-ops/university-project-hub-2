@@ -17,6 +17,8 @@ declare module 'next-auth' {
 }
 
 declare module 'next-auth/jwt' {
+
+  
   interface JWT {
     verified:         boolean
     profile_complete: boolean
