@@ -52,7 +52,6 @@ export async function middleware(req: NextRequest) {  // ← rename from proxy t
 export const config = {
   matcher: [
     '/verify',
-    '/register', 
     '/set-credentials',
     '/profile/:path*',
     '/dashboard/:path*',
