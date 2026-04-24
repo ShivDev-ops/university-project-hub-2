@@ -68,21 +68,26 @@ export const authOptions: NextAuthOptions = {
       }
 
       // Brand new user — create profile, middleware handles redirect to /verify
-      if (!existing) {
-        const userId = crypto.randomUUID()
-        const { error } = await supabaseAdmin.from('profiles').insert({
-          user_id:          userId,
-          email:            email,
-          full_name:        user.name,
-          avatar_url:       user.image,
-          verified:         false,
-          profile_complete: false,
-          is_admin:         false,
-          is_suspended:     false,
-          score:            500,
-        })
+    if (!existing) {
+        const { error } = await supabaseAdmin.from('profiles').upsert(
+          {
+            user_id:          crypto.randomUUID(),
+            email:            email,
+            full_name:        user.name,
+            avatar_url:       user.image,
+            verified:         false,
+            profile_complete: false,
+            is_admin:         false,
+            is_suspended:     false,
+            score:            500,
+          },
+          {
+            onConflict:       'email',
+            ignoreDuplicates: true,
+          }
+        )
         if (error) {
-          console.error('PROFILE INSERT ERROR:', error)
+          console.error('PROFILE UPSERT ERROR:', error)
           return false
         }
       }
