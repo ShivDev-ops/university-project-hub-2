@@ -1,9 +1,30 @@
 // File: app/dashboard/page.tsx
+
+export const revalidate = 0
+
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import Link from 'next/link'
+
+type ProjectWithOwner = {
+  id: string
+  title: string
+  description: string
+  required_skills: string[]
+  slots: number
+  filled_slots: number
+  status: string
+  created_at: string
+  owner_id: string
+  owner: {
+    full_name: string
+    avatar_url: string | null
+    score: number
+  } | null
+}
+
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -12,11 +33,18 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  const { data: projects } = await supabaseAdmin
-    .from('projects')
-    .select(`id, title, description, required_skills, slots, filled_slots, status, created_at, owner_id`)
-    .eq('status', 'open')
-    .order('created_at', { ascending: false })
+ // Replace your current query in app/dashboard/page.tsx
+const { data: projects } = await supabaseAdmin
+  .from('projects')
+  .select(`
+    id, title, description, required_skills,
+    slots, filled_slots, status, created_at, owner_id,
+    owner:profiles!projects_owner_id_fkey (
+      full_name, avatar_url, score
+    )
+  `)
+  .eq('status', 'open')
+  .order('created_at', { ascending: false }) as { data: ProjectWithOwner[] | null }
 
   const { data: profile } = await supabaseAdmin
     .from('profiles')
@@ -280,26 +308,48 @@ export default async function DashboardPage() {
                           )}
                         </div>
 
-                        <div className="pt-4 flex items-center justify-between" style={{borderTop:'1px solid rgba(66,71,84,0.1)'}}>
-                          <div>
-                            {spotsLeft <= 1 && spotsLeft > 0 ? (
-                              <div className="flex items-center gap-1.5" style={{fontSize:'10px', fontFamily:'DM Mono', color:'#fb923c', textTransform:'uppercase'}}>
-                                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse inline-block" />
-                                1 Slot Left!
-                              </div>
-                            ) : (
-                              <div style={{fontSize:'10px', fontFamily:'DM Mono', color:'rgba(194,198,214,0.6)', textTransform:'uppercase'}}>
-                                {spotsLeft} vacancies
-                              </div>
-                            )}
-                          </div>
-                          <Link href={`/projects/${project.id}`}>
-                            <button className="flex items-center gap-1 text-xs font-bold hover:gap-2 transition-all"
-                              style={{color:'#adc6ff', fontFamily:'DM Mono'}}>
-                              View <span className="material-symbols-outlined" style={{fontSize:'16px'}}>arrow_forward</span>
-                            </button>
-                          </Link>
-                        </div>
+                        
+<div className="pt-4 flex items-center justify-between" 
+  style={{borderTop:'1px solid rgba(66,71,84,0.1)'}}>
+  
+  {/* Owner info — LEFT side */}
+  <div className="flex items-center gap-2">
+    <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center"
+      style={{background:'#25293a', border:'1px solid rgba(66,71,84,0.3)'}}>
+      {(project.owner as any)?.avatar_url ? (
+        <img src={(project.owner as any).avatar_url} className="w-full h-full object-cover" />
+      ) : (
+        <span className="material-symbols-outlined" style={{fontSize:'14px', color:'#adc6ff'}}>person</span>
+      )}
+    </div>
+    <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)'}}>
+      {(project.owner as any)?.full_name || 'Unknown'}
+    </span>
+    {/* ScoreBadge */}
+    {(() => {
+      const score = (project.owner as any)?.score || 0
+      const color = score >= 600 ? '#34d399' : score >= 400 ? '#fbbf24' : '#fb7185'
+      return (
+        <span style={{
+          fontFamily:'DM Mono', fontSize:'9px', fontWeight:700,
+          padding:'1px 6px', borderRadius:'999px',
+          background:`${color}20`, color
+        }}>
+          {score}
+        </span>
+      )
+    })()}
+  </div>
+
+  {/* View button — RIGHT side */}
+  <Link href={`/projects/${project.id}`}>
+    <button className="flex items-center gap-1 text-xs font-bold hover:gap-2 transition-all"
+      style={{color:'#adc6ff', fontFamily:'DM Mono'}}>
+      View <span className="material-symbols-outlined" style={{fontSize:'16px'}}>arrow_forward</span>
+    </button>
+  </Link>
+</div>
+
                       </div>
                     </div>
                   )
@@ -326,7 +376,7 @@ export default async function DashboardPage() {
               )}
 
               {/* Skeleton loading cards — shown when no projects */}
-              {(!projects || projects.length === 0) && [1,2,3].map(i => (
+              {/* {(!projects || projects.length === 0) && [1,2,3].map(i => (
                 <div key={i} className="relative rounded-2xl overflow-hidden h-[340px]"
                   style={{background:'rgba(22,27,43,0.4)', border:'1px solid rgba(66,71,84,0.1)'}}>
                   <div className="shimmer absolute inset-0" />
@@ -342,7 +392,7 @@ export default async function DashboardPage() {
                     </div>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </main>
         </div>
