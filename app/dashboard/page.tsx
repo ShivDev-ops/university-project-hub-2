@@ -1,5 +1,4 @@
-// File: app/dashboard/page.tsx
-
+// app/dashboard/page.tsx
 export const revalidate = 0
 
 import { getServerSession } from 'next-auth'
@@ -8,7 +7,7 @@ import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import Link from 'next/link'
 
-type ProjectWithOwner = {
+type Project = {
   id: string
   title: string
   description: string
@@ -18,13 +17,16 @@ type ProjectWithOwner = {
   status: string
   created_at: string
   owner_id: string
-  owner: {
-    full_name: string
-    avatar_url: string | null
-    score: number
-  } | null
 }
 
+type Owner = {
+  user_id: string
+  full_name: string
+  avatar_url: string | null
+  score: number
+}
+
+type ProjectWithOwner = Project & { owner: Owner | null }
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -33,20 +35,34 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
- // Replace your current query in app/dashboard/page.tsx
-const { data: projects } = await supabaseAdmin
-  .from('projects')
-  .select(`
-    id, title, description, required_skills,
-    slots, filled_slots, status, created_at, owner_id,
-    owner:profiles!projects_owner_id_fkey (
-      full_name, avatar_url, score
-    )
-  `)
-  .eq('status', 'open')
-  .order('created_at', { ascending: false }) as { data: ProjectWithOwner[] | null }
+  // Step 1 — fetch projects without broken FK join
+  const { data: projects } = await supabaseAdmin
+    .from('projects')
+    .select('id, title, description, required_skills, slots, filled_slots, status, created_at, owner_id')
+    .eq('status', 'open')
+    .order('created_at', { ascending: false }) as { data: Project[] | null }
 
-  const { data: profile } = await supabaseAdmin
+  // Step 2 — fetch owners manually (owner_id = profiles.user_id confirmed)
+  let projectsWithOwners: ProjectWithOwner[] = []
+  if (projects && projects.length > 0) {
+    const ownerIds = [...new Set(projects.map(p => p.owner_id))]
+    const { data: owners } = await supabaseAdmin
+      .from('profiles')
+      .select('user_id, full_name, avatar_url, score')
+      .in('user_id', ownerIds) as { data: Owner[] | null }
+
+    const ownerMap = Object.fromEntries(
+      (owners ?? []).map(o => [o.user_id, o])
+    )
+    projectsWithOwners = projects.map(p => ({
+      ...p,
+      owner: ownerMap[p.owner_id] ?? null,
+    }))
+  }
+
+  // Step 3 — fetch current user profile
+  const { data: profile } =
+   await supabaseAdmin
     .from('profiles')
     .select('full_name, score, skills, avatar_url')
     .eq('user_id', session.user.id)
@@ -62,22 +78,11 @@ const { data: projects } = await supabaseAdmin
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         .glass-card { backdrop-filter: blur(16px); background: rgba(26, 31, 47, 0.6); }
         .neon-glow-primary { box-shadow: 0 0 20px rgba(77, 142, 255, 0.15); }
-        .shimmer {
-          background: linear-gradient(90deg, transparent, rgba(77, 142, 255, 0.05), transparent);
-          background-size: 200% 100%;
-          animation: shimmer 2s infinite linear;
-        }
-        @keyframes shimmer {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
-        }
         .dot-grid {
           background-image: radial-gradient(circle, rgba(77, 142, 255, 0.05) 1px, transparent 1px);
           background-size: 24px 24px;
         }
-        .card-hover {
-          transition: all 0.3s;
-        }
+        .card-hover { transition: all 0.3s; }
         .card-hover:hover {
           transform: translateY(-6px);
           box-shadow: 0 10px 40px -10px rgba(77, 142, 255, 0.2);
@@ -140,7 +145,7 @@ const { data: projects } = await supabaseAdmin
                   {profile?.full_name || session.user.name || 'Scholar'}
                 </div>
                 <div style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)', textTransform:'uppercase'}}>
-                  Score: {profile?.score || 500}
+                  Score: {profile?.score ?? 500}
                 </div>
               </div>
             </div>
@@ -190,23 +195,23 @@ const { data: projects } = await supabaseAdmin
                       <circle cx="20" cy="20" r="16" fill="transparent" stroke="#25293a" strokeWidth="3" />
                       <circle cx="20" cy="20" r="16" fill="transparent" stroke="#6bd8cb" strokeWidth="3"
                         strokeDasharray="100"
-                        strokeDashoffset={100 - ((profile?.score || 500) / 1000) * 100} />
+                        strokeDashoffset={100 - ((profile?.score ?? 500) / 1000) * 100} />
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center"
                       style={{fontFamily:'DM Mono', fontSize:'10px', fontWeight:700}}>
-                      {profile?.score || 500}
+                      {profile?.score ?? 500}
                     </div>
                   </div>
                   <div>
                     <div style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)'}}>ACCOUNTABILITY</div>
                     <div style={{fontSize:'12px', fontWeight:700, color:'#6bd8cb'}}>
-                      {(profile?.score || 500) >= 700 ? 'Vanguard Elite' :
-                       (profile?.score || 500) >= 500 ? 'Active Scholar' : 'Probation'}
+                      {(profile?.score ?? 500) >= 700 ? 'Vanguard Elite' :
+                       (profile?.score ?? 500) >= 500 ? 'Active Scholar' : 'Probation'}
                     </div>
                   </div>
                 </div>
                 <div className="h-1 w-full rounded-full overflow-hidden" style={{background:'#25293a'}}>
-                  <div className="h-full rounded-full" style={{background:'#6bd8cb', width:`${((profile?.score || 500) / 1000) * 100}%`}} />
+                  <div className="h-full rounded-full" style={{background:'#6bd8cb', width:`${((profile?.score ?? 500) / 1000) * 100}%`}} />
                 </div>
               </div>
             </div>
@@ -253,7 +258,7 @@ const { data: projects } = await supabaseAdmin
                 </button>
                 <div className="h-4 w-px mx-2" style={{background:'rgba(66,71,84,0.3)'}} />
                 <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.6)', textTransform:'uppercase', letterSpacing:'0.1em'}}>
-                  {projects?.length || 0} open projects
+                  {projectsWithOwners.length} open projects
                 </span>
               </div>
               <Link href="/projects/create">
@@ -266,16 +271,21 @@ const { data: projects } = await supabaseAdmin
 
             {/* Project Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-              {projects && projects.length > 0 ? (
-                projects.map((project) => {
+              {projectsWithOwners.length > 0 ? (
+                projectsWithOwners.map((project) => {
                   const spotsLeft = project.slots - project.filled_slots
+                  const score = project.owner?.score ?? 0
+                  const scoreColor = score >= 600 ? '#34d399' : score >= 400 ? '#fbbf24' : '#fb7185'
+
                   return (
                     <div key={project.id} className="card-hover relative rounded-2xl overflow-hidden"
                       style={{background:'rgba(26,31,47,0.4)', backdropFilter:'blur(16px)', border:'1px solid rgba(66,71,84,0.15)'}}>
                       <div className="p-6">
+
+                        {/* Header */}
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex flex-wrap gap-2">
-                            <span style={{padding:'2px 8px', borderRadius:'4px', background:'rgba(173,198,255,0.1)', color:'#adc6ff', fontSize:'10px', fontWeight:700, fontFamily:'DM Mono', textTransform:'uppercase'}}>
+                            <span style={{padding:'2px 8px', borderRadius:'4px', background: spotsLeft > 0 ? 'rgba(173,198,255,0.1)' : 'rgba(66,71,84,0.2)', color: spotsLeft > 0 ? '#adc6ff' : '#8c909f', fontSize:'10px', fontWeight:700, fontFamily:'DM Mono', textTransform:'uppercase'}}>
                               {spotsLeft > 0 ? 'Open' : 'Full'}
                             </span>
                             <span style={{fontSize:'10px', color:'rgba(194,198,214,0.6)', fontFamily:'DM Mono'}}>
@@ -288,74 +298,60 @@ const { data: projects } = await supabaseAdmin
                           </div>
                         </div>
 
-                        <h3 style={{fontFamily:'Syne', fontSize:'20px', fontWeight:700, marginBottom:'8px', lineHeight:1.2}}>
+                        {/* Title + desc */}
+                        <h3 style={{fontFamily:'Syne', fontSize:'20px', fontWeight:700, marginBottom:'8px', lineHeight:1.2, color:'#dee1f7'}}>
                           {project.title}
                         </h3>
                         <p style={{color:'#c2c6d6', fontSize:'14px', marginBottom:'16px', lineHeight:1.6, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden'}}>
                           {project.description}
                         </p>
 
+                        {/* Skills */}
                         <div className="flex flex-wrap gap-2 mb-6">
                           {project.required_skills?.slice(0, 3).map((skill: string) => (
                             <span key={skill} style={{padding:'4px 8px', borderRadius:'6px', background:'#25293a', fontSize:'10px', fontFamily:'DM Mono', color:'#c2c6d6'}}>
                               {skill}
                             </span>
                           ))}
-                          {project.required_skills?.length > 3 && (
-                            <span style={{padding:'4px 8px', borderRadius:'6px', background:'#25293a', fontSize:'10px', fontFamily:'DM Mono', color:'#c2c6d6'}}>
+                          {(project.required_skills?.length ?? 0) > 3 && (
+                            <span style={{padding:'4px 8px', borderRadius:'6px', background:'#25293a', fontSize:'10px', fontFamily:'DM Mono', color:'#8c909f'}}>
                               +{project.required_skills.length - 3} more
                             </span>
                           )}
                         </div>
 
-                        
-<div className="pt-4 flex items-center justify-between" 
-  style={{borderTop:'1px solid rgba(66,71,84,0.1)'}}>
-  
-  {/* Owner info — LEFT side */}
-  <div className="flex items-center gap-2">
-    <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center"
-      style={{background:'#25293a', border:'1px solid rgba(66,71,84,0.3)'}}>
-      {(project.owner as any)?.avatar_url ? (
-        <img src={(project.owner as any).avatar_url} className="w-full h-full object-cover" />
-      ) : (
-        <span className="material-symbols-outlined" style={{fontSize:'14px', color:'#adc6ff'}}>person</span>
-      )}
-    </div>
-    <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)'}}>
-      {(project.owner as any)?.full_name || 'Unknown'}
-    </span>
-    {/* ScoreBadge */}
-    {(() => {
-      const score = (project.owner as any)?.score || 0
-      const color = score >= 600 ? '#34d399' : score >= 400 ? '#fbbf24' : '#fb7185'
-      return (
-        <span style={{
-          fontFamily:'DM Mono', fontSize:'9px', fontWeight:700,
-          padding:'1px 6px', borderRadius:'999px',
-          background:`${color}20`, color
-        }}>
-          {score}
-        </span>
-      )
-    })()}
-  </div>
-
-  {/* View button — RIGHT side */}
-  <Link href={`/projects/${project.id}`}>
-    <button className="flex items-center gap-1 text-xs font-bold hover:gap-2 transition-all"
-      style={{color:'#adc6ff', fontFamily:'DM Mono'}}>
-      View <span className="material-symbols-outlined" style={{fontSize:'16px'}}>arrow_forward</span>
-    </button>
-  </Link>
-</div>
+                        {/* Footer */}
+                        <div className="pt-4 flex items-center justify-between"
+                          style={{borderTop:'1px solid rgba(66,71,84,0.1)'}}>
+                          <div className="flex items-center gap-2">
+                            <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center"
+                              style={{background:'#25293a', border:'1px solid rgba(66,71,84,0.3)'}}>
+                              {project.owner?.avatar_url ? (
+                                <img src={project.owner.avatar_url} className="w-full h-full object-cover" alt={project.owner.full_name} />
+                              ) : (
+                                <span className="material-symbols-outlined" style={{fontSize:'14px', color:'#adc6ff'}}>person</span>
+                              )}
+                            </div>
+                            <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)'}}>
+                              {project.owner?.full_name ?? 'Unknown'}
+                            </span>
+                            <span style={{fontFamily:'DM Mono', fontSize:'9px', fontWeight:700, padding:'1px 6px', borderRadius:'999px', background:`${scoreColor}20`, color: scoreColor}}>
+                              {score}
+                            </span>
+                          </div>
+                          <Link href={`/projects/${project.id}`}>
+                            <button className="flex items-center gap-1 text-xs font-bold hover:gap-2 transition-all"
+                              style={{color:'#adc6ff', fontFamily:'DM Mono'}}>
+                              View <span className="material-symbols-outlined" style={{fontSize:'16px'}}>arrow_forward</span>
+                            </button>
+                          </Link>
+                        </div>
 
                       </div>
                     </div>
                   )
                 })
               ) : (
-                // Empty state
                 <div className="col-span-3 text-center py-20">
                   <span className="material-symbols-outlined" style={{fontSize:'48px', color:'#424754'}}>
                     rocket_launch
@@ -374,25 +370,6 @@ const { data: projects } = await supabaseAdmin
                   </Link>
                 </div>
               )}
-
-              {/* Skeleton loading cards — shown when no projects */}
-              {/* {(!projects || projects.length === 0) && [1,2,3].map(i => (
-                <div key={i} className="relative rounded-2xl overflow-hidden h-[340px]"
-                  style={{background:'rgba(22,27,43,0.4)', border:'1px solid rgba(66,71,84,0.1)'}}>
-                  <div className="shimmer absolute inset-0" />
-                  <div className="p-6 space-y-4">
-                    <div className="flex gap-2">
-                      <div className="w-12 h-4 rounded" style={{background:'#1a1f2f'}} />
-                      <div className="w-16 h-4 rounded" style={{background:'#1a1f2f'}} />
-                    </div>
-                    <div className="w-3/4 h-8 rounded" style={{background:'#1a1f2f'}} />
-                    <div className="space-y-2">
-                      <div className="w-full h-4 rounded" style={{background:'#1a1f2f'}} />
-                      <div className="w-5/6 h-4 rounded" style={{background:'#1a1f2f'}} />
-                    </div>
-                  </div>
-                </div>
-              ))} */}
             </div>
           </main>
         </div>
