@@ -5,6 +5,10 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
 
+
+import DashboardNavbar from '@/components/DashboardNavbar'
+import DashboardSidebar from '@/components/DashboardSidebar'
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Profile = {
@@ -57,11 +61,10 @@ function scoreDashOffset(score: number) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: { userId: string }
+export default async function ProfilePage(props: {
+  params: Promise<{ userId: string }>
 }) {
+  const params = await props.params;
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) redirect('/login')
 
@@ -78,10 +81,10 @@ export default async function ProfilePage({
 
   const isOwnProfile = profile.user_id === session.user.id
 
-  // Fetch viewer's own profile id (for endorse logic)
+  // Fetch viewer's own profile (for navbar/sidebar and logic)
   const { data: viewerProfile } = await supabaseAdmin
     .from('profiles')
-    .select('id')
+    .select('id, full_name, avatar_url, score')
     .eq('user_id', session.user.id)
     .single()
 
@@ -154,105 +157,12 @@ export default async function ProfilePage({
       <div className="bg-[#0e1322] min-h-screen dot-grid overflow-x-hidden">
 
         {/* ── Top Nav ── */}
-        <nav
-          className="hidden md:flex fixed top-0 w-full justify-between items-center px-6 z-50"
-          style={{
-            height: '60px',
-            background: 'rgba(14,19,34,0.8)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(173,198,255,0.08)',
-            boxShadow: '0 4px 30px rgba(0,0,0,0.1)',
-          }}
-        >
-          <div className="flex items-center gap-8">
-            <Link href="/dashboard">
-              <span style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 900, letterSpacing: '-0.05em', color: '#adc6ff', cursor: 'pointer' }}>
-                PROJECT_HUB
-              </span>
-            </Link>
-            <nav className="flex gap-6">
-              {['Discover', 'Labs', 'Teams', 'Archive'].map(item => (
-                <a key={item} href="#"
-                  style={{ fontSize: '13px', fontWeight: 500, color: '#c2c6d6', fontFamily: 'DM Mono' }}
-                  className="hover:text-[#adc6ff] transition-colors px-2 py-1">
-                  {item}
-                </a>
-              ))}
-            </nav>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/notifications">
-              <button className="p-2 hover:text-[#adc6ff] transition-all" style={{ color: '#c2c6d6' }}>
-                <span className="material-symbols-outlined">notifications</span>
-              </button>
-            </Link>
-            <Link href="/profile/edit">
-              <button className="p-2 hover:text-[#adc6ff] transition-all" style={{ color: '#c2c6d6' }}>
-                <span className="material-symbols-outlined">settings</span>
-              </button>
-            </Link>
-          </div>
-        </nav>
+        <DashboardNavbar profile={viewerProfile} />
 
         <div className="flex pt-[60px] min-h-screen">
 
           {/* ── Sidebar ── */}
-          <aside
-            className="hidden md:flex fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex-col py-4 z-40"
-            style={{ background: 'rgba(9,14,28,0.9)', backdropFilter: 'blur(24px)', borderRight: '1px solid rgba(107,216,203,0.08)' }}
-          >
-            {/* Project branding */}
-            <div className="px-6 mb-8">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded flex items-center justify-center neon-secondary"
-                  style={{ background: 'rgba(107,216,203,0.08)', border: '1px solid rgba(107,216,203,0.25)' }}>
-                  <span className="material-symbols-outlined" style={{ color: '#6bd8cb' }}>school</span>
-                </div>
-                <div>
-                  <h2 style={{ fontFamily: 'Syne', color: '#6bd8cb', fontWeight: 800, fontSize: '16px', textTransform: 'uppercase' }}>
-                    {profile.full_name.split(' ')[0]}
-                  </h2>
-                  <p style={{ fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(194,198,214,0.5)', marginTop: '2px' }}>
-                    {profile.department ?? 'University'}
-                  </p>
-                </div>
-              </div>
-              {isOwnProfile && (
-                <Link href="/projects/create">
-                  <button className="w-full py-3 neon-primary transition-colors hover:bg-[#adc6ff]"
-                    style={{ background: '#4d8eff', color: '#002e6a', fontFamily: 'DM Mono', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-                    POST_PROJECT
-                  </button>
-                </Link>
-              )}
-            </div>
-
-            {/* Nav */}
-            <nav className="flex-1 flex flex-col" style={{ fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              {[
-                { href: '/dashboard', icon: 'grid_view', label: 'Dashboard' },
-                { href: '#active', icon: 'group', label: 'Active Projects' },
-                { href: '#completed', icon: 'inventory_2', label: 'Completed' },
-                { href: '#skills', icon: 'terminal', label: 'Skills' },
-              ].map(item => (
-                <a key={item.label} href={item.href}
-                  className="flex items-center gap-4 py-3 px-6 transition-all hover:bg-[#29a195]/10"
-                  style={{ color: 'rgba(194,198,214,0.6)' }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>{item.icon}</span>
-                  {item.label}
-                </a>
-              ))}
-            </nav>
-
-            <div className="px-6 pt-4" style={{ borderTop: '1px solid rgba(66,71,84,0.15)', fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-              <Link href="/dashboard">
-                <a className="flex items-center gap-4 py-2 transition-all hover:text-[#6bd8cb]" style={{ color: 'rgba(194,198,214,0.6)' }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
-                  Back to Feed
-                </a>
-              </Link>
-            </div>
-          </aside>
+          <DashboardSidebar profile={viewerProfile} session={session} />
 
           {/* ── Main Content ── */}
           <main className="md:ml-64 w-full p-6 lg:p-10 overflow-y-auto custom-scrollbar">
@@ -682,41 +592,6 @@ export default async function ProfilePage({
             </div>
           </main>
         </div>
-
-        {/* Mobile Bottom Nav */}
-        <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 px-4"
-          style={{ background: 'rgba(14,19,34,0.9)', backdropFilter: 'blur(20px)', borderTop: '1px solid rgba(173,198,255,0.08)' }}>
-          <Link href="/dashboard">
-            <button className="flex flex-col items-center gap-1" style={{ color: '#c2c6d6' }}>
-              <span className="material-symbols-outlined">grid_view</span>
-              <span style={{ fontFamily: 'DM Mono', fontSize: '9px', textTransform: 'uppercase' }}>Feed</span>
-            </button>
-          </Link>
-          <button className="flex flex-col items-center gap-1" style={{ color: '#adc6ff' }}>
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
-            <span style={{ fontFamily: 'DM Mono', fontSize: '9px', textTransform: 'uppercase' }}>Profile</span>
-          </button>
-          <div className="relative -top-6">
-            <Link href="/projects/create">
-              <button className="w-14 h-14 rounded-full flex items-center justify-center"
-                style={{ background: '#4d8eff', color: '#002e6a', boxShadow: '0 4px 20px rgba(77,142,255,0.3)' }}>
-                <span className="material-symbols-outlined">add</span>
-              </button>
-            </Link>
-          </div>
-          <Link href="/notifications">
-            <button className="flex flex-col items-center gap-1" style={{ color: '#c2c6d6' }}>
-              <span className="material-symbols-outlined">notifications</span>
-              <span style={{ fontFamily: 'DM Mono', fontSize: '9px', textTransform: 'uppercase' }}>Alerts</span>
-            </button>
-          </Link>
-          <Link href="/chat">
-            <button className="flex flex-col items-center gap-1" style={{ color: '#c2c6d6' }}>
-              <span className="material-symbols-outlined">chat</span>
-              <span style={{ fontFamily: 'DM Mono', fontSize: '9px', textTransform: 'uppercase' }}>Chat</span>
-            </button>
-          </Link>
-        </nav>
 
         {/* Background particles */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ opacity: 0.25 }}>

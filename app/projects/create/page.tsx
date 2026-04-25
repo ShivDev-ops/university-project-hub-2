@@ -6,6 +6,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import DashboardNavbar from '@/components/DashboardNavbar'
+import DashboardSidebar from '@/components/DashboardSidebar'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -236,146 +238,12 @@ export default function CreateProjectPage() {
       <div className="bg-[#0e1322] min-h-screen dot-grid overflow-x-hidden">
 
         {/* ── Top Nav ── */}
-        <nav
-          className="hidden md:flex fixed top-0 w-full justify-between items-center px-6 py-3 z-50"
-          style={{
-            background: 'rgba(14,19,34,0.6)',
-            backdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(66,71,84,0.15)',
-            boxShadow: '0 0 20px rgba(77,142,255,0.08)',
-            height: '60px',
-          }}
-        >
-          <div className="flex items-center gap-8">
-            <Link href="/dashboard">
-              <span style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 900, letterSpacing: '-0.05em', color: '#adc6ff', cursor: 'pointer' }}>
-                PROJECT_HUB
-              </span>
-            </Link>
-            <nav className="hidden md:flex items-center gap-6">
-              {['Discover', 'Labs', 'Teams', 'Archive'].map(item => (
-                <a key={item} href="#"
-                  style={{ fontSize: '13px', fontWeight: 500, color: '#c2c6d6', fontFamily: 'DM Mono' }}
-                  className="hover:text-[#adc6ff] transition-colors">
-                  {item}
-                </a>
-              ))}
-            </nav>
-          </div>
-          <div className="flex items-center gap-3">
-            {autoSavedAt && (
-              <div className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-mono"
-                style={{ color: '#6bd8cb', background: 'rgba(107,216,203,0.08)', border: '1px solid rgba(107,216,203,0.2)' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>cloud_done</span>
-                AUTO-SAVED: {autoSavedAt}
-              </div>
-            )}
-            <Link href="/notifications">
-              <button className="p-2 hover:bg-[#4d8eff]/20 rounded-lg transition-all">
-                <span className="material-symbols-outlined" style={{ color: '#c2c6d6' }}>notifications</span>
-              </button>
-            </Link>
-            <Link href="/profile/edit">
-              <div className="w-8 h-8 rounded-full border-2 overflow-hidden" style={{ borderColor: '#adc6ff' }}>
-                {userProfile?.avatar_url ? (
-                  <img src={userProfile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center" style={{ background: '#25293a' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#adc6ff' }}>person</span>
-                  </div>
-                )}
-              </div>
-            </Link>
-          </div>
-        </nav>
+        <DashboardNavbar profile={userProfile} />
 
         <div className="flex pt-[60px] min-h-screen">
 
           {/* ── Sidebar ── */}
-          <aside
-            className="hidden md:flex fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex-col py-4 z-40"
-            style={{ background: 'rgba(9,14,28,0.8)', backdropFilter: 'blur(24px)', borderRight: '1px solid rgba(66,71,84,0.15)' }}
-          >
-            {/* User info */}
-            <div className="px-6 mb-8 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)' }}>
-                <span className="material-symbols-outlined" style={{ color: '#6bd8cb' }}>school</span>
-              </div>
-              <div>
-                <div style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#6bd8cb', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                  {userProfile?.full_name || session?.user?.name || 'Scholar'}
-                </div>
-                <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.6)', textTransform: 'uppercase' }}>
-                  Score: {userProfile?.score || 500}
-                </div>
-              </div>
-            </div>
-
-            {/* Nav links */}
-            <div className="px-4 space-y-1 flex-1">
-              <div style={{ fontFamily: 'DM Mono', fontSize: '10px', fontWeight: 700, color: 'rgba(194,198,214,0.4)', padding: '8px', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-                Overview
-              </div>
-              {[
-                { href: '/dashboard', icon: 'grid_view', label: 'Dashboard' },
-                { href: '/projects/create', icon: 'rocket_launch', label: 'Post Project', active: true },
-                { href: '/profile/edit', icon: 'manage_accounts', label: 'My Profile' },
-                { href: '/chat', icon: 'chat', label: 'Messages' },
-              ].map(item => (
-                <Link key={item.href} href={item.href}
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#25293a] transition-all"
-                  style={{
-                    background: item.active ? 'rgba(77,142,255,0.1)' : 'transparent',
-                    color: item.active ? '#adc6ff' : 'rgba(194,198,214,0.7)',
-                    borderRight: item.active ? '4px solid #adc6ff' : '4px solid transparent',
-                  }}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>{item.icon}</span>
-                  <span style={{ fontFamily: 'DM Mono', fontSize: '12px' }}>{item.label}</span>
-                </Link>
-              ))}
-              <div style={{ fontFamily: 'DM Mono', fontSize: '10px', fontWeight: 700, color: 'rgba(194,198,214,0.4)', padding: '16px 8px 8px', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
-                Workspace
-              </div>
-              <Link href="/notifications"
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#25293a] transition-all"
-                style={{ color: 'rgba(194,198,214,0.7)' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>notifications</span>
-                <span style={{ fontFamily: 'DM Mono', fontSize: '12px' }}>Notifications</span>
-              </Link>
-            </div>
-
-            {/* Score widget */}
-            <div className="px-4 mt-auto">
-              <div className="p-4 rounded-xl glass-panel ghost-border">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="relative w-10 h-10">
-                    <svg className="w-full h-full" style={{ transform: 'rotate(-90deg)' }}>
-                      <circle cx="20" cy="20" r="16" fill="transparent" stroke="#25293a" strokeWidth="3" />
-                      <circle cx="20" cy="20" r="16" fill="transparent" stroke="#6bd8cb" strokeWidth="3"
-                        strokeDasharray="100"
-                        strokeDashoffset={100 - ((userProfile?.score || 500) / 1000) * 100} />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center"
-                      style={{ fontFamily: 'DM Mono', fontSize: '9px', fontWeight: 700, color: '#dee1f7' }}>
-                      {userProfile?.score || 500}
-                    </div>
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.6)' }}>ACCOUNTABILITY</div>
-                    <div style={{ fontSize: '12px', fontWeight: 700, color: '#6bd8cb' }}>
-                      {(userProfile?.score || 500) >= 700 ? 'Vanguard Elite' :
-                       (userProfile?.score || 500) >= 500 ? 'Active Scholar' : 'Probation'}
-                    </div>
-                  </div>
-                </div>
-                <div className="h-1 w-full rounded-full overflow-hidden" style={{ background: '#25293a' }}>
-                  <div className="h-full rounded-full"
-                    style={{ background: '#6bd8cb', width: `${((userProfile?.score || 500) / 1000) * 100}%` }} />
-                </div>
-              </div>
-            </div>
-          </aside>
+          <DashboardSidebar profile={userProfile} session={session} />
 
           {/* ── Main Content ── */}
           <main className="md:ml-64 w-full p-6 lg:p-10 overflow-y-auto custom-scrollbar">

@@ -19,8 +19,9 @@ type ApplicationWithProject = {
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -60,7 +61,7 @@ export async function PATCH(
         filled_slots
       )
     `)
-    .eq('id', params.id)
+    .eq('id', id)
     .single() as { data: ApplicationWithProject | null }
 
   if (!application) {
@@ -103,7 +104,7 @@ export async function PATCH(
       status,
       updated_at: new Date().toISOString(),
     })
-    .eq('id', params.id)
+    .eq('id', id)
 
   if (updateError) {
     console.error('Application update error:', updateError)
@@ -148,7 +149,7 @@ export async function PATCH(
         link:     `/projects/${application.project.id}`,
         metadata: {
           project_id:     application.project.id,
-          application_id: params.id,
+          application_id: id,
         },
         read: false,
       })

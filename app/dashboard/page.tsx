@@ -6,6 +6,10 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import Link from 'next/link'
+import DashboardNavbar from '@/components/DashboardNavbar'
+import DashboardSidebar from '@/components/DashboardSidebar'
+import DashboardSearchBar from '@/components/DashboardSearchBar'
+import DashboardProjectCard from '@/components/DashboardProjectCard'
 
 type Project = {
   id: string
@@ -92,158 +96,17 @@ export default async function DashboardPage() {
       <div className="bg-[#0e1322] min-h-screen selection:bg-[#4d8eff]/30">
 
         {/* Top Nav */}
-        <header className="fixed top-0 w-full h-[60px] backdrop-blur-xl border-b flex justify-between items-center px-6 z-50"
-          style={{background:'rgba(14,19,34,0.6)', borderColor:'rgba(66,71,84,0.15)', boxShadow:'0 0 20px rgba(77,142,255,0.1)'}}>
-          <div className="flex items-center gap-8">
-            <div style={{fontFamily:'Syne', fontSize:'20px', fontWeight:900, letterSpacing:'-0.05em', color:'#adc6ff'}}>
-              PROJECT_HUB
-            </div>
-            <nav className="hidden md:flex items-center gap-6">
-              <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#adc6ff', borderBottom:'2px solid #adc6ff', paddingBottom:'4px'}}>Discover</a>
-              <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Labs</a>
-              <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Teams</a>
-              <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Archive</a>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/notifications">
-              <button className="p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20">
-                <span className="material-symbols-outlined" style={{color:'#c2c6d6'}}>notifications</span>
-              </button>
-            </Link>
-            <button className="p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20">
-              <span className="material-symbols-outlined" style={{color:'#c2c6d6'}}>terminal</span>
-            </button>
-            <Link href="/profile/edit">
-              <div className="w-8 h-8 rounded-full border-2 overflow-hidden" style={{borderColor:'#adc6ff'}}>
-                {profile?.avatar_url ? (
-                  <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center" style={{background:'#25293a'}}>
-                    <span className="material-symbols-outlined" style={{fontSize:'16px', color:'#adc6ff'}}>person</span>
-                  </div>
-                )}
-              </div>
-            </Link>
-          </div>
-        </header>
+        <DashboardNavbar profile={profile} />
 
         <div className="flex pt-[60px] min-h-screen dot-grid">
 
-          {/* Sidebar */}
-          <aside className="fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex flex-col py-4 z-40"
-            style={{background:'rgba(9,14,28,0.8)', backdropFilter:'blur(24px)', borderRight:'1px solid rgba(66,71,84,0.15)'}}>
-
-            {/* User info */}
-            <div className="px-6 mb-8 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{background:'#25293a', border:'1px solid rgba(66,71,84,0.3)'}}>
-                <span className="material-symbols-outlined" style={{color:'#6bd8cb'}}>school</span>
-              </div>
-              <div>
-                <div style={{fontFamily:'DM Mono', fontSize:'12px', color:'#6bd8cb', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.1em'}}>
-                  {profile?.full_name || session.user.name || 'Scholar'}
-                </div>
-                <div style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)', textTransform:'uppercase'}}>
-                  Score: {profile?.score ?? 500}
-                </div>
-              </div>
-            </div>
-
-            {/* Nav links */}
-            <div className="px-4 space-y-1 flex-1">
-              <div style={{fontFamily:'DM Mono', fontSize:'10px', fontWeight:700, color:'rgba(194,198,214,0.4)', padding:'8px', textTransform:'uppercase', letterSpacing:'0.2em'}}>
-                Overview
-              </div>
-              <a href="#" className="flex items-center gap-3 px-3 py-2.5 rounded-lg"
-                style={{background:'rgba(77,142,255,0.1)', color:'#adc6ff', borderRight:'4px solid #adc6ff', boxShadow:'4px 0 15px -5px rgba(77,142,255,0.4)'}}>
-                <span className="material-symbols-outlined" style={{fontSize:'18px'}}>grid_view</span>
-                <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>Dashboard</span>
-              </a>
-              <Link href="/projects/create" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#25293a] transition-all"
-                style={{color:'rgba(194,198,214,0.7)'}}>
-                <span className="material-symbols-outlined" style={{fontSize:'18px'}}>rocket_launch</span>
-                <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>Post Project</span>
-              </Link>
-              <Link href="/profile/edit" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#25293a] transition-all"
-                style={{color:'rgba(194,198,214,0.7)'}}>
-                <span className="material-symbols-outlined" style={{fontSize:'18px'}}>manage_accounts</span>
-                <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>My Profile</span>
-              </Link>
-              <Link href="/chat" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#25293a] transition-all"
-                style={{color:'rgba(194,198,214,0.7)'}}>
-                <span className="material-symbols-outlined" style={{fontSize:'18px'}}>chat</span>
-                <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>Messages</span>
-              </Link>
-              <div style={{fontFamily:'DM Mono', fontSize:'10px', fontWeight:700, color:'rgba(194,198,214,0.4)', padding:'16px 8px 8px', textTransform:'uppercase', letterSpacing:'0.2em'}}>
-                Workspace
-              </div>
-              <Link href="/notifications" className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-[#25293a] transition-all"
-                style={{color:'rgba(194,198,214,0.7)'}}>
-                <span className="material-symbols-outlined" style={{fontSize:'18px'}}>notifications</span>
-                <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>Notifications</span>
-              </Link>
-            </div>
-
-            {/* Score widget */}
-            <div className="px-4 mt-auto mb-4">
-              <div className="p-4 rounded-xl glass-card relative overflow-hidden"
-                style={{border:'1px solid rgba(66,71,84,0.15)'}}>
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="relative w-10 h-10">
-                    <svg className="w-full h-full" style={{transform:'rotate(-90deg)'}}>
-                      <circle cx="20" cy="20" r="16" fill="transparent" stroke="#25293a" strokeWidth="3" />
-                      <circle cx="20" cy="20" r="16" fill="transparent" stroke="#6bd8cb" strokeWidth="3"
-                        strokeDasharray="100"
-                        strokeDashoffset={100 - ((profile?.score ?? 500) / 1000) * 100} />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center"
-                      style={{fontFamily:'DM Mono', fontSize:'10px', fontWeight:700}}>
-                      {profile?.score ?? 500}
-                    </div>
-                  </div>
-                  <div>
-                    <div style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)'}}>ACCOUNTABILITY</div>
-                    <div style={{fontSize:'12px', fontWeight:700, color:'#6bd8cb'}}>
-                      {(profile?.score ?? 500) >= 700 ? 'Vanguard Elite' :
-                       (profile?.score ?? 500) >= 500 ? 'Active Scholar' : 'Probation'}
-                    </div>
-                  </div>
-                </div>
-                <div className="h-1 w-full rounded-full overflow-hidden" style={{background:'#25293a'}}>
-                  <div className="h-full rounded-full" style={{background:'#6bd8cb', width:`${((profile?.score ?? 500) / 1000) * 100}%`}} />
-                </div>
-              </div>
-            </div>
-          </aside>
+          <DashboardSidebar profile={profile} session={session} />
 
           {/* Main Content */}
           <main className="ml-64 w-full p-8">
 
             {/* Search Bar */}
-            <div className="mb-8 max-w-5xl mx-auto">
-              <div className="relative group">
-                <div className="absolute -inset-1 rounded-2xl blur opacity-25 transition duration-500 group-focus-within:opacity-75"
-                  style={{background:'linear-gradient(to right, rgba(173,198,255,0.2), rgba(208,188,255,0.2))'}} />
-                <div className="relative flex items-center rounded-xl px-6 py-4"
-                  style={{background:'rgba(22,27,43,0.8)', backdropFilter:'blur(16px)', border:'1px solid rgba(66,71,84,0.2)'}}>
-                  <span className="material-symbols-outlined mr-4" style={{color:'#8c909f'}}>search</span>
-                  <input
-                    className="bg-transparent border-none focus:ring-0 w-full font-medium"
-                    placeholder="Search projects by skill or description... (AI search coming in Phase 4)"
-                    style={{color:'#dee1f7', outline:'none'}}
-                    disabled
-                  />
-                  <div className="flex items-center gap-2 px-3 py-1 rounded-full"
-                    style={{background:'rgba(208,188,255,0.1)', border:'1px solid rgba(208,188,255,0.2)'}}>
-                    <span className="material-symbols-outlined text-sm" style={{color:'#d0bcff', fontSize:'16px'}}>bolt</span>
-                    <span style={{fontFamily:'DM Mono', fontSize:'10px', fontWeight:700, color:'#d0bcff', textTransform:'uppercase'}}>
-                      Powered by AI
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <DashboardSearchBar />
 
             {/* Filter + Post Button */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-8 max-w-5xl mx-auto">
@@ -272,85 +135,9 @@ export default async function DashboardPage() {
             {/* Project Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
               {projectsWithOwners.length > 0 ? (
-                projectsWithOwners.map((project) => {
-                  const spotsLeft = project.slots - project.filled_slots
-                  const score = project.owner?.score ?? 0
-                  const scoreColor = score >= 600 ? '#34d399' : score >= 400 ? '#fbbf24' : '#fb7185'
-
-                  return (
-                    <div key={project.id} className="card-hover relative rounded-2xl overflow-hidden"
-                      style={{background:'rgba(26,31,47,0.4)', backdropFilter:'blur(16px)', border:'1px solid rgba(66,71,84,0.15)'}}>
-                      <div className="p-6">
-
-                        {/* Header */}
-                        <div className="flex justify-between items-start mb-4">
-                          <div className="flex flex-wrap gap-2">
-                            <span style={{padding:'2px 8px', borderRadius:'4px', background: spotsLeft > 0 ? 'rgba(173,198,255,0.1)' : 'rgba(66,71,84,0.2)', color: spotsLeft > 0 ? '#adc6ff' : '#8c909f', fontSize:'10px', fontWeight:700, fontFamily:'DM Mono', textTransform:'uppercase'}}>
-                              {spotsLeft > 0 ? 'Open' : 'Full'}
-                            </span>
-                            <span style={{fontSize:'10px', color:'rgba(194,198,214,0.6)', fontFamily:'DM Mono'}}>
-                              {new Date(project.created_at).toLocaleDateString()}
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-1" style={{fontSize:'10px', color:'rgba(194,198,214,0.6)', fontFamily:'DM Mono'}}>
-                            <span className="material-symbols-outlined" style={{fontSize:'14px'}}>group</span>
-                            {spotsLeft} left
-                          </div>
-                        </div>
-
-                        {/* Title + desc */}
-                        <h3 style={{fontFamily:'Syne', fontSize:'20px', fontWeight:700, marginBottom:'8px', lineHeight:1.2, color:'#dee1f7'}}>
-                          {project.title}
-                        </h3>
-                        <p style={{color:'#c2c6d6', fontSize:'14px', marginBottom:'16px', lineHeight:1.6, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden'}}>
-                          {project.description}
-                        </p>
-
-                        {/* Skills */}
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {project.required_skills?.slice(0, 3).map((skill: string) => (
-                            <span key={skill} style={{padding:'4px 8px', borderRadius:'6px', background:'#25293a', fontSize:'10px', fontFamily:'DM Mono', color:'#c2c6d6'}}>
-                              {skill}
-                            </span>
-                          ))}
-                          {(project.required_skills?.length ?? 0) > 3 && (
-                            <span style={{padding:'4px 8px', borderRadius:'6px', background:'#25293a', fontSize:'10px', fontFamily:'DM Mono', color:'#8c909f'}}>
-                              +{project.required_skills.length - 3} more
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Footer */}
-                        <div className="pt-4 flex items-center justify-between"
-                          style={{borderTop:'1px solid rgba(66,71,84,0.1)'}}>
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center"
-                              style={{background:'#25293a', border:'1px solid rgba(66,71,84,0.3)'}}>
-                              {project.owner?.avatar_url ? (
-                                <img src={project.owner.avatar_url} className="w-full h-full object-cover" alt={project.owner.full_name} />
-                              ) : (
-                                <span className="material-symbols-outlined" style={{fontSize:'14px', color:'#adc6ff'}}>person</span>
-                              )}
-                            </div>
-                            <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)'}}>
-                              {project.owner?.full_name ?? 'Unknown'}
-                            </span>
-                            <span style={{fontFamily:'DM Mono', fontSize:'9px', fontWeight:700, padding:'1px 6px', borderRadius:'999px', background:`${scoreColor}20`, color: scoreColor}}>
-                              {score}
-                            </span>
-                          </div>
-                          <Link href={`/projects/${project.id}`}>
-                            <button className="flex items-center gap-1 text-xs font-bold hover:gap-2 transition-all"
-                              style={{color:'#adc6ff', fontFamily:'DM Mono'}}>
-                              View <span className="material-symbols-outlined" style={{fontSize:'16px'}}>arrow_forward</span>
-                            </button>
-                          </Link>
-                        </div>
-
-                      </div>
-                    </div>
-                  )
-                })
+                projectsWithOwners.map((project) => (
+                  <DashboardProjectCard key={project.id} project={project} />
+                ))
               ) : (
                 <div className="col-span-3 text-center py-20">
                   <span className="material-symbols-outlined" style={{fontSize:'48px', color:'#424754'}}>

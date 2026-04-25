@@ -6,6 +6,8 @@ import { useState, useEffect, useRef } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import DashboardNavbar from '@/components/DashboardNavbar'
+import DashboardSidebar from '@/components/DashboardSidebar'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -274,95 +276,8 @@ export default function EditProfilePage() {
           <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: 'rgba(208,188,255,0.04)', filter: 'blur(150px)' }} />
         </div>
 
-        {/* ── Top Nav ── */}
-        <header className="fixed top-0 w-full z-50 flex justify-between items-center px-6"
-          style={{ height:'64px', background:'rgba(14,19,34,0.8)', backdropFilter:'blur(20px)', boxShadow:'0 4px 20px rgba(14,19,34,0.5)', borderBottom:'1px solid rgba(77,142,255,0.08)' }}>
-          <div className="flex items-center gap-8">
-            <Link href="/dashboard">
-              <span style={{ fontFamily:'Syne', fontSize:'20px', fontWeight:900, letterSpacing:'-0.05em', color:'#adc6ff', cursor:'pointer' }}>
-                PROJECT_HUB
-              </span>
-            </Link>
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5"
-              style={{ background:'rgba(22,27,43,0.6)', border:'1px solid rgba(66,71,84,0.2)' }}>
-              <span className="material-symbols-outlined" style={{ color:'#8c909f', fontSize:'18px' }}>search</span>
-              <input placeholder="Search experiments..." style={{ background:'transparent', border:'none', outline:'none', fontSize:'13px', fontFamily:'DM Mono', color:'#dee1f7', width:'200px' }} />
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            {saved && (
-              <div className="flex items-center gap-2 px-3 py-1 animate-pulse"
-                style={{ background:'rgba(107,216,203,0.08)', border:'1px solid rgba(107,216,203,0.2)', fontFamily:'DM Mono', fontSize:'10px', color:'#6bd8cb' }}>
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background:'#6bd8cb' }} />
-                CHANGES SAVED
-              </div>
-            )}
-            {unsaved && !saved && (
-              <div className="flex items-center gap-2 px-3 py-1"
-                style={{ background:'rgba(251,191,36,0.08)', border:'1px solid rgba(251,191,36,0.2)', fontFamily:'DM Mono', fontSize:'10px', color:'#fbbf24' }}>
-                <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background:'#fbbf24' }} />
-                UNSAVED CHANGES
-              </div>
-            )}
-            <button className="material-symbols-outlined transition-all hover:text-[#6bd8cb]" style={{ color:'#c2c6d6' }}>notifications</button>
-            <button className="material-symbols-outlined transition-all hover:text-[#6bd8cb]" style={{ color:'#c2c6d6' }}>settings</button>
-            <div className="w-8 h-8 rounded-full overflow-hidden" style={{ border:'2px solid rgba(173,198,255,0.3)' }}>
-              {displayAvatar
-                ? <img src={displayAvatar} alt="Avatar" className="w-full h-full object-cover" />
-                : <div className="w-full h-full flex items-center justify-center" style={{ background:'#25293a' }}>
-                    <span className="material-symbols-outlined" style={{ fontSize:'16px', color:'#adc6ff' }}>person</span>
-                  </div>
-              }
-            </div>
-          </div>
-        </header>
-
-        {/* ── Sidebar ── */}
-        <nav className="fixed left-0 top-0 h-screen w-64 flex flex-col z-40 pt-24 pb-8"
-          style={{ background:'rgba(9,14,28,0.9)', backdropFilter:'blur(24px)', borderRight:'1px solid rgba(77,142,255,0.08)', boxShadow:'10px 0 30px rgba(77,142,255,0.05)' }}>
-          <div className="px-6 mb-8">
-            <h2 style={{ fontFamily:'Syne', fontWeight:700, fontSize:'20px', color:'#adc6ff' }}>PROJECT_HUB</h2>
-            <p style={{ fontFamily:'DM Mono', fontSize:'10px', textTransform:'uppercase', letterSpacing:'0.1em', color:'rgba(194,198,214,0.5)', marginTop:'4px' }}>
-              Academic HUD v1.0
-            </p>
-          </div>
-
-          <div className="flex-1 space-y-1">
-            {[
-              { href:'/dashboard', icon:'grid_view', label:'Dashboard' },
-              { href:'/chat', icon:'chat', label:'Messages' },
-              { href:'#skills', icon:'psychology', label:'Skills' },
-              { href:'/notifications', icon:'notifications', label:'Notifications' },
-            ].map(item => (
-              <Link 
-                key={item.label} 
-                href={item.href}
-                className="flex items-center gap-3 px-6 py-3 transition-all hover:translate-x-1 duration-300 hover:text-[#adc6ff] hover:bg-[#4d8eff]/5"
-                style={{ fontFamily:'DM Mono', fontSize:'11px', textTransform:'uppercase', letterSpacing:'0.15em', color:'rgba(194,198,214,0.6)' }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize:'20px' }}>{item.icon}</span>
-                {item.label}
-              </Link>
-            ))}
-          </div>
-
-          <div className="px-6 mb-6">
-            <Link href="/projects/create">
-              <button className="w-full py-3 font-bold transition-all hover:scale-[1.02]"
-                style={{ background:'#4d8eff', color:'#002e6a', fontFamily:'DM Mono', fontSize:'11px', textTransform:'uppercase', letterSpacing:'0.2em', boxShadow:'0 0 15px rgba(77,142,255,0.3)' }}>
-                New Experiment
-              </button>
-            </Link>
-          </div>
-
-          <div className="px-6 pt-4" style={{ borderTop:'1px solid rgba(66,71,84,0.15)' }}>
-            <a href="#" className="flex items-center gap-3 py-3 transition-colors hover:text-[#adc6ff]"
-              style={{ fontFamily:'DM Mono', fontSize:'11px', textTransform:'uppercase', letterSpacing:'0.15em', color:'rgba(194,198,214,0.6)' }}>
-              <span className="material-symbols-outlined" style={{ fontSize:'18px' }}>sensors</span>
-              System Status
-            </a>
-          </div>
-        </nav>
+        <DashboardNavbar profile={{ full_name: fullName, avatar_url: displayAvatar }} />
+        <DashboardSidebar profile={{ full_name: fullName, avatar_url: displayAvatar, score }} session={session} />
 
         {/* ── Main Content ── */}
         <main className="relative z-10 ml-64 pt-16 min-h-screen custom-scrollbar">
@@ -378,10 +293,28 @@ export default function EditProfilePage() {
                   Configure your academic footprint across the Hub.
                 </p>
               </div>
-              <div className="flex items-center gap-2 px-3 py-1 animate-pulse"
-                style={{ background:'rgba(107,216,203,0.05)', border:'1px solid rgba(107,216,203,0.2)', fontFamily:'DM Mono', fontSize:'10px', color:'#6bd8cb', borderRadius:'999px' }}>
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background:'#6bd8cb' }} />
-                SYSTEM: READY FOR UPDATE
+              <div className="flex flex-col items-end gap-2">
+                {saved && (
+                  <div className="flex items-center gap-2 px-3 py-1 animate-pulse"
+                    style={{ background:'rgba(107,216,203,0.08)', border:'1px solid rgba(107,216,203,0.2)', fontFamily:'DM Mono', fontSize:'10px', color:'#6bd8cb', borderRadius:'999px' }}>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background:'#6bd8cb' }} />
+                    CHANGES SAVED
+                  </div>
+                )}
+                {unsaved && !saved && (
+                  <div className="flex items-center gap-2 px-3 py-1"
+                    style={{ background:'rgba(251,191,36,0.08)', border:'1px solid rgba(251,191,36,0.2)', fontFamily:'DM Mono', fontSize:'10px', color:'#fbbf24', borderRadius:'999px' }}>
+                    <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background:'#fbbf24' }} />
+                    UNSAVED CHANGES
+                  </div>
+                )}
+                {!unsaved && !saved && (
+                  <div className="flex items-center gap-2 px-3 py-1 animate-pulse"
+                    style={{ background:'rgba(107,216,203,0.05)', border:'1px solid rgba(107,216,203,0.2)', fontFamily:'DM Mono', fontSize:'10px', color:'#6bd8cb', borderRadius:'999px' }}>
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background:'#6bd8cb' }} />
+                    SYSTEM: READY FOR UPDATE
+                  </div>
+                )}
               </div>
             </div>
 
