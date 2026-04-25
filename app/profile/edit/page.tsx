@@ -334,12 +334,14 @@ export default function EditProfilePage() {
               { href:'#skills', icon:'psychology', label:'Skills' },
               { href:'/notifications', icon:'notifications', label:'Notifications' },
             ].map(item => (
-              <Link key={item.label} href={item.href}>
-                <a className="flex items-center gap-3 px-6 py-3 transition-all hover:translate-x-1 duration-300 hover:text-[#adc6ff] hover:bg-[#4d8eff]/5"
-                  style={{ fontFamily:'DM Mono', fontSize:'11px', textTransform:'uppercase', letterSpacing:'0.15em', color:'rgba(194,198,214,0.6)' }}>
-                  <span className="material-symbols-outlined" style={{ fontSize:'20px' }}>{item.icon}</span>
-                  {item.label}
-                </a>
+              <Link 
+                key={item.label} 
+                href={item.href}
+                className="flex items-center gap-3 px-6 py-3 transition-all hover:translate-x-1 duration-300 hover:text-[#adc6ff] hover:bg-[#4d8eff]/5"
+                style={{ fontFamily:'DM Mono', fontSize:'11px', textTransform:'uppercase', letterSpacing:'0.15em', color:'rgba(194,198,214,0.6)' }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize:'20px' }}>{item.icon}</span>
+                {item.label}
               </Link>
             ))}
           </div>
