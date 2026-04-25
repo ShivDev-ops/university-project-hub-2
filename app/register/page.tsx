@@ -40,7 +40,7 @@ export default function RegisterPage() {
             Get started
           </h2>
           <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#8c909f', marginBottom:'32px'}}>
-            Sign up with your university Microsoft account to continue
+            Sign up with your email address to create anccount to continue
           </p>
 
           <button

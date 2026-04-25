@@ -76,13 +76,13 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} style={{display:'flex', flexDirection:'column', gap:'16px'}}>
             <div>
               <label style={{fontFamily:'DM Mono', fontSize:'10px', color:'#adc6ff', textTransform:'uppercase', letterSpacing:'0.15em', display:'block', marginBottom:'6px'}}>
-                University Email
+                Your email address
               </label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder="you@university.edu"
+                placeholder="email@example.com"
                 required
                 style={{width:'100%', background:'#161b2b', border:'1px solid rgba(66,71,84,0.5)', borderRadius:'10px', color:'#dee1f7', padding:'12px 14px', fontFamily:'DM Mono', fontSize:'14px', outline:'none', transition:'border-color 0.2s'}}
                 onFocus={e => e.target.style.borderColor = '#adc6ff'}
