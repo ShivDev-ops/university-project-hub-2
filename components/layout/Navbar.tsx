@@ -8,7 +8,7 @@ let profile = null
 if (session?.user?.id) {
 const { data } = await supabaseAdmin
 .from('profiles')
-.select('full_name, avatar_url, score')
+.select('user_id, full_name, avatar_url, score')
 .eq('user_id', session.user.id)
 .single()
 profile = data
@@ -47,7 +47,7 @@ notifications
 </span>
 </button>
 </Link>
-<Link href="/profile/edit">
+<Link href={profile?.user_id ? `/profile/${profile.user_id}` : '/profile/edit'}>
 <div className="w-8 h-8 rounded-full border-2 overflow-hidden"
 style={{ borderColor: '#adc6ff' }}>
 {profile?.avatar_url ? (

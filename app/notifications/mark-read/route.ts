@@ -10,6 +10,12 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('id, user_id')
+    .eq('user_id', session.user.id)
+    .single()
+
   let body: { id?: string } = {}
   try { body = await req.json() } catch { /* mark all */ }
 
@@ -19,13 +25,13 @@ export async function POST(req: Request) {
       .from('notifications')
       .update({ read: true })
       .eq('id', body.id)
-      .eq('user_id', session.user.id)   // enforce ownership
+      .in('user_id', profile ? [profile.user_id, profile.id] : [session.user.id])   // enforce ownership
   } else {
     // Mark ALL notifications read for this user
     await supabaseAdmin
       .from('notifications')
       .update({ read: true })
-      .eq('user_id', session.user.id)
+      .in('user_id', profile ? [profile.user_id, profile.id] : [session.user.id])
       .eq('read', false)
   }
 

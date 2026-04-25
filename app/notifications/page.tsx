@@ -10,15 +10,26 @@ import DashboardSidebar from '@/components/DashboardSidebar'
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-async function getNotifications(userId: string) {
+async function getNotifications(userIds: string[]) {
   const { data } = await supabaseAdmin
     .from('notifications')
     .select('*')
-    .eq('user_id', userId)
+    .in('user_id', userIds)
     .order('created_at', { ascending: false })
     .limit(60)
 
   return data || []
+}
+
+async function getApplicationStatusMap(applicationIds: string[]) {
+  if (applicationIds.length === 0) return new Map<string, string>()
+
+  const { data } = await supabaseAdmin
+    .from('applications')
+    .select('id, status')
+    .in('id', applicationIds)
+
+  return new Map((data || []).map((application: { id: string; status: string }) => [application.id, application.status]))
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -73,16 +84,29 @@ export default async function NotificationsPage() {
   const session = await getServerSession(authOptions)
   if (!session?.user?.id) redirect('/api/auth/signin')
 
-  const notifications = await getNotifications(session.user.id)
-  const unread = notifications.filter(n => !n.read)
-  const grouped = groupByDate(notifications)
-
   // Get user profile
   const { data: profile } = await supabaseAdmin
     .from('profiles')
-    .select('full_name, avatar_url, score')
+    .select('id, user_id, full_name, avatar_url, score')
     .eq('user_id', session.user.id)
     .single()
+
+  const notifications = profile
+    ? await getNotifications([profile.user_id, profile.id])
+    : []
+
+  const applicationIds = Array.from(
+    new Set(
+      notifications
+        .filter(notification => notification.type === 'application' && notification.metadata?.application_id)
+        .map(notification => notification.metadata.application_id as string)
+    )
+  )
+
+  const applicationStatusMap = await getApplicationStatusMap(applicationIds)
+
+  const unread = notifications.filter(n => !n.read)
+  const grouped = groupByDate(notifications)
 
   return (
     <>
@@ -169,7 +193,10 @@ export default async function NotificationsPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                   {items.map((notif: any, idx: number) => {
                     const cfg = iconMap[notif.type] || iconMap.system
-                    const isApplication = notif.type === 'application' && notif.metadata?.application_id
+                    const applicationId = notif.metadata?.application_id as string | undefined
+                    const applicationStatus = applicationId ? applicationStatusMap.get(applicationId) : undefined
+                    const isApplication = notif.type === 'application' && applicationId
+                    const isActionableApplication = isApplication && applicationStatus === 'pending'
 
                     return (
                       <div
@@ -216,10 +243,16 @@ export default async function NotificationsPage() {
                             </p>
 
                             {/* Accept / Reject inline actions for application notifications */}
-                            {isApplication && (
+                            {isApplication && !isActionableApplication && applicationStatus && applicationStatus !== 'pending' && (
+                              <div style={{ marginTop: '12px', padding: '8px 12px', border: '1px solid rgba(66,71,84,0.2)', background: 'rgba(66,71,84,0.08)', fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f' }}>
+                                Application already {applicationStatus}.
+                              </div>
+                            )}
+
+                            {isActionableApplication && (
                               <NotifActions
                                 mode="accept-reject"
-                                applicationId={notif.metadata.application_id}
+                                applicationId={applicationId}
                                 notifId={notif.id}
                                 applicantName={notif.metadata.applicant_name}
                                 applicantScore={notif.metadata.applicant_score}

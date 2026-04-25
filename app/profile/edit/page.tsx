@@ -124,7 +124,7 @@ export default function EditProfilePage() {
   // ── Mark unsaved on any change ──
   useEffect(() => {
     if (!loading) setUnsaved(true)
-  }, [fullName, department, year, bio, skills, githubUrl, portfolioUrl])
+  }, [fullName, department, year, bio, skills, githubUrl, portfolioUrl, avatarUrl])
 
   // ── Skill autocomplete ──
   useEffect(() => {
@@ -276,7 +276,7 @@ export default function EditProfilePage() {
           <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: 'rgba(208,188,255,0.04)', filter: 'blur(150px)' }} />
         </div>
 
-        <DashboardNavbar profile={{ full_name: fullName, avatar_url: displayAvatar }} />
+        <DashboardNavbar profile={{ user_id: session?.user?.id, full_name: fullName, avatar_url: displayAvatar }} />
         <DashboardSidebar profile={{ full_name: fullName, avatar_url: displayAvatar, score }} session={session} />
 
         {/* ── Main Content ── */}

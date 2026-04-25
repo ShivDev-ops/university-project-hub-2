@@ -2,6 +2,8 @@
 import Link from 'next/link'
 
 export default function DashboardNavbar({ profile }: { profile: any }) {
+  const profileHref = profile?.user_id ? `/profile/${profile.user_id}` : '/profile/edit'
+
   return (
     <header className="fixed top-0 w-full h-[60px] backdrop-blur-xl border-b flex justify-between items-center px-6 z-50"
       style={{background:'rgba(14,19,34,0.6)', borderColor:'rgba(66,71,84,0.15)', boxShadow:'0 0 20px rgba(77,142,255,0.1)'}}>
@@ -27,7 +29,7 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
         <button className="p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20">
           <span className="material-symbols-outlined" style={{color:'#c2c6d6'}}>terminal</span>
         </button>
-        <Link href="/profile/edit">
+        <Link href={profileHref}>
           <div className="w-8 h-8 rounded-full border-2 overflow-hidden" style={{borderColor:'#adc6ff'}}>
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />

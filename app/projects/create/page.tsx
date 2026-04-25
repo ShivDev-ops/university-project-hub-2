@@ -58,7 +58,7 @@ export default function CreateProjectPage() {
   const [autoSavedAt, setAutoSavedAt] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
-  const [userProfile, setUserProfile] = useState<{ full_name: string; score: number; avatar_url: string | null } | null>(null)
+  const [userProfile, setUserProfile] = useState<{ user_id: string; full_name: string; score: number; avatar_url: string | null } | null>(null)
   const [atProjectLimit, setAtProjectLimit] = useState(false)
 
   // ── Auto-save timestamp ──

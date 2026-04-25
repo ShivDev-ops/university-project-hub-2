@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 
 export default function DashboardSidebar({ profile, session }: { profile: any, session: any }) {
   const pathname = usePathname()
+  const profileHref = session?.user?.id ? `/profile/${session.user.id}` : '/profile/edit'
 
   return (
     <aside className="fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex flex-col py-4 z-40"
@@ -40,8 +41,8 @@ export default function DashboardSidebar({ profile, session }: { profile: any, s
           <span className="material-symbols-outlined" style={{fontSize:'18px'}}>rocket_launch</span>
           <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>Post Project</span>
         </Link>
-        <Link href="/profile/edit" className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${pathname === '/profile/edit' ? '' : 'hover:bg-[#25293a]'}`}
-          style={pathname === '/profile/edit' ? {background:'rgba(77,142,255,0.1)', color:'#adc6ff', borderRight:'4px solid #adc6ff', boxShadow:'4px 0 15px -5px rgba(77,142,255,0.4)'} : {color:'rgba(194,198,214,0.7)'}}>
+        <Link href={profileHref} className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${pathname.startsWith('/profile/') ? '' : 'hover:bg-[#25293a]'}`}
+          style={pathname.startsWith('/profile/') ? {background:'rgba(77,142,255,0.1)', color:'#adc6ff', borderRight:'4px solid #adc6ff', boxShadow:'4px 0 15px -5px rgba(77,142,255,0.4)'} : {color:'rgba(194,198,214,0.7)'}}>
           <span className="material-symbols-outlined" style={{fontSize:'18px'}}>manage_accounts</span>
           <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>My Profile</span>
         </Link>

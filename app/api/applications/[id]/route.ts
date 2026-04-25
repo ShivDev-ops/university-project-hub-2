@@ -35,10 +35,10 @@ export async function PATCH(
     )
   }
 
-  // Get caller's profile.id (PK) — owner_id on projects references profiles.id
+  // owner_id on projects uses profiles.user_id
   const { data: callerProfile } = await supabaseAdmin
     .from('profiles')
-    .select('id')
+    .select('id, user_id')
     .eq('user_id', session.user.id)
     .single()
 
@@ -69,9 +69,12 @@ export async function PATCH(
   }
 
   // Only the project owner can accept/reject
-  // application.project.owner_id = profiles.id (PK)
-  // callerProfile.id             = profiles.id (PK)
-  if (application.project.owner_id !== callerProfile.id) {
+  // application.project.owner_id and session identity both use profiles.user_id
+  const isOwner =
+    application.project.owner_id === callerProfile.user_id ||
+    application.project.owner_id === callerProfile.id
+
+  if (!isOwner) {
     return NextResponse.json(
       { error: 'Only the project owner can do this' },
       { status: 403 }
@@ -126,13 +129,12 @@ export async function PATCH(
     }
   }
 
-  // Notify the applicant
-  // applicant_id = profiles.id (PK) — need user_id for notifications table
+  // Resolve applicant profile so notifications can fall back across key shapes
   const { data: applicantProfile } = await supabaseAdmin
     .from('profiles')
-    .select('user_id')
-    .eq('id', application.applicant_id)
-    .single()
+    .select('id, user_id')
+    .or(`id.eq.${application.applicant_id},user_id.eq.${application.applicant_id}`)
+    .maybeSingle()
 
   if (applicantProfile) {
     const notifMessage =
@@ -140,19 +142,35 @@ export async function PATCH(
         ? `Your application to "${application.project.title}" was accepted! Welcome to the team.`
         : `Your application to "${application.project.title}" was not accepted this time.`
 
-    const { error: notifError } = await supabaseAdmin
+    const notificationPayload = {
+      type: status === 'accepted' ? 'accepted' : 'rejected',
+      message: notifMessage,
+      link: `/projects/${application.project.id}`,
+      metadata: {
+        project_id: application.project.id,
+        application_id: id,
+      },
+      read: false,
+    }
+
+    let { error: notifError } = await supabaseAdmin
       .from('notifications')
       .insert({
-        user_id:  applicantProfile.user_id,   // notifications use user_id not profiles.id
-        type:     status === 'accepted' ? 'accepted' : 'rejected',
-        message:  notifMessage,
-        link:     `/projects/${application.project.id}`,
-        metadata: {
-          project_id:     application.project.id,
-          application_id: id,
-        },
-        read: false,
+        ...notificationPayload,
+        user_id: applicantProfile.user_id,
       })
+
+    if (notifError && applicantProfile.id && applicantProfile.id !== applicantProfile.user_id) {
+      console.error('Notification insert failed with user_id, retrying as profile id:', notifError)
+      const { error: fallbackError } = await supabaseAdmin
+        .from('notifications')
+        .insert({
+          ...notificationPayload,
+          user_id: applicantProfile.id,
+        })
+
+      notifError = fallbackError
+    }
 
     if (notifError) {
       // Best-effort — don't fail the request

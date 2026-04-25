@@ -36,6 +36,7 @@ type Project = {
   created_at: string
   slots: number
   filled_slots: number
+  role?: 'owner' | 'member'
 }
 
 // ─── Score helpers ─────────────────────────────────────────────────────────────
@@ -62,7 +63,7 @@ function scoreDashOffset(score: number) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function ProfilePage(props: {
-  params: Promise<{ userId: string }>
+  params: Promise<{ userid: string }>
 }) {
   const params = await props.params;
   const session = await getServerSession(authOptions)
@@ -74,8 +75,8 @@ export default async function ProfilePage(props: {
     .select(
       'id, user_id, full_name, email, avatar_url, department, year, bio, skills, github_url, portfolio_url, score, created_at'
     )
-    .eq('id', params.userId)
-    .single()
+    .or(`user_id.eq.${params.userid},id.eq.${params.userid}`)
+    .maybeSingle()
 
   if (error || !profile) notFound()
 
@@ -84,31 +85,61 @@ export default async function ProfilePage(props: {
   // Fetch viewer's own profile (for navbar/sidebar and logic)
   const { data: viewerProfile } = await supabaseAdmin
     .from('profiles')
-    .select('id, full_name, avatar_url, score')
+    .select('id, user_id, full_name, avatar_url, score')
     .eq('user_id', session.user.id)
     .single()
 
-  // Fetch active projects (owned)
-  const { data: activeProjects } = await supabaseAdmin
+  // Fetch projects owned by the viewed profile (supports both legacy/current owner_id mapping)
+  const { data: ownedProjects } = await supabaseAdmin
     .from('projects')
     .select('id, title, description, required_skills, status, created_at, slots, filled_slots')
-    .eq('owner_id', profile.id)
-    .in('status', ['open', 'in_progress'])
+    .or(`owner_id.eq.${profile.user_id},owner_id.eq.${profile.id}`)
     .order('created_at', { ascending: false })
 
-  // Fetch completed projects
-  const { data: completedProjects } = await supabaseAdmin
-    .from('projects')
-    .select('id, title, description, required_skills, status, created_at, slots, filled_slots')
-    .eq('owner_id', profile.id)
-    .eq('status', 'completed')
-    .order('created_at', { ascending: false })
+  // Fetch projects where viewed profile is an accepted team member
+  const { data: membershipApps } = await supabaseAdmin
+    .from('applications')
+    .select('project_id')
+    .or(`applicant_id.eq.${profile.user_id},applicant_id.eq.${profile.id}`)
+    .eq('status', 'accepted')
+
+  const memberProjectIds = Array.from(new Set((membershipApps ?? []).map((a: { project_id: string }) => a.project_id)))
+
+  const { data: memberProjects } = memberProjectIds.length > 0
+    ? await supabaseAdmin
+        .from('projects')
+        .select('id, title, description, required_skills, status, created_at, slots, filled_slots')
+        .in('id', memberProjectIds)
+        .order('created_at', { ascending: false })
+    : { data: [] as Project[] }
+
+  const allProjectsMap = new Map<string, Project>()
+
+  for (const project of ownedProjects ?? []) {
+    allProjectsMap.set(project.id, { ...project, role: 'owner' })
+  }
+
+  for (const project of memberProjects ?? []) {
+    if (!allProjectsMap.has(project.id)) {
+      allProjectsMap.set(project.id, { ...project, role: 'member' })
+    }
+  }
+
+  const allProjects = Array.from(allProjectsMap.values())
+
+  const activeProjects = allProjects
+    .filter(project => project.status === 'open' || project.status === 'in_progress')
+    .sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at))
+
+  const completedProjects = allProjects
+    .filter(project => project.status === 'completed')
+    .sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at))
 
   // Check if viewer is a teammate on any shared project (for endorse button)
   const { data: sharedApps } = await supabaseAdmin
     .from('applications')
     .select('project_id')
-    .eq('applicant_id', viewerProfile?.id ?? '')
+    .or(`applicant_id.eq.${viewerProfile?.user_id ?? ''},applicant_id.eq.${viewerProfile?.id ?? ''}`)
     .eq('status', 'accepted')
 
   const sharedProjectIds = new Set((sharedApps ?? []).map((a: any) => a.project_id))
@@ -166,6 +197,16 @@ export default async function ProfilePage(props: {
 
           {/* ── Main Content ── */}
           <main className="md:ml-64 w-full p-6 lg:p-10 overflow-y-auto custom-scrollbar">
+            <div className="hidden md:flex items-center justify-between mb-8 px-1">
+              <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                Node ID: {profile.user_id.slice(0, 8).toUpperCase()}
+              </div>
+              {isOwnProfile && (
+                <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#6bd8cb', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                  Your Profile
+                </div>
+              )}
+            </div>
 
             {/* ── Hero Section ── */}
             <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16 items-center">
@@ -211,6 +252,10 @@ export default async function ProfilePage(props: {
                       style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#c2c6d6' }}>
                       <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#6bd8cb' }} />
                       {profile.department ?? 'Researcher'}
+                    </span>
+                    <span className="flex items-center gap-2 px-3 py-1"
+                      style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#c2c6d6' }}>
+                      Node ID: {profile.user_id.slice(0, 6).toUpperCase()}
                     </span>
                     {profile.year && (
                       <span className="flex items-center gap-2 px-3 py-1"
@@ -447,11 +492,11 @@ export default async function ProfilePage(props: {
                 <div className="flex items-end gap-4 mb-8">
                   <h2 style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: 'clamp(28px,4vw,40px)', textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1 }}>
                     Active<br />
-                    <span style={{ color: '#6bd8cb' }}>Research</span>
+                    <span style={{ color: '#6bd8cb' }}>Projects</span>
                   </h2>
                   <div className="flex-grow mb-2" style={{ borderBottom: '1px solid rgba(66,71,84,0.2)' }} />
                   <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '8px' }}>
-                    Current_Cycles
+                    Current_Projects
                   </span>
                 </div>
 
@@ -478,7 +523,7 @@ export default async function ProfilePage(props: {
                               {project.title}
                             </h4>
                             <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '10px' }}>
-                              Role: Owner
+                              Role: {project.role === 'member' ? 'Team Member' : 'Owner'}
                             </p>
                             <p style={{ fontSize: '12px', color: '#c2c6d6', marginBottom: '20px', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                               {project.description}
@@ -557,7 +602,7 @@ export default async function ProfilePage(props: {
                               {project.title}
                             </h4>
                             <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#6bd8cb', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '10px' }}>
-                              Role: Owner
+                              Role: {project.role === 'member' ? 'Team Member' : 'Owner'}
                             </p>
                             <p style={{ fontSize: '12px', color: '#c2c6d6', marginBottom: '14px', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                               {project.description}
@@ -592,6 +637,30 @@ export default async function ProfilePage(props: {
             </div>
           </main>
         </div>
+
+        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#0e1322]/90 backdrop-blur-xl border-t border-[#adc6ff]/10 z-50 flex justify-around items-center h-20 px-4">
+          <Link href="/dashboard" className="flex flex-col items-center gap-1 text-on-surface-variant">
+            <span className="material-symbols-outlined">grid_view</span>
+            <span className="text-[9px] font-['DM_Mono'] uppercase">Nodes</span>
+          </Link>
+          <Link href={`/profile/${profile.user_id}`} className="flex flex-col items-center gap-1 text-primary">
+            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>person</span>
+            <span className="text-[9px] font-['DM_Mono'] uppercase">Profile</span>
+          </Link>
+          <Link href="/projects/create" className="relative -top-6">
+            <div className="bg-primary-container text-on-primary-container w-14 h-14 rounded-full flex items-center justify-center shadow-lg shadow-primary/20">
+              <span className="material-symbols-outlined">add</span>
+            </div>
+          </Link>
+          <Link href="#active" className="flex flex-col items-center gap-1 text-on-surface-variant">
+            <span className="material-symbols-outlined">analytics</span>
+            <span className="text-[9px] font-['DM_Mono'] uppercase">Stats</span>
+          </Link>
+          <Link href="/notifications" className="flex flex-col items-center gap-1 text-on-surface-variant">
+            <span className="material-symbols-outlined">notifications</span>
+            <span className="text-[9px] font-['DM_Mono'] uppercase">Alerts</span>
+          </Link>
+        </nav>
 
         {/* Background particles */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ opacity: 0.25 }}>

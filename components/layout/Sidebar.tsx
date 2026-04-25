@@ -16,6 +16,7 @@ const workspaceItems = [
 ]
 export function Sidebar({ userName = 'Scholar', score = 500 }: SidebarProps) {
 const pathname = usePathname()
+const profileHref = '/profile/edit'
 const tierLabel =
 score >= 700 ? 'Vanguard Elite' :
 score >= 500 ? 'Active Scholar' : 'Probation'
@@ -49,10 +50,10 @@ Score: {score}
 {navItems.map(item => {
 const active = pathname === item.href
 return (
-<Link key={item.href} href={item.href}
+	<Link key={item.href} href={item.label === 'My Profile' ? profileHref : item.href}
 className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all"
 style={{
-background: active ? 'rgba(77,142,255,0.1)' : 'transparent',
+background: active || (item.label === 'My Profile' && pathname.startsWith('/profile/')) ? 'rgba(77,142,255,0.1)' : 'transparent',
 color: active ? '#adc6ff' : 'rgba(194,198,214,0.7)',
 }}>
 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>

@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
   const { data: profile, error } = await supabaseAdmin
     .from('profiles')
-    .select('id, full_name, avatar_url, score, skills, department, year, bio, github_url, portfolio_url')
+    .select('id, user_id, full_name, avatar_url, score, skills, department, year, bio, github_url, portfolio_url')
     .eq('user_id', userId)
     .single()
 
@@ -67,17 +67,36 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { bio, skills, github_url, full_name, academic_focus, fingerprint } = await req.json()
+    const {
+      bio,
+      skills,
+      github_url,
+      portfolio_url,
+      avatar_url,
+      full_name,
+      department,
+      year,
+      academic_focus,
+      fingerprint,
+    } = await req.json()
+
+    const normalizedYear = year === '' || year === null || year === undefined
+      ? null
+      : Number(year)
 
     const { error } = await supabaseAdmin
       .from('profiles')
       .update({
-        bio,
-        skills,
-        github_url,
-        full_name,
-        academic_focus,
-        fingerprint,
+        bio: bio ?? null,
+        skills: Array.isArray(skills) ? skills : [],
+        github_url: github_url ?? null,
+        portfolio_url: portfolio_url ?? null,
+        avatar_url: avatar_url ?? null,
+        full_name: full_name ?? null,
+        department: department ?? null,
+        year: Number.isFinite(normalizedYear) ? normalizedYear : null,
+        academic_focus: academic_focus ?? null,
+        fingerprint: fingerprint ?? null,
         profile_complete: true,
         updated_at: new Date().toISOString(),
       })

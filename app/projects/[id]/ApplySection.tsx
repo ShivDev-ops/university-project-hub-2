@@ -24,12 +24,14 @@ export function ApplySection({
   const [message, setMessage] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [warning, setWarning] = useState('')
   const [success, setSuccess] = useState(false)
   const router = useRouter()
 
   async function handleApply() {
     setLoading(true)
     setError('')
+    setWarning('')
     try {
       const res = await fetch('/api/applications', {
         method: 'POST',
@@ -39,6 +41,7 @@ export function ApplySection({
       const data = await res.json()
       if (!res.ok) { setError(data.error || 'Failed to apply'); return }
       setSuccess(true)
+      if (data.warning) setWarning(data.warning)
       setShowModal(false)
       router.refresh()
     } catch {
@@ -146,6 +149,12 @@ export function ApplySection({
         {success && (
           <div style={{ padding: '12px', background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.2)', marginBottom: '16px', fontFamily: 'DM Mono', fontSize: '11px', color: '#34d399' }}>
             ✓ Application sent! The owner will be notified.
+          </div>
+        )}
+
+        {warning && (
+          <div style={{ padding: '12px', background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.2)', marginBottom: '16px', fontFamily: 'DM Mono', fontSize: '11px', color: '#fbbf24' }}>
+            {warning}
           </div>
         )}
 

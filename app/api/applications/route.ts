@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'projectId is required' }, { status: 400 })
   }
 
-  // Get applicant profile — need both id (PK) and user_id for notification
+  // Get applicant profile using session user_id
   const { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('id, user_id, full_name, score')
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
   }
 
   // Guard: can't apply to own project
-  if (project.owner_id === profile.user_id) {
+  if (project.owner_id === profile.user_id || project.owner_id === profile.id) {
     return NextResponse.json({ error: 'You cannot apply to your own project' }, { status: 403 })
   }
 
@@ -58,10 +58,10 @@ export async function POST(req: Request) {
     .from('applications')
     .select('id')
     .eq('project_id', projectId)
-    .eq('applicant_id', profile.id)   // profiles.id (PK) per schema
-    .maybeSingle()
+    .or(`applicant_id.eq.${profile.user_id},applicant_id.eq.${profile.id}`)
+    .limit(1)
 
-  if (existing) {
+  if ((existing?.length ?? 0) > 0) {
     return NextResponse.json({ error: 'Already applied to this project' }, { status: 409 })
   }
 
@@ -69,19 +69,19 @@ export async function POST(req: Request) {
   const { count } = await supabaseAdmin
     .from('applications')
     .select('id', { count: 'exact', head: true })
-    .eq('applicant_id', profile.id)
+    .or(`applicant_id.eq.${profile.user_id},applicant_id.eq.${profile.id}`)
     .eq('status', 'accepted')
 
   if ((count ?? 0) >= 2) {
     return NextResponse.json({ error: 'You are already in 2 active projects' }, { status: 403 })
   }
 
-  // Insert application — applicant_id = profiles.id (PK) per schema
+  // Insert application — applicant_id uses profiles.user_id
   const { data: application, error } = await supabaseAdmin
     .from('applications')
     .insert({
       project_id:   projectId,
-      applicant_id: profile.id,         // profiles.id NOT auth.users.id
+      applicant_id: profile.user_id,
       message:      message?.trim() || null,
       status:       'pending',
       applied_at:   new Date().toISOString(),
@@ -94,27 +94,69 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  // Resolve owner profile deterministically so notifications can fall back across key shapes
+  const { data: ownerProfile } = await supabaseAdmin
+    .from('profiles')
+    .select('id, user_id')
+    .or(`user_id.eq.${project.owner_id},id.eq.${project.owner_id}`)
+    .maybeSingle()
+
+  if (!ownerProfile) {
+    console.error('Owner notification mapping failed for project owner_id:', project.owner_id)
+    return NextResponse.json(
+      {
+        success: true,
+        id: application.id,
+        warning: 'Application submitted, but owner notification could not be created.',
+      },
+      { status: 201 }
+    )
+  }
+
   // Fire notification to project owner
-  const { error: notifError } = await supabaseAdmin
+  const notificationPayload = {
+    type: 'application',
+    message: `${profile.full_name} applied to your project "${project.title}"`,
+    link: '/notifications',
+    metadata: {
+      application_id: application.id,
+      project_id: projectId,
+      applicant_id: profile.user_id,
+      applicant_name: profile.full_name,
+      applicant_score: profile.score,
+    },
+    read: false,
+  }
+
+  let { error: notifError } = await supabaseAdmin
     .from('notifications')
     .insert({
-      user_id:  project.owner_id,       // owner's user_id receives the notification
-      type:     'application',
-      message:  `${profile.full_name} applied to your project "${project.title}"`,
-      link:     `/notifications`,
-      metadata: {
-        application_id:  application.id,
-        project_id:      projectId,
-        applicant_id:    profile.id,    // profiles.id for DB lookups
-        applicant_name:  profile.full_name,
-        applicant_score: profile.score,
-      },
-      read: false,
+      ...notificationPayload,
+      user_id: ownerProfile.user_id,
     })
 
+  if (notifError && ownerProfile.id && ownerProfile.id !== ownerProfile.user_id) {
+    console.error('Notification insert failed with user_id, retrying as profile id:', notifError)
+    const { error: fallbackError } = await supabaseAdmin
+      .from('notifications')
+      .insert({
+        ...notificationPayload,
+        user_id: ownerProfile.id,
+      })
+
+    notifError = fallbackError
+  }
+
   if (notifError) {
-    // Don't fail — application is saved, notification is best-effort
     console.error('Notification error:', notifError)
+    return NextResponse.json(
+      {
+        success: true,
+        id: application.id,
+        warning: 'Application submitted, but owner notification failed to send.',
+      },
+      { status: 201 }
+    )
   }
 
   return NextResponse.json({ success: true, id: application.id }, { status: 201 })

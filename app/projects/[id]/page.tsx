@@ -152,10 +152,16 @@ export default async function ProjectDetailPage({
 
   let unreadCount = 0
   if (session?.user?.id) {
+    const { data: viewerProfile } = await supabaseAdmin
+      .from('profiles')
+      .select('id, user_id')
+      .eq('user_id', session.user.id)
+      .single()
+
     const { count } = await supabaseAdmin
       .from('notifications')
       .select('id', { count: 'exact', head: true })
-      .eq('user_id', session.user.id)
+      .in('user_id', viewerProfile ? [viewerProfile.user_id, viewerProfile.id] : [session.user.id])
       .eq('read', false)
     unreadCount = count ?? 0
   }
