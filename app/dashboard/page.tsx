@@ -103,7 +103,7 @@ export default async function DashboardPage() {
           <DashboardSidebar profile={profile} session={session} />
 
           {/* Main Content */}
-          <main className="ml-64 w-full p-8">
+          <main className="md:ml-64 w-full p-6 md:p-8">
 
             {/* Search Bar */}
             <DashboardSearchBar />

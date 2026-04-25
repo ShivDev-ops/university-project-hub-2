@@ -280,7 +280,7 @@ export default function EditProfilePage() {
         <DashboardSidebar profile={{ full_name: fullName, avatar_url: displayAvatar, score }} session={session} />
 
         {/* ── Main Content ── */}
-        <main className="relative z-10 ml-64 pt-16 min-h-screen custom-scrollbar">
+        <main className="relative z-10 md:ml-64 pt-16 min-h-screen custom-scrollbar">
           <div className="max-w-4xl mx-auto py-12 px-8">
 
             {/* ── Page header ── */}

@@ -7,7 +7,7 @@ export default function DashboardSidebar({ profile, session }: { profile: any, s
   const profileHref = session?.user?.id ? `/profile/${session.user.id}` : '/profile/edit'
 
   return (
-    <aside className="fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex flex-col py-4 z-40"
+    <aside className="hidden md:flex fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex-col py-4 z-40"
       style={{background:'rgba(9,14,28,0.8)', backdropFilter:'blur(24px)', borderRight:'1px solid rgba(66,71,84,0.15)'}}>
 
       {/* User info */}
