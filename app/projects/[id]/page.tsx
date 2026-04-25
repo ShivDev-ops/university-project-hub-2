@@ -5,6 +5,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ApplySection } from './ApplySection'
+import { DeleteProjectControl } from './DeleteProjectControl'
 import DashboardNavbar from '@/components/DashboardNavbar'
 import DashboardSidebar from '@/components/DashboardSidebar'
 
@@ -95,15 +96,15 @@ async function getUserContext(
     return { profile: null, isOwner: false, application: null, isTeamMember: false }
   }
 
-  // owner_id = profiles.user_id ✅ confirmed
-  const isOwner = projectOwnerId === profile.user_id
+  // owner_id can be stored as either profiles.user_id or profiles.id in older rows
+  const isOwner = projectOwnerId === profile.user_id || projectOwnerId === profile.id
 
-  // applicant_id = profiles.user_id ✅ (consistent with route.ts)
+  // applicant_id may exist in either identifier form depending on row age
   const { data: application } = await supabaseAdmin
     .from('applications')
     .select('id, status, message, created_at')
     .eq('project_id', projectId)
-    .eq('applicant_id', profile.user_id)
+    .or(`applicant_id.eq.${profile.user_id},applicant_id.eq.${profile.id}`)
     .maybeSingle()
 
   const isTeamMember = isOwner || application?.status === 'accepted'
@@ -531,6 +532,10 @@ export default async function ProjectDetailPage({
                     </span>
                   </div>
                 </section>
+
+                {isOwner && (
+                  <DeleteProjectControl projectId={project.id} projectTitle={project.title} />
+                )}
 
               </div>
             </div>

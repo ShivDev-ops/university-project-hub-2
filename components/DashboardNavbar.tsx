@@ -1,12 +1,35 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function DashboardNavbar({ profile }: { profile: any }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
   const pathname = usePathname()
   const profileHref = profile?.user_id ? `/profile/${profile.user_id}` : '/profile/edit'
+
+  useEffect(() => {
+    let active = true
+
+    async function loadUnreadCount() {
+      try {
+        const res = await fetch('/api/notifications/unread-count', { cache: 'no-store' })
+        if (!res.ok) return
+        const data = await res.json()
+        if (active) {
+          setUnreadCount(typeof data?.unreadCount === 'number' ? data.unreadCount : 0)
+        }
+      } catch {
+        if (active) setUnreadCount(0)
+      }
+    }
+
+    void loadUnreadCount()
+    return () => {
+      active = false
+    }
+  }, [])
 
   return (
     <>
@@ -27,8 +50,32 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
       </div>
       <div className="flex items-center gap-2 md:gap-4">
         <Link href="/notifications" className="hidden md:block">
-          <button className="p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20">
+          <button className="relative p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20" aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}>
             <span className="material-symbols-outlined" style={{color:'#c2c6d6'}}>notifications</span>
+            {unreadCount > 0 && (
+              <span
+                style={{
+                  position: 'absolute',
+                  top: 4,
+                  right: 4,
+                  minWidth: 16,
+                  height: 16,
+                  borderRadius: '999px',
+                  background: '#fb7185',
+                  color: '#fff',
+                  fontSize: '9px',
+                  fontFamily: 'DM Mono',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '0 4px',
+                  lineHeight: 1,
+                }}
+              >
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </button>
         </Link>
         <button className="hidden md:block p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20">

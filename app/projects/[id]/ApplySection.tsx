@@ -65,13 +65,13 @@ export function ApplySection({
           </span>
         </div>
         <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: 'rgba(194,198,214,0.6)', marginBottom: '16px' }}>
-          You created this project. Manage applications from the notifications panel.
+          You created this project. Review applicants from the notifications panel.
         </p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <a href={`/projects/${projectId}/applications`}
             style={{ display: 'block', padding: '10px 16px', background: 'rgba(107,216,203,0.1)', border: '1px solid rgba(107,216,203,0.2)', color: '#6bd8cb', fontFamily: 'DM Mono', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', textDecoration: 'none', textAlign: 'center' }}
             className="hover:bg-[#6bd8cb]/20 transition-all">
-            View Applications
+            View Applicants
           </a>
           <a href={`/projects/${projectId}/edit`}
             style={{ display: 'block', padding: '10px 16px', background: 'transparent', border: '1px solid rgba(66,71,84,0.3)', color: 'rgba(194,198,214,0.6)', fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', textDecoration: 'none', textAlign: 'center' }}

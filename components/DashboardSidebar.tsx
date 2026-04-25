@@ -1,10 +1,34 @@
 'use client'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 export default function DashboardSidebar({ profile, session }: { profile: any, session: any }) {
   const pathname = usePathname()
+  const [unreadCount, setUnreadCount] = useState(0)
   const profileHref = session?.user?.id ? `/profile/${session.user.id}` : '/profile/edit'
+
+  useEffect(() => {
+    let active = true
+
+    async function loadUnreadCount() {
+      try {
+        const res = await fetch('/api/notifications/unread-count', { cache: 'no-store' })
+        if (!res.ok) return
+        const data = await res.json()
+        if (active) {
+          setUnreadCount(typeof data?.unreadCount === 'number' ? data.unreadCount : 0)
+        }
+      } catch {
+        if (active) setUnreadCount(0)
+      }
+    }
+
+    void loadUnreadCount()
+    return () => {
+      active = false
+    }
+  }, [])
 
   return (
     <aside className="hidden md:flex fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex-col py-4 z-40"
@@ -59,6 +83,29 @@ export default function DashboardSidebar({ profile, session }: { profile: any, s
           style={pathname === '/notifications' ? {background:'rgba(77,142,255,0.1)', color:'#adc6ff', borderRight:'4px solid #adc6ff', boxShadow:'4px 0 15px -5px rgba(77,142,255,0.4)'} : {color:'rgba(194,198,214,0.7)'}}>
           <span className="material-symbols-outlined" style={{fontSize:'18px'}}>notifications</span>
           <span style={{fontFamily:'DM Mono', fontSize:'12px'}}>Notifications</span>
+          {unreadCount > 0 && (
+            <span
+              style={{
+                marginLeft: 'auto',
+                minWidth: 16,
+                height: 16,
+                borderRadius: '999px',
+                background: '#fb7185',
+                color: '#fff',
+                fontSize: '9px',
+                fontFamily: 'DM Mono',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 4px',
+                lineHeight: 1,
+              }}
+              aria-label={`${unreadCount} unread notifications`}
+            >
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
         </Link>
       </div>
 

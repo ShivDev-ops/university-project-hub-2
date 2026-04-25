@@ -3,6 +3,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 
 // ── Mark all read ──────────────────────────────────────────────────────────────
 
@@ -41,9 +42,10 @@ interface AcceptRejectProps {
   notifId: string
   applicantName: string
   applicantScore: number
+  applicantId?: string
 }
 
-function AcceptReject({ applicationId, notifId, applicantName, applicantScore }: AcceptRejectProps) {
+function AcceptReject({ applicationId, notifId, applicantName, applicantScore, applicantId }: AcceptRejectProps) {
   const [status, setStatus] = useState<'idle' | 'loading' | 'accepted' | 'rejected' | 'error'>('idle')
   const [confirm, setConfirm] = useState<'accept' | 'reject' | null>(null)
   const router = useRouter()
@@ -150,7 +152,7 @@ function AcceptReject({ applicationId, notifId, applicantName, applicantScore }:
         </div>
       ) : (
         /* Default buttons */
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           <button
             onClick={() => setConfirm('accept')}
             style={{
@@ -175,6 +177,28 @@ function AcceptReject({ applicationId, notifId, applicantName, applicantScore }:
           >
             ✕ Reject
           </button>
+          {applicantId && (
+            <Link href={`/profile/${applicantId}`} style={{ textDecoration: 'none' }}>
+              <button
+                style={{
+                  padding: '7px 18px',
+                  fontFamily: 'DM Mono',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  background: 'rgba(173,198,255,0.08)',
+                  color: '#adc6ff',
+                  border: '1px solid rgba(173,198,255,0.25)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  transition: 'all 0.15s',
+                }}
+                className="hover:bg-[#adc6ff]/20 transition-all"
+              >
+                View Profile
+              </button>
+            </Link>
+          )}
         </div>
       )}
     </div>
@@ -189,9 +213,10 @@ interface NotifActionsProps {
   notifId?: string
   applicantName?: string
   applicantScore?: number
+  applicantId?: string
 }
 
-export function NotifActions({ mode, applicationId, notifId, applicantName, applicantScore }: NotifActionsProps) {
+export function NotifActions({ mode, applicationId, notifId, applicantName, applicantScore, applicantId }: NotifActionsProps) {
   if (mode === 'mark-all') return <MarkAllRead />
   if (mode === 'accept-reject' && applicationId && notifId) {
     return (
@@ -200,6 +225,7 @@ export function NotifActions({ mode, applicationId, notifId, applicantName, appl
         notifId={notifId}
         applicantName={applicantName || 'Applicant'}
         applicantScore={applicantScore || 500}
+        applicantId={applicantId}
       />
     )
   }

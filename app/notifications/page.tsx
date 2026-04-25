@@ -256,6 +256,7 @@ export default async function NotificationsPage() {
                                 notifId={notif.id}
                                 applicantName={notif.metadata.applicant_name}
                                 applicantScore={notif.metadata.applicant_score}
+                                applicantId={notif.metadata.applicant_id}
                               />
                             )}
                           </div>

@@ -60,6 +60,12 @@ function scoreDashOffset(score: number) {
   return 283 - pct * 283
 }
 
+function normalizeExternalUrl(url: string | null | undefined) {
+  if (!url) return null
+  if (url.startsWith('http://') || url.startsWith('https://')) return url
+  return `https://${url}`
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function ProfilePage(props: {
@@ -149,6 +155,9 @@ export default async function ProfilePage(props: {
 
   const color = scoreColor(profile.score)
   const dashOffset = scoreDashOffset(profile.score)
+  const githubUrl = normalizeExternalUrl(profile.github_url)
+  const portfolioUrl = normalizeExternalUrl(profile.portfolio_url)
+  const linkedinUrl = portfolioUrl && portfolioUrl.toLowerCase().includes('linkedin.com') ? portfolioUrl : null
 
   return (
     <>
@@ -263,22 +272,37 @@ export default async function ProfilePage(props: {
                         Year {profile.year}
                       </span>
                     )}
-                    {profile.github_url && (
-                      <a href={profile.github_url} target="_blank" rel="noopener noreferrer"
+                    {profile.email && (
+                      <a href={`mailto:${profile.email}`}
+                        className="flex items-center gap-2 px-3 py-1 hover:border-[#adc6ff]/40 transition-all"
+                        style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#adc6ff' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>mail</span>
+                        {profile.email}
+                      </a>
+                    )}
+                    {githubUrl && (
+                      <a href={githubUrl} target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-1 hover:border-[#6bd8cb]/40 transition-all"
                         style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#6bd8cb' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>code</span>
-                        GitHub Verified
+                        GitHub
                       </a>
                     )}
-                    {profile.portfolio_url && (
-                      <a href={profile.portfolio_url} target="_blank" rel="noopener noreferrer"
+                    {linkedinUrl ? (
+                      <a href={linkedinUrl} target="_blank" rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-1 hover:border-[#d0bcff]/40 transition-all"
+                        style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d0bcff' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>hub</span>
+                        LinkedIn
+                      </a>
+                    ) : portfolioUrl ? (
+                      <a href={portfolioUrl} target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-1 hover:border-[#adc6ff]/40 transition-all"
                         style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#adc6ff' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
                         Portfolio
                       </a>
-                    )}
+                    ) : null}
                   </div>
 
                   {/* Bio */}

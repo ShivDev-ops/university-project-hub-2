@@ -104,7 +104,7 @@ export async function DELETE(
   // Verify ownership
   const { data: project } = await supabaseAdmin
     .from('projects')
-    .select('owner_id, status')
+    .select('owner_id, status, title')
     .eq('id', id)
     .single()
 
@@ -117,11 +117,46 @@ export async function DELETE(
     return NextResponse.json({ error: 'Only the project owner can delete this' }, { status: 403 })
   }
 
-  // Soft delete — mark as cancelled rather than hard delete
-  // This preserves application history and notifications
+  let body: { confirmProjectName?: string } = {}
+  try {
+    body = await req.json()
+  } catch {
+    return NextResponse.json(
+      { error: 'Project name confirmation is required' },
+      { status: 400 }
+    )
+  }
+
+  if ((body.confirmProjectName || '').trim() !== project.title) {
+    return NextResponse.json(
+      { error: 'Project name does not match. Deletion cancelled.' },
+      { status: 400 }
+    )
+  }
+
+  // Permanently remove related rows first so the project does not linger in
+  // archived views or leave orphaned applications behind.
+  const { error: applicationsError } = await supabaseAdmin
+    .from('applications')
+    .delete()
+    .eq('project_id', id)
+
+  if (applicationsError) {
+    return NextResponse.json({ error: applicationsError.message }, { status: 500 })
+  }
+
+  const { error: notificationsError } = await supabaseAdmin
+    .from('notifications')
+    .delete()
+    .contains('metadata', { project_id: id })
+
+  if (notificationsError) {
+    return NextResponse.json({ error: notificationsError.message }, { status: 500 })
+  }
+
   const { error } = await supabaseAdmin
     .from('projects')
-    .update({ status: 'cancelled' })
+    .delete()
     .eq('id', id)
 
   if (error) {
