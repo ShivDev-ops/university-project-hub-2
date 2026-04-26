@@ -11,7 +11,6 @@ import DashboardNavbar from '@/components/DashboardNavbar'
 import DashboardSidebar from '@/components/DashboardSidebar'
 import { MarkdownView } from '@/components/MarkdownView'
 
-// Force dynamic rendering to bypass caching issues with application status changes
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
@@ -66,7 +65,6 @@ type ProfileCandidate = Exclude<UserProfile, null>
 // ─── Data Fetching ────────────────────────────────────────────────────────────
 
 async function getProject(id: string): Promise<Project | null> {
-  // Fetch project first
   const { data: project, error } = await supabaseAdmin
     .from('projects')
     .select('*')
@@ -75,7 +73,6 @@ async function getProject(id: string): Promise<Project | null> {
 
   if (error || !project) return null
 
-  // Manual join — owner_id = profiles.user_id (confirmed from DB)
   const { data: owner } = await supabaseAdmin
     .from('profiles')
     .select('user_id, full_name, avatar_url, score, department, year')
@@ -148,12 +145,8 @@ async function getUserContext(
   }
 
   const identityCandidates = Array.from(identitySet)
-
-  // owner_id can be stored as either profiles.user_id or profiles.id in older rows
   const isOwner = identityCandidates.includes(projectOwnerId)
 
-  // applicant_id may exist in either identifier form depending on row age.
-  // Use a list query (not maybeSingle) so legacy duplicate rows do not break access checks.
   let applicationRows: Array<{ id: string; status: string; message: string | null; created_at: string }> = []
   if (identityCandidates.length > 0) {
     const { data } = await supabaseAdmin
@@ -198,7 +191,7 @@ async function getUserContext(
   return { profile, isOwner, application: application ?? null, isTeamMember }
 }
 
-// ─── Score helpers ────────────────────────────────────────────────────────────
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function scoreColor(score: number) {
   if (score >= 600) return '#34d399'
@@ -236,9 +229,7 @@ function normalizeAssetList(value: unknown): string[] {
         return Array.isArray(parsed)
           ? parsed.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
           : []
-      } catch {
-        return []
-      }
+      } catch { return [] }
     }
     return trimmed.includes(',')
       ? trimmed.split(',').map(s => s.trim()).filter(Boolean)
@@ -296,10 +287,9 @@ export default async function ProjectDetailPage({
     const viewerCandidates = await resolveProfileCandidates(session.user.id, session.user.email)
     const viewerIds = Array.from(
       new Set(
-        viewerCandidates.flatMap((candidate) => [candidate.user_id, candidate.id]).filter(Boolean)
+        viewerCandidates.flatMap((c) => [c.user_id, c.id]).filter(Boolean)
       )
     )
-
     if (viewerIds.length > 0) {
       const { count } = await supabaseAdmin
         .from('notifications')
@@ -316,23 +306,199 @@ export default async function ProjectDetailPage({
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
       <style>{`
-        * { box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: border-box; }
         body { font-family: 'Manrope', sans-serif; background-color: #0e1322; color: #dee1f7; margin: 0; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
         .glass-panel { background: rgba(26,31,47,0.7); backdrop-filter: blur(16px); }
         .ghost-border { border: 1px solid rgba(66,71,84,0.15); }
         .dot-grid { background-image: radial-gradient(circle, rgba(77,142,255,0.05) 1px, transparent 1px); background-size: 24px 24px; }
         .vault-blur { filter: blur(4px); user-select: none; pointer-events: none; }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
-        .animate-pulse { animation: pulse 2s ease-in-out infinite; }
         .skill-pill { padding: 4px 12px; border-radius: 999px; background: rgba(107,216,203,0.08); color: #6bd8cb; border: 1px solid rgba(107,216,203,0.2); font-size: 11px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; }
         .tag-pill { padding: 4px 12px; border-radius: 999px; background: rgba(173,198,255,0.08); color: #adc6ff; border: 1px solid rgba(173,198,255,0.2); font-size: 11px; font-family: 'DM Mono', monospace; }
-        .notif-badge { position: absolute; top: 2px; right: 2px; min-width: 16px; height: 16px; border-radius: 999px; background: #fb7185; color: #fff; font-size: 9px; font-family: 'DM Mono', monospace; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
-        .hover-nav:hover { color: #adc6ff; }
-        .hover-sidebar:hover { background: rgba(37,41,58,0.8); }
+
+        /* ── Layout ── */
+        .page-wrapper {
+          min-height: 100vh;
+        }
+
+        /* Desktop: push main content past the sidebar */
+        .main-content {
+          margin-left: 256px;
+          padding-top: 60px;
+          min-height: 100vh;
+          transition: margin-left 0.3s ease;
+        }
+
+        .inner-content {
+          padding: 40px 40px;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* Two-column layout for desktop */
+        .detail-grid {
+          display: grid;
+          grid-template-columns: 1fr 380px;
+          gap: 32px;
+          align-items: start;
+        }
+
+        /* Right column sticky on desktop */
+        .right-col {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+          position: sticky;
+          top: 80px;
+        }
+
+        /* Project title */
+        .project-title {
+          font-family: 'Syne', sans-serif;
+          font-size: clamp(28px, 5vw, 64px);
+          font-weight: 800;
+          letter-spacing: -0.04em;
+          line-height: 1;
+          color: #dee1f7;
+          margin-bottom: 16px;
+          text-transform: uppercase;
+          word-break: break-word;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-bottom: 32px;
+          font-family: 'DM Mono', monospace;
+          font-size: 11px;
+          color: rgba(194,198,214,0.5);
+          flex-wrap: wrap;
+        }
+
+        /* Status badges row */
+        .status-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 16px;
+          flex-wrap: wrap;
+        }
+
+        /* Tag pills row */
+        .tag-row {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        /* Skills row */
+        .skills-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
+        /* Vault file row */
+        .vault-file-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 16px;
+          background: rgba(14,19,34,0.6);
+          border: 1px solid rgba(208,188,255,0.15);
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .vault-file-info {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          min-width: 0;
+          flex: 1;
+        }
+
+        .vault-file-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+
+        /* ── Tablet (≤ 1024px) ── */
+        @media (max-width: 1024px) {
+          .main-content {
+            margin-left: 256px;
+          }
+          .detail-grid {
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+          }
+          .inner-content {
+            padding: 32px 24px;
+          }
+        }
+
+        /* ── Mobile / small tablet (≤ 768px) ── */
+        @media (max-width: 768px) {
+          /* Sidebar is hidden/collapsed on mobile — handled by DashboardSidebar component */
+          .main-content {
+            margin-left: 0;
+            padding-top: 60px; /* just navbar height */
+          }
+
+          .inner-content {
+            padding: 24px 16px;
+          }
+
+          /* Stack columns vertically */
+          .detail-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+
+          /* Right column loses sticky on mobile */
+          .right-col {
+            position: static;
+            top: auto;
+          }
+
+          /* Reorder: show apply card above details on mobile */
+          .right-col {
+            order: -1;
+          }
+
+          .breadcrumb {
+            margin-bottom: 20px;
+          }
+        }
+
+        /* ── Small mobile (≤ 480px) ── */
+        @media (max-width: 480px) {
+          .inner-content {
+            padding: 16px 12px;
+          }
+
+          .skill-pill, .tag-pill {
+            font-size: 10px;
+            padding: 3px 10px;
+          }
+
+          .vault-file-row {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .vault-file-actions {
+            width: 100%;
+            justify-content: flex-end;
+          }
+        }
       `}</style>
 
-      <div className="bg-[#0e1322] min-h-screen dot-grid overflow-x-hidden">
+      <div className="bg-[#0e1322] page-wrapper dot-grid overflow-x-hidden">
 
         {/* ── Navbar ── */}
         <DashboardNavbar profile={profile} />
@@ -341,21 +507,23 @@ export default async function ProjectDetailPage({
         <DashboardSidebar profile={profile} session={session} />
 
         {/* ── Main ── */}
-        <main style={{ marginLeft: '256px', paddingTop: '60px', minHeight: '100vh' }}>
-          <div style={{ padding: '40px', maxWidth: '1200px', margin: '0 auto' }}>
+        <main className="main-content">
+          <div className="inner-content">
 
             {/* Breadcrumb */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '32px', fontFamily: 'DM Mono', fontSize: '11px', color: 'rgba(194,198,214,0.5)' }}>
+            <nav className="breadcrumb">
               <Link href="/dashboard" style={{ color: '#adc6ff' }}>Dashboard</Link>
               <span>›</span>
               <span>Projects</span>
               <span>›</span>
-              <span style={{ color: '#dee1f7' }}>{project.title}</span>
-            </div>
+              <span style={{ color: '#dee1f7', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
+                {project.title}
+              </span>
+            </nav>
 
             {/* Header */}
-            <header style={{ marginBottom: '48px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+            <header style={{ marginBottom: '40px' }}>
+              <div className="status-row">
                 <span style={{
                   padding: '3px 10px', fontSize: '10px', fontFamily: 'DM Mono',
                   fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em',
@@ -383,11 +551,7 @@ export default async function ProjectDetailPage({
                 )}
               </div>
 
-              <h1 style={{
-                fontFamily: 'Syne', fontSize: 'clamp(36px,5vw,64px)', fontWeight: 800,
-                letterSpacing: '-0.04em', lineHeight: 1, color: '#dee1f7',
-                marginBottom: '16px', textTransform: 'uppercase',
-              }}>
+              <h1 className="project-title">
                 {project.title.split(' ').map((word: string, i: number) => (
                   i === 1
                     ? <span key={i} style={{ color: '#adc6ff', fontStyle: 'italic' }}>{word} </span>
@@ -395,7 +559,7 @@ export default async function ProjectDetailPage({
                 ))}
               </h1>
 
-              <p style={{ fontSize: '17px', color: '#c2c6d6', maxWidth: '680px', lineHeight: 1.7 }}>
+              <p style={{ fontSize: 'clamp(14px, 2vw, 17px)', color: '#c2c6d6', maxWidth: '680px', lineHeight: 1.7 }}>
                 {project.description}
               </p>
 
@@ -403,19 +567,19 @@ export default async function ProjectDetailPage({
             </header>
 
             {/* Two-column grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', alignItems: 'start' }}>
+            <div className="detail-grid">
 
               {/* ── Left Column ── */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
                 {/* Full Details */}
-                <section className="glass-panel ghost-border" style={{ padding: '28px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', marginBottom: '16px' }}>
-                    <h3 style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7' }}>
+                <section className="glass-panel ghost-border" style={{ padding: 'clamp(16px, 3vw, 28px)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                    <h3 style={{ fontFamily: 'Syne', fontSize: 'clamp(16px, 2.5vw, 20px)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7', margin: 0 }}>
                       <span className="material-symbols-outlined" style={{ color: '#adc6ff' }}>description</span>
                       Full Details
                     </h3>
-                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <div className="tag-row">
                       <span className="tag-pill">{spotsLeft} spot{spotsLeft === 1 ? '' : 's'} left</span>
                       <span className="tag-pill">{project.visibility}</span>
                       <span className="tag-pill">{project.status}</span>
@@ -435,7 +599,7 @@ export default async function ProjectDetailPage({
                       <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '10px' }}>
                         Required Skills
                       </p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      <div className="skills-row">
                         {project.required_skills.map((skill: string) => (
                           <span key={skill} className="skill-pill">{skill}</span>
                         ))}
@@ -445,9 +609,9 @@ export default async function ProjectDetailPage({
                 </section>
 
                 {/* ── Vault Section ── */}
-                <section className="glass-panel" style={{ padding: '32px', border: '1px dashed rgba(208,188,255,0.2)', position: 'relative' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                    <h3 style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7' }}>
+                <section className="glass-panel" style={{ padding: 'clamp(16px, 3vw, 32px)', border: '1px dashed rgba(208,188,255,0.2)', position: 'relative' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '12px', flexWrap: 'wrap' }}>
+                    <h3 style={{ fontFamily: 'Syne', fontSize: 'clamp(16px, 2.5vw, 20px)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7', margin: 0 }}>
                       <span className="material-symbols-outlined" style={{ color: '#d0bcff' }}>encrypted</span>
                       The Vault
                     </h3>
@@ -460,17 +624,17 @@ export default async function ProjectDetailPage({
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                       {project.github_repo ? (
                         <a href={project.github_repo} target="_blank" rel="noopener noreferrer"
-                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(208,188,255,0.2)', textDecoration: 'none', transition: 'border-color 0.2s' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                            <span className="material-symbols-outlined" style={{ color: '#d0bcff' }}>code</span>
-                            <div>
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(208,188,255,0.2)', textDecoration: 'none', flexWrap: 'wrap', gap: '12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: 0 }}>
+                            <span className="material-symbols-outlined" style={{ color: '#d0bcff', flexShrink: 0 }}>code</span>
+                            <div style={{ minWidth: 0 }}>
                               <div style={{ fontFamily: 'DM Mono', fontSize: '13px', color: '#dee1f7' }}>GitHub Repository</div>
-                              <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', marginTop: '2px' }}>
+                              <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '240px' }}>
                                 {project.github_repo.replace('https://github.com/', '')}
                               </div>
                             </div>
                           </div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
                             <span style={{
                               fontFamily: 'DM Mono', fontSize: '10px', color: '#d0bcff',
                               border: '1px solid rgba(208,188,255,0.3)', padding: '4px 10px',
@@ -487,10 +651,8 @@ export default async function ProjectDetailPage({
                         const isImage = isImageAsset(url)
                         const isPdf = isPdfAsset(url)
                         return (
-                          <div
-                            key={url + i}
-                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(208,188,255,0.15)', gap: '12px' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
+                          <div key={url + i} className="vault-file-row">
+                            <div className="vault-file-info">
                               {isImage ? (
                                 <img
                                   src={url}
@@ -498,7 +660,7 @@ export default async function ProjectDetailPage({
                                   style={{ width: '44px', height: '44px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(208,188,255,0.25)', flexShrink: 0 }}
                                 />
                               ) : (
-                                <span className="material-symbols-outlined" style={{ color: 'rgba(208,188,255,0.5)' }}>
+                                <span className="material-symbols-outlined" style={{ color: 'rgba(208,188,255,0.5)', flexShrink: 0 }}>
                                   {isPdf ? 'picture_as_pdf' : 'description'}
                                 </span>
                               )}
@@ -511,31 +673,13 @@ export default async function ProjectDetailPage({
                                 </div>
                               </div>
                             </div>
-
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                              <a
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                  fontFamily: 'DM Mono', fontSize: '10px', color: '#d0bcff',
-                                  border: '1px solid rgba(208,188,255,0.3)', padding: '4px 10px',
-                                  textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none',
-                                }}
-                              >
-                                {isImage ? 'View Image' : isPdf ? 'View PDF' : 'Open'}
+                            <div className="vault-file-actions">
+                              <a href={url} target="_blank" rel="noopener noreferrer"
+                                style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#d0bcff', border: '1px solid rgba(208,188,255,0.3)', padding: '4px 10px', textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none' }}>
+                                {isImage ? 'View' : isPdf ? 'View PDF' : 'Open'}
                               </a>
-                              <a
-                                href={url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                download
-                                style={{
-                                  fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.8)',
-                                  border: '1px solid rgba(66,71,84,0.4)', padding: '4px 10px',
-                                  textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none',
-                                }}
-                              >
+                              <a href={url} target="_blank" rel="noopener noreferrer" download
+                                style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.8)', border: '1px solid rgba(66,71,84,0.4)', padding: '4px 10px', textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none' }}>
                                 Download
                               </a>
                             </div>
@@ -575,7 +719,7 @@ export default async function ProjectDetailPage({
                         <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(208,188,255,0.1)', border: '1px solid rgba(208,188,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           <span className="material-symbols-outlined" style={{ color: '#d0bcff', fontSize: '28px' }}>lock</span>
                         </div>
-                        <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#d0bcff', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                        <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#d0bcff', textTransform: 'uppercase', letterSpacing: '0.15em', margin: 0 }}>
                           Join the team to unlock
                         </p>
                       </div>
@@ -585,7 +729,7 @@ export default async function ProjectDetailPage({
               </div>
 
               {/* ── Right Column ── */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', position: 'sticky', top: '80px' }}>
+              <div className="right-col">
 
                 {/* Apply / Status Card */}
                 <ApplySection
@@ -605,8 +749,8 @@ export default async function ProjectDetailPage({
                   <h3 style={{ fontFamily: 'Syne', fontSize: '16px', fontWeight: 700, marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#dee1f7' }}>
                     Project Lead
                   </h3>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
-                    <div style={{ position: 'relative' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
+                    <div style={{ position: 'relative', flexShrink: 0 }}>
                       <div style={{ width: '56px', height: '56px', borderRadius: '12px', padding: '2px', background: 'linear-gradient(135deg, #adc6ff, #d0bcff)', overflow: 'hidden' }}>
                         <div style={{ width: '100%', height: '100%', borderRadius: '10px', overflow: 'hidden', background: '#25293a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {project.owner?.avatar_url ? (
@@ -628,8 +772,8 @@ export default async function ProjectDetailPage({
                         </span>
                       </div>
                     </div>
-                    <div>
-                      <div style={{ fontWeight: 700, fontSize: '15px', color: '#dee1f7' }}>
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontWeight: 700, fontSize: '15px', color: '#dee1f7', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {project.owner?.full_name ?? 'Unknown'}
                       </div>
                       <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', marginTop: '2px' }}>
@@ -672,7 +816,7 @@ export default async function ProjectDetailPage({
 
                 {/* Slots Stats */}
                 <section className="glass-panel ghost-border" style={{ padding: '20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: '8px' }}>
                     <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                       Team Slots
                     </span>
