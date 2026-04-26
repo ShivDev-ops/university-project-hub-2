@@ -5,6 +5,7 @@ import { supabaseAdmin } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { NotifActions } from './NotifActions'
+import { NotificationsCenter } from '@/components/Notifications/NotificationsCenter'
 import DashboardNavbar from '@/components/DashboardNavbar'
 import DashboardSidebar from '@/components/DashboardSidebar'
 
@@ -30,6 +31,28 @@ async function getApplicationStatusMap(applicationIds: string[]) {
     .in('id', applicationIds)
 
   return new Map((data || []).map((application: { id: string; status: string }) => [application.id, application.status]))
+}
+
+async function getAppliedApplications(userIds: string[]) {
+  if (userIds.length === 0) return []
+
+  const { data } = await supabaseAdmin
+    .from('applications')
+    .select(`
+      id,
+      status,
+      created_at,
+      updated_at,
+      project:projects!applications_project_id_fkey (
+        id,
+        title,
+        owner_id
+      )
+    `)
+    .in('applicant_id', userIds)
+    .order('created_at', { ascending: false })
+
+  return data || []
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -96,6 +119,10 @@ export default async function NotificationsPage() {
     ? await getNotifications([profile.user_id, profile.id])
     : []
 
+  const appliedApplications = profile
+    ? await getAppliedApplications([profile.user_id, profile.id])
+    : []
+
   const applicationIds = Array.from(
     new Set(
       notifications
@@ -105,9 +132,11 @@ export default async function NotificationsPage() {
   )
 
   const applicationStatusMap = await getApplicationStatusMap(applicationIds)
+  const applicationStatusById = Object.fromEntries(
+    Array.from(applicationStatusMap.entries())
+  )
 
   const unread = notifications.filter(n => !n.read)
-  const grouped = groupByDate(notifications)
 
   return (
     <>
@@ -156,169 +185,11 @@ export default async function NotificationsPage() {
               )}
             </div>
 
-            {/* Filter tabs */}
-            <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid rgba(66,71,84,0.2)', marginBottom: '32px', overflowX: 'auto' }}>
-              {['All', 'Applications', 'Messages', 'Score', 'System'].map((tab, i) => (
-                <button key={tab} style={{
-                  padding: '10px 20px', fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em',
-                  background: 'transparent', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
-                  color: i === 0 ? '#adc6ff' : 'rgba(194,198,214,0.5)',
-                  borderBottom: i === 0 ? '2px solid #adc6ff' : '2px solid transparent',
-                  marginBottom: '-1px',
-                }}>
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            {/* Empty state */}
-            {notifications.length === 0 && (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0', gap: '16px' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#424754' }}>notifications_none</span>
-                <h3 style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 700, color: '#c2c6d6' }}>All caught up</h3>
-                <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f' }}>No notifications yet.</p>
-              </div>
-            )}
-
-            {/* Grouped notifications */}
-            {Object.entries(grouped).map(([dateLabel, items]) => (
-              <section key={dateLabel} style={{ marginBottom: '36px' }}>
-                {/* Date divider */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-                  <h2 style={{ fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(194,198,214,0.4)', whiteSpace: 'nowrap' }}>
-                    {dateLabel}
-                  </h2>
-                  <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, rgba(66,71,84,0.3), transparent)' }} />
-                </div>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                  {items.map((notif: any, idx: number) => {
-                    const cfg = iconMap[notif.type] || iconMap.system
-                    const applicationId = notif.metadata?.application_id as string | undefined
-                    const applicationStatus = applicationId ? applicationStatusMap.get(applicationId) : undefined
-                    const isApplication = notif.type === 'application' && applicationId
-                    const isActionableApplication = isApplication && applicationStatus === 'pending'
-                    const leaveReason = notif.type === 'collaborator_left'
-                      ? (typeof notif.metadata?.reason === 'string' ? notif.metadata.reason.trim() : '')
-                      : ''
-
-                    return (
-                      <div
-                        key={notif.id}
-                        className="notif-row slide-in glass-panel"
-                        style={{
-                          border: notif.read ? '1px solid rgba(66,71,84,0.12)' : `1px solid ${cfg.color}25`,
-                          padding: '16px 20px',
-                          position: 'relative',
-                          animationDelay: `${idx * 40}ms`,
-                        }}
-                      >
-                        {/* Unread indicator */}
-                        {!notif.read && (
-                          <div style={{
-                            position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)',
-                            width: '3px', height: '40px', background: cfg.color,
-                            boxShadow: `0 0 8px ${cfg.color}60`,
-                          }} />
-                        )}
-
-                        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
-                          {/* Icon */}
-                          <div style={{
-                            width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
-                            background: `${cfg.color}12`, border: `1px solid ${cfg.color}25`,
-                            display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          }}>
-                            <span className="material-symbols-outlined" style={{ color: cfg.color, fontSize: '20px' }}>{cfg.icon}</span>
-                          </div>
-
-                          {/* Content */}
-                          <div style={{ flex: 1, minWidth: 0 }}>
-                            <p style={{
-                              fontSize: '14px', lineHeight: 1.5,
-                              color: notif.read ? '#c2c6d6' : '#dee1f7',
-                              fontWeight: notif.read ? 400 : 600,
-                              marginBottom: '4px',
-                            }}>
-                              {notif.message}
-                            </p>
-
-                            {notif.type === 'collaborator_left' && leaveReason && (
-                              <div style={{
-                                marginTop: '10px',
-                                marginBottom: '8px',
-                                padding: '10px 12px',
-                                background: 'rgba(251,191,36,0.08)',
-                                border: '1px solid rgba(251,191,36,0.2)',
-                              }}>
-                                <p style={{
-                                  fontFamily: 'DM Mono',
-                                  fontSize: '10px',
-                                  color: '#fbbf24',
-                                  textTransform: 'uppercase',
-                                  letterSpacing: '0.12em',
-                                  marginBottom: '6px',
-                                }}>
-                                  Exit Reason
-                                </p>
-                                <p style={{
-                                  fontFamily: 'DM Mono',
-                                  fontSize: '11px',
-                                  lineHeight: 1.6,
-                                  color: '#e8dbb5',
-                                  whiteSpace: 'pre-wrap',
-                                }}>
-                                  {leaveReason}
-                                </p>
-                              </div>
-                            )}
-
-                            <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.4)' }}>
-                              {relativeTime(notif.created_at)}
-                            </p>
-
-                            {/* Accept / Reject inline actions for application notifications */}
-                            {isApplication && !isActionableApplication && applicationStatus && applicationStatus !== 'pending' && (
-                              <div style={{ marginTop: '12px', padding: '8px 12px', border: '1px solid rgba(66,71,84,0.2)', background: 'rgba(66,71,84,0.08)', fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f' }}>
-                                Application already {applicationStatus}.
-                              </div>
-                            )}
-
-                            {isActionableApplication && (
-                              <NotifActions
-                                mode="accept-reject"
-                                applicationId={applicationId}
-                                notifId={notif.id}
-                                applicantName={notif.metadata.applicant_name}
-                                applicantScore={notif.metadata.applicant_score}
-                                applicantId={notif.metadata.applicant_id}
-                              />
-                            )}
-                          </div>
-
-                          {/* Right side: unread dot + chevron */}
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-                            {!notif.read && (
-                              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: cfg.color, boxShadow: `0 0 6px ${cfg.color}` }} />
-                            )}
-                            {notif.link && (
-                              <Link href={notif.link}>
-                                <span
-                                  className="material-symbols-outlined hover:text-[#adc6ff] transition-colors"
-                                  style={{ color: 'rgba(194,198,214,0.3)', fontSize: '18px', cursor: 'pointer' }}
-                                >
-                                  chevron_right
-                                </span>
-                              </Link>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              </section>
-            ))}
+            <NotificationsCenter
+              notifications={notifications as any}
+              applications={appliedApplications as any}
+              applicationStatusById={applicationStatusById}
+            />
           </div>
         </main>
         </div>

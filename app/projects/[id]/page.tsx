@@ -62,6 +62,14 @@ type UserProfile = {
 
 type ProfileCandidate = Exclude<UserProfile, null>
 
+type ProjectActivity = {
+  id: string
+  type: string
+  message: string
+  created_at: string
+  metadata: Record<string, unknown> | null
+}
+
 // ─── Data Fetching ────────────────────────────────────────────────────────────
 
 async function getProject(id: string): Promise<Project | null> {
@@ -251,6 +259,18 @@ function displayFileName(url: string, index: number) {
   }
 }
 
+async function getProjectActivity(projectId: string): Promise<ProjectActivity[]> {
+  const { data } = await supabaseAdmin
+    .from('notifications')
+    .select('id, type, message, created_at, metadata')
+    .contains('metadata', { project_id: projectId })
+    .in('type', ['application', 'accepted', 'rejected', 'collaborator_left'])
+    .order('created_at', { ascending: false })
+    .limit(6)
+
+  return (data || []) as ProjectActivity[]
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function ProjectDetailPage({
@@ -281,6 +301,8 @@ export default async function ProjectDetailPage({
       ...normalizeAssetList(project.vault_files),
     ])
   )
+
+  const activityFeed = await getProjectActivity(project.id)
 
   let unreadCount = 0
   if (session?.user?.id) {
@@ -425,6 +447,26 @@ export default async function ProjectDetailPage({
           align-items: center;
           gap: 8px;
           flex-shrink: 0;
+        }
+
+        .activity-list {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .activity-item {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 12px;
+          background: rgba(14,19,34,0.6);
+          border: 1px solid rgba(66,71,84,0.25);
+        }
+
+        .activity-copy {
+          min-width: 0;
+          flex: 1;
         }
 
         /* ── Tablet (≤ 1024px) ── */
@@ -841,6 +883,86 @@ export default async function ProjectDetailPage({
                       {fillPct}% filled
                     </span>
                   </div>
+                </section>
+
+                <section className="glass-panel ghost-border" style={{ padding: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span className="material-symbols-outlined" style={{ color: '#6bd8cb' }}>history</span>
+                      <h3 style={{ fontFamily: 'Syne', fontSize: '16px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#dee1f7', margin: 0 }}>
+                        Activity Feed
+                      </h3>
+                    </div>
+                    <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+                      Recent project events
+                    </span>
+                  </div>
+
+                  {isTeamMember ? (
+                    activityFeed.length > 0 ? (
+                      <div className="activity-list">
+                        {activityFeed.map((activity) => {
+                          const type = activity.type.toLowerCase()
+                          const icon = type === 'accepted'
+                            ? 'check_circle'
+                            : type === 'rejected'
+                              ? 'cancel'
+                              : type === 'collaborator_left'
+                                ? 'logout'
+                                : 'description'
+                          const color = type === 'accepted'
+                            ? '#34d399'
+                            : type === 'rejected'
+                              ? '#fb7185'
+                              : type === 'collaborator_left'
+                                ? '#fbbf24'
+                                : '#adc6ff'
+                          const actorName =
+                            (activity.metadata?.applicant_name as string | undefined) ||
+                            (activity.metadata?.collaborator_name as string | undefined) ||
+                            project.owner?.full_name ||
+                            'Someone'
+                          const summary =
+                            type === 'collaborator_left'
+                              ? 'left the project'
+                              : type === 'accepted'
+                                ? 'was accepted'
+                                : type === 'rejected'
+                                  ? 'was rejected'
+                                  : 'activity happened'
+
+                          return (
+                            <div key={activity.id} className="activity-item">
+                              <span className="material-symbols-outlined" style={{ color, flexShrink: 0 }}>
+                                {icon}
+                              </span>
+                              <div className="activity-copy">
+                                <div style={{ fontSize: '13px', lineHeight: 1.5, color: '#dee1f7' }}>
+                                  <span style={{ color, fontWeight: 700 }}>{actorName}</span> {summary}
+                                </div>
+                                {type === 'collaborator_left' && typeof activity.metadata?.reason === 'string' && activity.metadata.reason && (
+                                  <div style={{ marginTop: '6px', fontFamily: 'DM Mono', fontSize: '10px', color: '#fbbf24', lineHeight: 1.5 }}>
+                                    Reason: {activity.metadata.reason}
+                                  </div>
+                                )}
+                                <div style={{ marginTop: '4px', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.4)' }}>
+                                  {new Date(activity.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ) : (
+                      <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f', margin: 0 }}>
+                        No recent activity yet.
+                      </p>
+                    )
+                  ) : (
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f', margin: 0 }}>
+                      Join the team to view project activity.
+                    </p>
+                  )}
                 </section>
 
                 {isOwner && (

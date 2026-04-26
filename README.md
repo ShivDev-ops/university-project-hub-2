@@ -22,6 +22,17 @@ A full-stack web application that helps B.Tech students find teammates for unive
 
 ## ✅ Completed Phases
 
+### Recent Updates (April 2026)
+- Project detail page made responsive for desktop, tablet, and mobile breakpoints
+- Added collaborator leave flow with reconfirmation + reason (`LeaveProjectControl`)
+- Added owner notification when collaborator leaves project (`type: collaborator_left`)
+- Added project activity feed (project-scoped events from notifications metadata)
+- Notifications center upgraded with:
+  - per-item delete action
+  - `Applicants` tab (owner-side application notifications)
+  - `Applied` tab (user-side application history with pending/accepted/rejected)
+- Added API endpoint to delete a single notification by id
+
 ### Phase 1 — Foundation
 - Next.js 16 project initialized with App Router + Tailwind CSS
 - Environment variables configured (Azure AD, Supabase, Resend)
@@ -77,12 +88,15 @@ university-project-hub2/
 │   │   │   ├── save-credentials/route.ts    # Commit username/password for OAuth users
 │   │   │   └── verify-reset-otp/route.ts    # Validate reset OTP
 │   │   ├── notifications/
-│   │   │   ├── route.ts                     # List/manage notifications
+│   │   │   ├── route.ts                     # Legacy notifications endpoint
+│   │   │   ├── [id]/route.ts                # Delete one notification
 │   │   │   ├── unread-count/route.ts        # Get unread notification count
-│   │   │   └── mark-read/route.ts           # Mark notification as read
+│   │   │   └── (mark-read handled in app/notifications/mark-read/route.ts)
 │   │   ├── projects/
 │   │   │   ├── route.ts                     # List/create projects
-│   │   │   └── [id]/route.ts                # Get/update/delete project
+│   │   │   └── [id]/
+│   │   │       ├── route.ts                 # Get/update/delete project
+│   │   │       └── leave/route.ts           # Collaborator leave project endpoint
 │   │   ├── search/route.ts                  # Global search endpoint
 │   │   ├── send-otp/route.tsx               # Send verification OTP
 │   │   ├── skills/route.ts                  # List available skills
@@ -110,7 +124,8 @@ university-project-hub2/
 │   │   └── [id]/
 │   │       ├── page.tsx                     # Project detail view
 │   │       ├── ApplySection.tsx             # Apply/manage applicants section
-│   │       └── DeleteProjectControl.tsx     # Delete with name confirmation
+│   │       ├── DeleteProjectControl.tsx     # Delete with name confirmation
+│   │       └── LeaveProjectControl.tsx      # Collaborator leave UI/control
 │   ├── register/page.tsx                    # Registration page
 │   ├── set-credentials/page.tsx             # Post-OAuth credential claim UI
 │   ├── suspended/page.tsx                   # Account suspended notice
@@ -139,7 +154,8 @@ university-project-hub2/
 │   │   └── Sidebar.tsx                      # Sidebar navigation
 │   ├── Notifications/
 │   │   ├── NotifBell.tsx                    # Bell icon with badge
-│   │   └── NotifItem.tsx                    # Individual notification card
+│   │   ├── NotifItem.tsx                    # Individual notification card
+│   │   └── NotificationsCenter.tsx          # Client tabs + filtering + per-item delete
 │   ├── profile/
 │   │   ├── ProfileCard.tsx                  # User profile header card
 │   │   └── ScoreHistory.tsx                 # Score history chart
@@ -268,6 +284,21 @@ create table public.applications (
 );
 ```
 
+Note on leave flow:
+- Current leave logic is backward-compatible with existing status check constraints.
+- It attempts `left` first, then falls back to `rejected` (or row removal safety path) if `left` is not allowed by DB constraints.
+
+Optional migration to support explicit `left` status:
+
+```sql
+alter table public.applications
+  drop constraint if exists applications_status_check;
+
+alter table public.applications
+  add constraint applications_status_check
+  check (status in ('pending', 'accepted', 'rejected', 'left'));
+```
+
 #### 4. **Notifications Table**
 Stores user notifications with rich metadata support.
 
@@ -289,6 +320,20 @@ create index notifications_user_id_created_at_idx
 create index notifications_user_id_read_idx 
   on public.notifications (user_id, read, created_at desc);
 ```
+
+Known notification `type` values in active use:
+- `application`
+- `accepted`
+- `rejected`
+- `collaborator_left`
+
+Common metadata keys:
+- `project_id`
+- `application_id`
+- `applicant_id`
+- `applicant_name`
+- `collaborator_name`
+- `reason`
 
 #### 5. **OTP Codes Table**
 Stores one-time passwords for verification and password resets.

@@ -3,6 +3,57 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 
+function isStatusConstraintViolation(message: string | undefined) {
+  const normalized = String(message || '').toLowerCase()
+  return normalized.includes('applications_status_check') || normalized.includes('check constraint')
+}
+
+function isAcceptedLikeStatus(status: string | null | undefined) {
+  const normalized = String(status || '').trim().toLowerCase()
+  return normalized === 'accepted' || normalized === 'approved' || normalized === 'active'
+}
+
+type ProfileCandidate = {
+  id: string
+  user_id: string
+  full_name: string
+}
+
+async function resolveProfileCandidates(sessionUserId: string, sessionUserEmail: string | null | undefined) {
+  const dedupe = new Map<string, ProfileCandidate>()
+
+  const { data: byIdRows } = await supabaseAdmin
+    .from('profiles')
+    .select('id, user_id, full_name')
+    .or(`user_id.eq.${sessionUserId},id.eq.${sessionUserId}`)
+    .limit(10)
+
+  for (const row of byIdRows ?? []) {
+    dedupe.set(`${row.id}:${row.user_id}`, row)
+  }
+
+  if (sessionUserEmail) {
+    const { data: byEmailRows } = await supabaseAdmin
+      .from('profiles')
+      .select('id, user_id, full_name')
+      .eq('email', sessionUserEmail)
+      .limit(10)
+
+    for (const row of byEmailRows ?? []) {
+      dedupe.set(`${row.id}:${row.user_id}`, row)
+    }
+  }
+
+  const candidates = Array.from(dedupe.values())
+  candidates.sort((a, b) => {
+    const aMatch = a.user_id === sessionUserId || a.id === sessionUserId ? 1 : 0
+    const bMatch = b.user_id === sessionUserId || b.id === sessionUserId ? 1 : 0
+    return bMatch - aMatch
+  })
+
+  return candidates
+}
+
 export async function POST(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -49,55 +100,124 @@ export async function POST(
     )
   }
 
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('id, user_id, full_name')
-    .eq('user_id', session.user.id)
-    .single()
+  const profileCandidates = await resolveProfileCandidates(session.user.id, session.user.email)
+  const identityCandidates = Array.from(
+    new Set(profileCandidates.flatMap((candidate) => [candidate.user_id, candidate.id]).filter(Boolean))
+  )
 
+  if (identityCandidates.length === 0) {
+    return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
+  }
+
+  const profile = profileCandidates[0]
   if (!profile) {
     return NextResponse.json({ error: 'Profile not found' }, { status: 404 })
   }
 
-  if (project.owner_id === profile.user_id || project.owner_id === profile.id) {
+  if (identityCandidates.includes(project.owner_id)) {
     return NextResponse.json(
       { error: 'Project owners cannot leave their own project.' },
       { status: 403 }
     )
   }
 
-  const { data: application } = await supabaseAdmin
+  const { data: applicationRows } = await supabaseAdmin
     .from('applications')
-    .select('id, status')
+    .select('id, status, created_at')
     .eq('project_id', projectId)
-    .or(`applicant_id.eq.${profile.user_id},applicant_id.eq.${profile.id}`)
-    .eq('status', 'accepted')
-    .maybeSingle()
+    .in('applicant_id', identityCandidates)
+    .order('created_at', { ascending: false })
 
+  const application = (applicationRows || []).find((row) => isAcceptedLikeStatus(row.status))
+
+  let hasAcceptedNotification = false
   if (!application) {
+    const { data: acceptedNotif } = await supabaseAdmin
+      .from('notifications')
+      .select('id')
+      .in('user_id', identityCandidates)
+      .eq('type', 'accepted')
+      .contains('metadata', { project_id: projectId })
+      .limit(1)
+
+    hasAcceptedNotification = (acceptedNotif?.length ?? 0) > 0
+  }
+
+  if (!application && !hasAcceptedNotification) {
     return NextResponse.json(
       { error: 'You are not an accepted collaborator on this project.' },
       { status: 403 }
     )
   }
 
-  const { error: applicationError } = await supabaseAdmin
-    .from('applications')
-    .update({ status: 'left' })
-    .eq('id', application.id)
+  let applicationError: { message?: string } | null = null
+  let shouldDecrementSlots = !!application || hasAcceptedNotification
 
-  if (applicationError) {
-    return NextResponse.json({ error: applicationError.message }, { status: 500 })
+  if (application) {
+    shouldDecrementSlots = true
+
+    // Prefer explicit "left" status. If current DB constraint doesn't allow it,
+    // gracefully fall back to "rejected" so collaborator removal still works.
+    let updateResult = await supabaseAdmin
+      .from('applications')
+      .update({ status: 'left' })
+      .eq('id', application.id)
+
+    applicationError = updateResult.error
+
+    if (applicationError && isStatusConstraintViolation(applicationError.message)) {
+      const { error: fallbackError } = await supabaseAdmin
+        .from('applications')
+        .update({ status: 'rejected' })
+        .eq('id', application.id)
+      applicationError = fallbackError
+    }
+
+    // Final safety net: if status transitions are constrained by legacy DB rules,
+    // remove the accepted membership row directly so collaborator access is revoked.
+    if (applicationError) {
+      const { error: deleteError } = await supabaseAdmin
+        .from('applications')
+        .delete()
+        .eq('id', application.id)
+
+      if (!deleteError) {
+        applicationError = null
+      }
+    }
   }
 
-  const nextFilledSlots = Math.max((project.filled_slots ?? 0) - 1, 0)
-  const { error: projectUpdateError } = await supabaseAdmin
-    .from('projects')
-    .update({ filled_slots: nextFilledSlots })
-    .eq('id', projectId)
+  if (applicationError) {
+    return NextResponse.json(
+      { error: 'Could not update collaborator status while leaving project.' },
+      { status: 500 }
+    )
+  }
 
-  if (projectUpdateError) {
-    return NextResponse.json({ error: projectUpdateError.message }, { status: 500 })
+  const { error: revokeNotificationError } = await supabaseAdmin
+    .from('notifications')
+    .delete()
+    .in('user_id', identityCandidates)
+    .eq('type', 'accepted')
+    .contains('metadata', { project_id: projectId })
+
+  if (revokeNotificationError) {
+    return NextResponse.json(
+      { error: 'Could not revoke collaborator access notifications.' },
+      { status: 500 }
+    )
+  }
+
+  if (shouldDecrementSlots) {
+    const nextFilledSlots = Math.max((project.filled_slots ?? 0) - 1, 0)
+    const { error: projectUpdateError } = await supabaseAdmin
+      .from('projects')
+      .update({ filled_slots: nextFilledSlots })
+      .eq('id', projectId)
+
+    if (projectUpdateError) {
+      return NextResponse.json({ error: projectUpdateError.message }, { status: 500 })
+    }
   }
 
   const { data: ownerProfile } = await supabaseAdmin
