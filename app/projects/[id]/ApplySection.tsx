@@ -89,6 +89,7 @@ export function ApplySection({
       pending:  { color: '#fbbf24', bg: 'rgba(251,191,36,0.08)',  border: 'rgba(251,191,36,0.2)',  icon: 'schedule',     text: 'Application Pending', sub: 'The project owner will review your application soon.' },
       accepted: { color: '#34d399', bg: 'rgba(52,211,153,0.08)',  border: 'rgba(52,211,153,0.2)',  icon: 'check_circle', text: 'Application Accepted!', sub: 'You are now part of this team. Check the vault above.' },
       rejected: { color: '#fb7185', bg: 'rgba(251,113,133,0.08)', border: 'rgba(251,113,133,0.2)', icon: 'cancel',       text: 'Application Rejected', sub: 'This application was not accepted for this project.' },
+      left:     { color: '#fbbf24', bg: 'rgba(251,191,36,0.08)',  border: 'rgba(251,191,36,0.2)',  icon: 'logout',       text: 'You Left This Project', sub: 'You are no longer part of this team.' },
     }
     const cfg = statusConfig[application.status as keyof typeof statusConfig] || statusConfig.pending
 

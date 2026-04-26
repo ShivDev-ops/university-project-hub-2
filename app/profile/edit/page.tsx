@@ -155,15 +155,24 @@ export default function EditProfilePage() {
     if (!file) return
     setAvatarPreview(URL.createObjectURL(file))
     setUploading(true)
+    setError('')
     try {
       const formData = new FormData()
       formData.append('files', file)
       formData.append('bucket', 'avatars')
       const res = await fetch('/api/upload', { method: 'POST', body: formData })
-      if (res.ok) {
-        const data = await res.json()
-        if (data.urls?.[0]) setAvatarUrl(data.urls[0])
+      const data = await res.json()
+      
+      if (res.ok && data.urls?.[0]) {
+        setAvatarUrl(data.urls[0])
+      } else {
+        setError(data.error || 'Failed to upload avatar. Please try again.')
+        setAvatarPreview(null)
       }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Upload failed'
+      setError(`Avatar upload error: ${message}`)
+      setAvatarPreview(null)
     } finally {
       setUploading(false)
     }

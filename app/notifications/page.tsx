@@ -61,6 +61,7 @@ const iconMap: Record<string, { icon: string; color: string }> = {
   application: { icon: 'description',  color: '#adc6ff' },
   accepted:    { icon: 'check_circle', color: '#34d399' },
   rejected:    { icon: 'cancel',       color: '#fb7185' },
+  collaborator_left: { icon: 'logout', color: '#fbbf24' },
   message:     { icon: 'chat',         color: '#fbbf24' },
   score:       { icon: 'star',         color: '#6bd8cb' },
   ghost:       { icon: 'warning',      color: '#fb923c' },
@@ -197,6 +198,9 @@ export default async function NotificationsPage() {
                     const applicationStatus = applicationId ? applicationStatusMap.get(applicationId) : undefined
                     const isApplication = notif.type === 'application' && applicationId
                     const isActionableApplication = isApplication && applicationStatus === 'pending'
+                    const leaveReason = notif.type === 'collaborator_left'
+                      ? (typeof notif.metadata?.reason === 'string' ? notif.metadata.reason.trim() : '')
+                      : ''
 
                     return (
                       <div
@@ -238,6 +242,37 @@ export default async function NotificationsPage() {
                             }}>
                               {notif.message}
                             </p>
+
+                            {notif.type === 'collaborator_left' && leaveReason && (
+                              <div style={{
+                                marginTop: '10px',
+                                marginBottom: '8px',
+                                padding: '10px 12px',
+                                background: 'rgba(251,191,36,0.08)',
+                                border: '1px solid rgba(251,191,36,0.2)',
+                              }}>
+                                <p style={{
+                                  fontFamily: 'DM Mono',
+                                  fontSize: '10px',
+                                  color: '#fbbf24',
+                                  textTransform: 'uppercase',
+                                  letterSpacing: '0.12em',
+                                  marginBottom: '6px',
+                                }}>
+                                  Exit Reason
+                                </p>
+                                <p style={{
+                                  fontFamily: 'DM Mono',
+                                  fontSize: '11px',
+                                  lineHeight: 1.6,
+                                  color: '#e8dbb5',
+                                  whiteSpace: 'pre-wrap',
+                                }}>
+                                  {leaveReason}
+                                </p>
+                              </div>
+                            )}
+
                             <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.4)' }}>
                               {relativeTime(notif.created_at)}
                             </p>

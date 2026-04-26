@@ -2,7 +2,15 @@ import ReactMarkdown from 'react-markdown'
 interface MarkdownViewProps {
 content: string
 }
+
+function normalizeMarkdown(source: string) {
+const headingFixed = source.replace(/^(#{1,6})([^\s#])/gm, '$1 $2')
+const emphasisFixed = headingFixed.replace(/\*\*([^\n]*?)\s+\*\*/g, '**$1**')
+return emphasisFixed.replace(/\n{3,}/g, '\n\n')
+}
+
 export function MarkdownView({ content }: MarkdownViewProps) {
+const normalizedContent = normalizeMarkdown(content)
 return (
 <div
 className="prose prose-invert max-w-none"
@@ -45,7 +53,7 @@ a: ({ href, children }) => (
 ),
 }}
 >
-{content}
+{normalizedContent}
 </ReactMarkdown>
 </div>
 )

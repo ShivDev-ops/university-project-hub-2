@@ -2,12 +2,13 @@
 
 // File: app/projects/create/page.tsx
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import DashboardNavbar from '@/components/DashboardNavbar'
 import DashboardSidebar from '@/components/DashboardSidebar'
+import { MarkdownView } from '@/components/MarkdownView'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -37,6 +38,7 @@ function scoreColor(score: number) {
 export default function CreateProjectPage() {
   const router = useRouter()
   const { data: session } = useSession()
+  const fullDetailsRef = useRef<HTMLTextAreaElement | null>(null)
 
   // ── Form State ──
   const [title, setTitle] = useState('')
@@ -108,6 +110,44 @@ export default function CreateProjectPage() {
     setSelectedSkills(prev => prev.filter(s => s !== skill))
   }
 
+  function insertMarkdown(before: string, after = '', placeholder = '') {
+    const editor = fullDetailsRef.current
+    if (!editor || atProjectLimit) return
+
+    const start = editor.selectionStart ?? fullDesc.length
+    const end = editor.selectionEnd ?? fullDesc.length
+    const selectedText = fullDesc.slice(start, end) || placeholder
+    const nextValue = `${fullDesc.slice(0, start)}${before}${selectedText}${after}${fullDesc.slice(end)}`
+
+    setFullDesc(nextValue)
+
+    requestAnimationFrame(() => {
+      editor.focus()
+      editor.setSelectionRange(start + before.length, start + before.length + selectedText.length)
+    })
+  }
+
+  function insertLinePrefix(prefix: string) {
+    const editor = fullDetailsRef.current
+    if (!editor || atProjectLimit) return
+
+    const start = editor.selectionStart ?? 0
+    const end = editor.selectionEnd ?? 0
+    const value = fullDesc
+    const lineStart = value.lastIndexOf('\n', start - 1) + 1
+    const lineEnd = value.indexOf('\n', end)
+    const resolvedLineEnd = lineEnd === -1 ? value.length : lineEnd
+    const line = value.slice(lineStart, resolvedLineEnd)
+    const nextValue = `${value.slice(0, lineStart)}${prefix}${line}${value.slice(resolvedLineEnd)}`
+
+    setFullDesc(nextValue)
+
+    requestAnimationFrame(() => {
+      editor.focus()
+      editor.setSelectionRange(lineStart + prefix.length, lineStart + prefix.length + line.length)
+    })
+  }
+
   // ── File drop ──
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault(); setDragOver(false)
@@ -131,9 +171,18 @@ export default function CreateProjectPage() {
         uploadedFiles.forEach(f => formData.append('files', f))
         formData.append('bucket', 'project-files')
         const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData })
-        if (uploadRes.ok) {
-          const uploadData = await uploadRes.json()
-          fileUrls = uploadData.urls || []
+        const uploadData = await uploadRes.json()
+        
+        if (uploadRes.ok && uploadData.urls?.length > 0) {
+          fileUrls = uploadData.urls
+          if (uploadData.errors?.length > 0) {
+            setError(`Some files failed to upload: ${uploadData.errors.join(', ')}. Continuing with uploaded files.`)
+          }
+        } else {
+          // File upload failed completely
+          setError(uploadData.error || 'Failed to upload files. Please try again.')
+          setLoading(false)
+          return
         }
       }
 
@@ -165,8 +214,9 @@ export default function CreateProjectPage() {
 
       const data = await res.json()
       router.push(`/projects/${data.id}`)
-    } catch {
-      setError('Something went wrong. Please try again.')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Unknown error'
+      setError(`Something went wrong: ${message}`)
     } finally {
       setLoading(false)
     }
@@ -512,23 +562,49 @@ export default function CreateProjectPage() {
                   <div style={{ border: '1px solid rgba(66,71,84,0.3)', overflow: 'hidden' }}>
                     {/* Toolbar */}
                     <div className="flex gap-4 p-3" style={{ background: 'rgba(26,31,47,0.6)', borderBottom: '1px solid rgba(66,71,84,0.2)' }}>
-                      {['format_bold', 'format_italic', 'link', 'image', 'terminal'].map((icon, i) => (
-                        <span key={icon}>
-                          {i === 4 && <span style={{ display: 'inline-block', width: '1px', height: '16px', background: 'rgba(66,71,84,0.5)', margin: '0 4px', verticalAlign: 'middle' }} />}
-                          <span
-                            className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer"
-                            style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)' }}>
-                            {icon}
-                          </span>
-                        </span>
-                      ))}
+                      <button type="button" onClick={() => insertMarkdown('**', '**', 'bold text')} disabled={atProjectLimit} title="Bold" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                        format_bold
+                      </button>
+                      <button type="button" onClick={() => insertMarkdown('*', '*', 'italic text')} disabled={atProjectLimit} title="Italic" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                        format_italic
+                      </button>
+                      <button type="button" onClick={() => insertMarkdown('[', '](https://example.com)', 'link text')} disabled={atProjectLimit} title="Link" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                        link
+                      </button>
+                      <button type="button" onClick={() => insertMarkdown('![', '](https://example.com/image.png)', 'image alt')} disabled={atProjectLimit} title="Image" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                        image
+                      </button>
+                      <span style={{ display: 'inline-block', width: '1px', height: '16px', background: 'rgba(66,71,84,0.5)', margin: '0 4px', verticalAlign: 'middle' }} />
+                      <button type="button" onClick={() => insertLinePrefix('## ')} disabled={atProjectLimit} title="Heading 2" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                        title
+                      </button>
+                      <button type="button" onClick={() => insertLinePrefix('- ')} disabled={atProjectLimit} title="Bullet list" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                        format_list_bulleted
+                      </button>
+                      <button type="button" onClick={() => insertMarkdown('`', '`', 'inline code')} disabled={atProjectLimit} title="Inline code" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                        terminal
+                      </button>
                     </div>
 
                     {editorTab === 'write' ? (
                       <textarea
                         value={fullDesc}
+                        ref={fullDetailsRef}
                         onChange={e => setFullDesc(e.target.value)}
-                        placeholder="Initialize deep-dive documentation...&#10;&#10;## Overview&#10;&#10;Describe your project in full detail. Supports **markdown**.&#10;&#10;## What we're building&#10;&#10;## Who we need"
+                        placeholder={`Initialize deep-dive documentation...
+
+## Overview
+
+Describe your project in full detail. Supports **markdown**.
+
+## What we're building
+
+- The problem we solve
+- What we are building
+
+## Who we need
+
+Add headings like ## this, bold text, links, and lists.`}
                         rows={10}
                         disabled={atProjectLimit}
                         style={{
@@ -540,8 +616,8 @@ export default function CreateProjectPage() {
                       />
                     ) : (
                       <div style={{ minHeight: '200px', padding: '24px', background: 'rgba(14,19,34,0.4)', color: '#c2c6d6', fontSize: '14px', lineHeight: 1.8 }}>
-                        {fullDesc ? (
-                          <div style={{ fontFamily: 'Manrope', whiteSpace: 'pre-wrap' }}>{fullDesc}</div>
+                        {fullDesc.trim() ? (
+                          <MarkdownView content={fullDesc} />
                         ) : (
                           <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#424754' }}>Nothing to preview yet.</p>
                         )}
@@ -743,13 +819,19 @@ export default function CreateProjectPage() {
                       </div>
                     </div>
 
-                    <p style={{
-                      fontSize: '13px', color: preview.description.startsWith('Project summary') ? 'rgba(194,198,214,0.35)' : '#c2c6d6',
-                      lineHeight: 1.7, marginBottom: '24px', fontStyle: preview.description.startsWith('Project summary') ? 'italic' : 'normal',
-                      display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-                    }}>
-                      {preview.description}
-                    </p>
+                    {fullDesc.trim() ? (
+                      <div style={{ marginBottom: '24px' }}>
+                        <MarkdownView content={fullDesc} />
+                      </div>
+                    ) : (
+                      <p style={{
+                        fontSize: '13px', color: preview.description.startsWith('Project summary') ? 'rgba(194,198,214,0.35)' : '#c2c6d6',
+                        lineHeight: 1.7, marginBottom: '24px', fontStyle: preview.description.startsWith('Project summary') ? 'italic' : 'normal',
+                        display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                      }}>
+                        {preview.description}
+                      </p>
+                    )}
 
                     {/* Skills */}
                     <div style={{ borderTop: '1px solid rgba(66,71,84,0.2)', paddingTop: '16px', marginBottom: '16px' }}>

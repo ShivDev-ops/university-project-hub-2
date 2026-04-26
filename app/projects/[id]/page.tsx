@@ -6,8 +6,14 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ApplySection } from './ApplySection'
 import { DeleteProjectControl } from './DeleteProjectControl'
+import { LeaveProjectControl } from './LeaveProjectControl'
 import DashboardNavbar from '@/components/DashboardNavbar'
 import DashboardSidebar from '@/components/DashboardSidebar'
+import { MarkdownView } from '@/components/MarkdownView'
+
+// Force dynamic rendering to bypass caching issues with application status changes
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -33,6 +39,7 @@ type Project = {
   visibility: string
   github_repo: string | null
   file_urls: string[]
+  vault_files?: string[]
   timeline: string | null
   owner_id: string
   created_at: string
@@ -53,6 +60,8 @@ type UserProfile = {
   avatar_url: string | null
   score: number
 } | null
+
+type ProfileCandidate = Exclude<UserProfile, null>
 
 // ─── Data Fetching ────────────────────────────────────────────────────────────
 
@@ -76,8 +85,47 @@ async function getProject(id: string): Promise<Project | null> {
   return { ...project, owner: owner ?? null }
 }
 
+async function resolveProfileCandidates(
+  sessionUserId: string,
+  sessionUserEmail: string | null | undefined
+): Promise<ProfileCandidate[]> {
+  const dedupe = new Map<string, ProfileCandidate>()
+
+  const { data: byIdRows } = await supabaseAdmin
+    .from('profiles')
+    .select('id, user_id, full_name, avatar_url, score')
+    .or(`user_id.eq.${sessionUserId},id.eq.${sessionUserId}`)
+    .limit(10)
+
+  for (const row of byIdRows ?? []) {
+    dedupe.set(`${row.id}:${row.user_id}`, row)
+  }
+
+  if (sessionUserEmail) {
+    const { data: byEmailRows } = await supabaseAdmin
+      .from('profiles')
+      .select('id, user_id, full_name, avatar_url, score')
+      .eq('email', sessionUserEmail)
+      .limit(10)
+
+    for (const row of byEmailRows ?? []) {
+      dedupe.set(`${row.id}:${row.user_id}`, row)
+    }
+  }
+
+  const candidates = Array.from(dedupe.values())
+  candidates.sort((a, b) => {
+    const aMatch = a.user_id === sessionUserId || a.id === sessionUserId ? 1 : 0
+    const bMatch = b.user_id === sessionUserId || b.id === sessionUserId ? 1 : 0
+    return bMatch - aMatch
+  })
+
+  return candidates
+}
+
 async function getUserContext(
   sessionUserId: string,
+  sessionUserEmail: string | null | undefined,
   projectId: string,
   projectOwnerId: string
 ): Promise<{
@@ -86,28 +134,66 @@ async function getUserContext(
   application: Application
   isTeamMember: boolean
 }> {
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('id, user_id, full_name, avatar_url, score')
-    .eq('user_id', sessionUserId)
-    .single()
+  const profileCandidates = await resolveProfileCandidates(sessionUserId, sessionUserEmail)
+  const profile = profileCandidates[0] ?? null
 
   if (!profile) {
     return { profile: null, isOwner: false, application: null, isTeamMember: false }
   }
 
+  const identitySet = new Set<string>()
+  for (const candidate of profileCandidates) {
+    if (candidate.id) identitySet.add(candidate.id)
+    if (candidate.user_id) identitySet.add(candidate.user_id)
+  }
+
+  const identityCandidates = Array.from(identitySet)
+
   // owner_id can be stored as either profiles.user_id or profiles.id in older rows
-  const isOwner = projectOwnerId === profile.user_id || projectOwnerId === profile.id
+  const isOwner = identityCandidates.includes(projectOwnerId)
 
-  // applicant_id may exist in either identifier form depending on row age
-  const { data: application } = await supabaseAdmin
-    .from('applications')
-    .select('id, status, message, created_at')
-    .eq('project_id', projectId)
-    .or(`applicant_id.eq.${profile.user_id},applicant_id.eq.${profile.id}`)
-    .maybeSingle()
+  // applicant_id may exist in either identifier form depending on row age.
+  // Use a list query (not maybeSingle) so legacy duplicate rows do not break access checks.
+  let applicationRows: Array<{ id: string; status: string; message: string | null; created_at: string }> = []
+  if (identityCandidates.length > 0) {
+    const { data } = await supabaseAdmin
+      .from('applications')
+      .select('id, status, message, created_at')
+      .eq('project_id', projectId)
+      .in('applicant_id', identityCandidates)
+      .order('created_at', { ascending: false })
+    applicationRows = data ?? []
+  }
 
-  const isTeamMember = isOwner || application?.status === 'accepted'
+  const applications = applicationRows
+  const acceptedApplication = applications.find((row) => isAcceptedStatus(row.status)) ?? null
+  let application = acceptedApplication ?? applications[0] ?? null
+
+  let hasAcceptedNotification = false
+  if (!isOwner && !acceptedApplication && identityCandidates.length > 0) {
+    const { data: acceptedNotif } = await supabaseAdmin
+      .from('notifications')
+      .select('id, created_at')
+      .in('user_id', identityCandidates)
+      .eq('type', 'accepted')
+      .contains('metadata', { project_id: projectId })
+      .order('created_at', { ascending: false })
+      .limit(1)
+
+    if ((acceptedNotif?.length ?? 0) > 0) {
+      hasAcceptedNotification = true
+      if (!application) {
+        application = {
+          id: acceptedNotif![0].id,
+          status: 'accepted',
+          message: null,
+          created_at: acceptedNotif![0].created_at,
+        }
+      }
+    }
+  }
+
+  const isTeamMember = isOwner || !!acceptedApplication || hasAcceptedNotification
 
   return { profile, isOwner, application: application ?? null, isTeamMember }
 }
@@ -126,6 +212,54 @@ function scoreTier(score: number) {
   return 'Probation'
 }
 
+function isAcceptedStatus(status: string | null | undefined) {
+  const normalized = String(status || '').trim().toLowerCase()
+  return normalized === 'accepted' || normalized === 'approved' || normalized === 'active'
+}
+
+function isImageAsset(url: string) {
+  const clean = url.split('?')[0].toLowerCase()
+  return clean.endsWith('.png') || clean.endsWith('.jpg') || clean.endsWith('.jpeg') || clean.endsWith('.gif') || clean.endsWith('.webp') || clean.endsWith('.svg')
+}
+
+function normalizeAssetList(value: unknown): string[] {
+  if (!value) return []
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+  }
+  if (typeof value === 'string') {
+    const trimmed = value.trim()
+    if (!trimmed) return []
+    if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+      try {
+        const parsed = JSON.parse(trimmed)
+        return Array.isArray(parsed)
+          ? parsed.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+          : []
+      } catch {
+        return []
+      }
+    }
+    return trimmed.includes(',')
+      ? trimmed.split(',').map(s => s.trim()).filter(Boolean)
+      : [trimmed]
+  }
+  return []
+}
+
+function isPdfAsset(url: string) {
+  return url.split('?')[0].toLowerCase().endsWith('.pdf')
+}
+
+function displayFileName(url: string, index: number) {
+  try {
+    const name = decodeURIComponent(url.split('/').pop() || '')
+    return name || `Attachment ${index + 1}`
+  } catch {
+    return `Attachment ${index + 1}`
+  }
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function ProjectDetailPage({
@@ -140,7 +274,7 @@ export default async function ProjectDetailPage({
   if (!project) notFound()
 
   const { profile, isOwner, application, isTeamMember } = session?.user?.id
-    ? await getUserContext(session.user.id, id, project.owner_id)
+    ? await getUserContext(session.user.id, session.user.email, id, project.owner_id)
     : { profile: null, isOwner: false, application: null, isTeamMember: false }
 
   const spotsLeft = project.slots - project.filled_slots
@@ -150,21 +284,30 @@ export default async function ProjectDetailPage({
   const createdDate = new Date(project.created_at).toLocaleDateString('en-US', {
     year: 'numeric', month: 'short', day: 'numeric',
   })
+  const vaultAssets = Array.from(
+    new Set([
+      ...normalizeAssetList(project.file_urls),
+      ...normalizeAssetList(project.vault_files),
+    ])
+  )
 
   let unreadCount = 0
   if (session?.user?.id) {
-    const { data: viewerProfile } = await supabaseAdmin
-      .from('profiles')
-      .select('id, user_id')
-      .eq('user_id', session.user.id)
-      .single()
+    const viewerCandidates = await resolveProfileCandidates(session.user.id, session.user.email)
+    const viewerIds = Array.from(
+      new Set(
+        viewerCandidates.flatMap((candidate) => [candidate.user_id, candidate.id]).filter(Boolean)
+      )
+    )
 
-    const { count } = await supabaseAdmin
-      .from('notifications')
-      .select('id', { count: 'exact', head: true })
-      .in('user_id', viewerProfile ? [viewerProfile.user_id, viewerProfile.id] : [session.user.id])
-      .eq('read', false)
-    unreadCount = count ?? 0
+    if (viewerIds.length > 0) {
+      const { count } = await supabaseAdmin
+        .from('notifications')
+        .select('id', { count: 'exact', head: true })
+        .in('user_id', viewerIds)
+        .eq('read', false)
+      unreadCount = count ?? 0
+    }
   }
 
   return (
@@ -265,71 +408,36 @@ export default async function ProjectDetailPage({
               {/* ── Left Column ── */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
 
-                {/* Project Overview */}
-                <section className="glass-panel ghost-border" style={{ padding: '32px' }}>
-                  <h3 style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 700, marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7' }}>
-                    <span style={{ width: '4px', height: '24px', background: '#adc6ff', display: 'inline-block' }} />
-                    Project Overview
-                  </h3>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
-                    <div>
-                      <h4 style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '12px' }}>
-                        Core Mission
-                      </h4>
-                      <p style={{ color: '#c2c6d6', fontSize: '14px', lineHeight: 1.7 }}>
-                        {project.full_description || project.description}
-                      </p>
-                    </div>
-                    <div>
-                      <h4 style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '12px' }}>
-                        Status
-                      </h4>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                        <span style={{
-                          padding: '4px 12px', fontSize: '11px', fontFamily: 'DM Mono', fontWeight: 700,
-                          background: 'rgba(59,130,246,0.1)', color: '#60a5fa',
-                          border: '1px solid rgba(59,130,246,0.3)',
-                          display: 'flex', alignItems: 'center', gap: '8px',
-                        }}>
-                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#60a5fa', display: 'inline-block' }} className="animate-pulse" />
-                          {project.status === 'open' ? 'Active Recruitment' : project.status.toUpperCase()}
-                        </span>
-                      </div>
-                      {project.timeline && (
-                        <>
-                          <h4 style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '8px' }}>
-                            Timeline
-                          </h4>
-                          <p style={{ color: '#c2c6d6', fontSize: '13px', fontFamily: 'DM Mono' }}>{project.timeline}</p>
-                        </>
-                      )}
+                {/* Full Details */}
+                <section className="glass-panel ghost-border" style={{ padding: '28px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', marginBottom: '16px' }}>
+                    <h3 style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7' }}>
+                      <span className="material-symbols-outlined" style={{ color: '#adc6ff' }}>description</span>
+                      Full Details
+                    </h3>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <span className="tag-pill">{spotsLeft} spot{spotsLeft === 1 ? '' : 's'} left</span>
+                      <span className="tag-pill">{project.visibility}</span>
+                      <span className="tag-pill">{project.status}</span>
                     </div>
                   </div>
 
-                  {/* Required Skills */}
+                  {project.timeline && (
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#8c909f', marginBottom: '14px' }}>
+                      Timeline: {project.timeline}
+                    </p>
+                  )}
+
+                  <MarkdownView content={project.full_description || project.description} />
+
                   {project.required_skills?.length > 0 && (
-                    <div style={{ marginBottom: '24px' }}>
-                      <h4 style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '12px' }}>
+                    <div style={{ marginTop: '18px' }}>
+                      <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '10px' }}>
                         Required Skills
-                      </h4>
+                      </p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                         {project.required_skills.map((skill: string) => (
                           <span key={skill} className="skill-pill">{skill}</span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Tech Stack */}
-                  {project.tech_stack?.length > 0 && (
-                    <div>
-                      <h4 style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '12px' }}>
-                        Technical Stack
-                      </h4>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-                        {project.tech_stack.map((tech: string) => (
-                          <span key={tech} className="tag-pill">{tech}</span>
                         ))}
                       </div>
                     </div>
@@ -362,22 +470,80 @@ export default async function ProjectDetailPage({
                               </div>
                             </div>
                           </div>
-                          <span className="material-symbols-outlined" style={{ color: '#d0bcff', fontSize: '18px' }}>open_in_new</span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{
+                              fontFamily: 'DM Mono', fontSize: '10px', color: '#d0bcff',
+                              border: '1px solid rgba(208,188,255,0.3)', padding: '4px 10px',
+                              textTransform: 'uppercase', letterSpacing: '0.08em',
+                            }}>
+                              Open Repo
+                            </span>
+                            <span className="material-symbols-outlined" style={{ color: '#d0bcff', fontSize: '18px' }}>open_in_new</span>
+                          </div>
                         </a>
                       ) : null}
 
-                      {project.file_urls?.map((url: string, i: number) => (
-                        <a key={i} href={url} target="_blank" rel="noopener noreferrer"
-                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(208,188,255,0.15)', textDecoration: 'none' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                            <span className="material-symbols-outlined" style={{ color: 'rgba(208,188,255,0.5)' }}>description</span>
-                            <span style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#c2c6d6' }}>Attachment {i + 1}</span>
-                          </div>
-                          <span className="material-symbols-outlined" style={{ color: '#d0bcff', fontSize: '18px' }}>download</span>
-                        </a>
-                      ))}
+                      {vaultAssets.map((url: string, i: number) => {
+                        const isImage = isImageAsset(url)
+                        const isPdf = isPdfAsset(url)
+                        return (
+                          <div
+                            key={url + i}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px', background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(208,188,255,0.15)', gap: '12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
+                              {isImage ? (
+                                <img
+                                  src={url}
+                                  alt={displayFileName(url, i)}
+                                  style={{ width: '44px', height: '44px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(208,188,255,0.25)', flexShrink: 0 }}
+                                />
+                              ) : (
+                                <span className="material-symbols-outlined" style={{ color: 'rgba(208,188,255,0.5)' }}>
+                                  {isPdf ? 'picture_as_pdf' : 'description'}
+                                </span>
+                              )}
+                              <div style={{ minWidth: 0 }}>
+                                <div style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#c2c6d6', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                  {displayFileName(url, i)}
+                                </div>
+                                <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', marginTop: '2px' }}>
+                                  {isImage ? 'Image' : isPdf ? 'PDF Document' : 'File Attachment'}
+                                </div>
+                              </div>
+                            </div>
 
-                      {!project.github_repo && (!project.file_urls || project.file_urls.length === 0) && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+                              <a
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  fontFamily: 'DM Mono', fontSize: '10px', color: '#d0bcff',
+                                  border: '1px solid rgba(208,188,255,0.3)', padding: '4px 10px',
+                                  textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none',
+                                }}
+                              >
+                                {isImage ? 'View Image' : isPdf ? 'View PDF' : 'Open'}
+                              </a>
+                              <a
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                download
+                                style={{
+                                  fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.8)',
+                                  border: '1px solid rgba(66,71,84,0.4)', padding: '4px 10px',
+                                  textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none',
+                                }}
+                              >
+                                Download
+                              </a>
+                            </div>
+                          </div>
+                        )
+                      })}
+
+                      {!project.github_repo && vaultAssets.length === 0 && (
                         <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f' }}>
                           No vault assets added yet.
                         </p>
@@ -535,6 +701,10 @@ export default async function ProjectDetailPage({
 
                 {isOwner && (
                   <DeleteProjectControl projectId={project.id} projectTitle={project.title} />
+                )}
+
+                {!isOwner && application?.status === 'accepted' && (
+                  <LeaveProjectControl projectId={project.id} projectTitle={project.title} />
                 )}
 
               </div>

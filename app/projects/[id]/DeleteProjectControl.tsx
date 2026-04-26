@@ -20,6 +20,11 @@ export function DeleteProjectControl({ projectId, projectTitle }: DeleteProjectC
     event.preventDefault()
     if (!canDelete || loading) return
 
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${projectTitle}"? This action cannot be undone.`
+    )
+    if (!confirmed) return
+
     setLoading(true)
     setError(null)
 
