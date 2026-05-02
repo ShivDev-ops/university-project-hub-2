@@ -45,3 +45,32 @@ export async function POST(
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json(data)
 }
+
+// Add this to the bottom of app/api/chat/threads/[id]/messages/route.ts
+
+export async function DELETE(
+  _req: Request,
+  { params }: { params: Promise<{ id: string }> }  // matches your existing pattern
+) {
+  const { id } = await params
+  const session = await getServerSession(authOptions)
+  if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+
+  // Verify the requester is a member of this thread before wiping
+  const { data: member } = await supabaseAdmin
+    .from('chat_members')
+    .select('user_id')
+    .eq('thread_id', id)
+    .eq('user_id', session.user.id)
+    .single()
+
+  if (!member) return NextResponse.json({ error: 'Not a member' }, { status: 403 })
+
+  const { error } = await supabaseAdmin
+    .from('chat_messages')
+    .delete()
+    .eq('thread_id', id)
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json({ ok: true })
+}

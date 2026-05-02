@@ -40,6 +40,13 @@ className="hover:text-[#adc6ff] transition-colors">
 </nav>
 </div>
 <div className="flex items-center gap-3">
+<Link href="/chat">
+<button className="p-2 rounded-lg hover:bg-[#adc6ff]/10 transition-all md:hidden">
+<span className="material-symbols-outlined" style={{ color: '#c2c6d6', fontSize: '22px' }}>
+chat
+</span>
+</button>
+</Link>
 <Link href="/notifications">
 <button className="p-2 rounded-lg hover:bg-[#adc6ff]/10 transition-all">
 <span className="material-symbols-outlined" style={{ color: '#c2c6d6', fontSize: '22px' }}>

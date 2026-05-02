@@ -10,6 +10,7 @@ const navItems = [
 { href: '/projects/create', icon: 'rocket_launch', label: 'Post Project' },
 { href: '/profile/edit', icon: 'manage_accounts', label: 'My Profile' },
 { href: '/chat', icon: 'chat', label: 'Messages' },
+{ href: '/notifications', icon: 'notifications', label: 'Notifications' },
 ]
 const workspaceItems = [
 { href: '/notifications', icon: 'notifications', label: 'Notifications' },

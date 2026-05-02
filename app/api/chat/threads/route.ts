@@ -56,4 +56,11 @@ export async function POST(req: Request) {
   if (membersError) return NextResponse.json({ error: membersError.message }, { status: 500 })
 
   return NextResponse.json(thread)
+}ge }, { status: 500 })
+  }
+
+  return NextResponse.json(thread)
+}
+or.message }, { status: 500 })
+  return NextResponse.json({ ok: true })
 }

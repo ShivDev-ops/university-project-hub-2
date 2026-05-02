@@ -111,6 +111,7 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
             { href: '/dashboard', label: 'Dashboard', icon: 'grid_view' },
             { href: '/projects/create', label: 'Post Project', icon: 'rocket_launch' },
             { href: profileHref, label: 'My Profile', icon: 'manage_accounts' },
+            { href: '/chat', label: 'Chat', icon: 'chat' },
             { href: '/notifications', label: 'Notifications', icon: 'notifications' },
           ].map(item => (
             <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
