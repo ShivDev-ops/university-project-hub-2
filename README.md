@@ -66,6 +66,56 @@ A full-stack web application that helps B.Tech students find teammates for unive
 - Suspended users → redirected to `/suspended`
 - Admin routes → protected with `is_admin` check
 
+### Phase 3 — Core Features + Chat System
+
+#### User Profiles & Onboarding
+- Profile creation wizard with skills selection, bio, and avatar upload
+- Skill-based matching system for project recommendations
+- User score system for reputation tracking
+- Public profile pages with project history and score visualization
+
+#### Projects & Applications
+- Project creation with team size, skills required, and description
+- Project listing and search with filters
+- Application system: users can apply to projects with cover letters
+- Project owners can accept/reject applicants
+- Team management: collaborators can leave projects with notifications
+- Project detail pages with activity feeds and team sections
+
+#### Notifications System
+- Comprehensive notification center with tabs for different types
+- Application notifications (owner-side: new applicants; user-side: application status)
+- Project-related notifications (collaborator left, etc.)
+- Real-time notification badges and unread counts
+- Per-notification actions (accept/reject applications, mark as read, delete)
+
+#### Chat & Social Features
+- **Real-time Chat**: Full-featured chat system with Supabase real-time subscriptions
+- **Thread Types**: Direct messages (DM), group chats, and team chats
+- **Message History**: Persistent message storage with sender information
+- **Friend System**: Send friend requests, accept/decline, view friend lists
+- **User Blocking**: Block/unblock users to prevent unwanted interactions
+- **Thread Muting**: Mute specific chat threads to reduce notifications
+- **Chat UI**: Responsive chat interface with online status indicators, avatars, and typing indicators
+- **Thread Management**: Create new threads, add members, view thread history
+
+#### Search & Discovery
+- Global search across users, projects, and content
+- Skill-based filtering for project and user discovery
+- Dashboard with personalized project recommendations
+
+#### Admin Features
+- Admin panel for user score management
+- Data export functionality for GDPR compliance
+- User suspension and account management
+
+#### Additional Features
+- File upload system for avatars and project attachments
+- Responsive design for desktop, tablet, and mobile
+- Dark theme with custom UI components
+- Email verification and password reset flows
+- Device fingerprinting for security
+
 ---
 
 ## 📁 Project Structure
@@ -106,6 +156,13 @@ university-project-hub2/
 │   │   │   ├── profile/route.ts             # Get/update user profile
 │   │   │   └── verify-email/route.ts        # Email verification endpoint
 │   │   └── verify-otp/route.ts              # Validate verification OTP
+│   │   ├── chat/
+│   │   │   └── threads/
+│   │   │       ├── route.ts                 # List/create chat threads
+│   │   │       └── [id]/
+│   │   │           ├── messages/route.ts    # Get/send messages in thread
+│   │   │           └── mute/route.ts        # Mute/unmute thread
+│   │   └── friends/route.ts                 # Send/accept friend requests
 │   ├── dashboard/page.tsx                   # Main protected dashboard
 │   ├── forgot-password/page.tsx             # Password reset request UI
 │   ├── login/page.tsx                       # Login page (credentials & OAuth)
@@ -130,6 +187,7 @@ university-project-hub2/
 │   ├── set-credentials/page.tsx             # Post-OAuth credential claim UI
 │   ├── suspended/page.tsx                   # Account suspended notice
 │   ├── verify/page.tsx                      # OTP verification page
+│   ├── chat/page.tsx                        # Chat interface page
 │   ├── globals.css                          # Global styles
 │   ├── layout.tsx                           # Root layout wrapper
 │   └── page.tsx                             # Home/landing page
@@ -146,6 +204,8 @@ university-project-hub2/
 │   ├── SessionProviderWrapper.tsx           # NextAuth session provider
 │   ├── SkillSelector.tsx                    # Skill multi-select component
 │   ├── SkillTag.tsx                         # Skill badge display
+│   ├── chat/
+│   │   └── ChatClient.tsx                   # Real-time chat interface component
 │   ├── dashboard/
 │   │   ├── MyProjectsPanel.tsx              # User's created projects panel
 │   │   └── SlotBanner.tsx                   # Project vacancy banner
