@@ -6,29 +6,44 @@ import { usePathname } from 'next/navigation'
 export default function DashboardSidebar({ profile, session }: { profile: any, session: any }) {
   const pathname = usePathname()
   const [unreadCount, setUnreadCount] = useState(0)
+  const [userProjects, setUserProjects] = useState<any[]>([])
   const profileHref = session?.user?.id ? `/profile/${session.user.id}` : '/profile/edit'
+
+  // Robust project ID detection: /projects/[id]/...
+  const pathParts = pathname.split('/')
+  const projectsIndex = pathParts.indexOf('projects')
+  const projectId = projectsIndex !== -1 && pathParts[projectsIndex + 1] ? pathParts[projectsIndex + 1] : null
+  const isActualProject = projectId && projectId !== 'create'
+  const currentLabHref = isActualProject ? `/projects/${projectId}/lab` : null
 
   useEffect(() => {
     let active = true
 
-    async function loadUnreadCount() {
+    async function loadData() {
       try {
-        const res = await fetch('/api/notifications/unread-count', { cache: 'no-store' })
-        if (!res.ok) return
-        const data = await res.json()
-        if (active) {
-          setUnreadCount(typeof data?.unreadCount === 'number' ? data.unreadCount : 0)
+        // Notifications
+        const notifRes = await fetch('/api/notifications/unread-count', { cache: 'no-store' })
+        if (notifRes.ok) {
+          const data = await notifRes.json()
+          if (active) setUnreadCount(typeof data?.unreadCount === 'number' ? data.unreadCount : 0)
         }
-      } catch {
-        if (active) setUnreadCount(0)
+
+        // Projects the user is part of (as owner or accepted member)
+        if (session?.user?.id) {
+          const res = await fetch('/api/projects?my=true', { cache: 'no-store' })
+          if (res.ok) {
+            const data = await res.json()
+            if (active) setUserProjects(Array.isArray(data) ? data : [])
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load sidebar data:', err)
       }
     }
 
-    void loadUnreadCount()
-    return () => {
-      active = false
-    }
-  }, [])
+    void loadData()
+    return () => { active = false }
+  }, [session?.user?.id])
 
   return (
     <aside className="hidden md:flex fixed left-0 top-[60px] h-[calc(100vh-60px)] w-64 flex-col py-4 z-40"
@@ -107,6 +122,34 @@ export default function DashboardSidebar({ profile, session }: { profile: any, s
             </span>
           )}
         </Link>
+
+        {/* Dynamic Mission Control section */}
+        {userProjects.length > 0 && (
+          <div className="mt-8 pt-4 border-t border-emerald-500/10">
+            <div style={{fontFamily:'DM Mono', fontSize:'10px', fontWeight:700, color:'rgba(16, 185, 129, 0.4)', padding:'8px', textTransform:'uppercase', letterSpacing:'0.2em'}}>
+              Mission Control
+            </div>
+            <div className="space-y-1">
+              {userProjects.map(proj => {
+                const href = `/projects/${proj.id}/lab`
+                const active = pathname === href
+                return (
+                  <Link key={proj.id} href={href}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${active ? '' : 'hover:bg-emerald-500/5'}`}
+                    style={active 
+                      ? {background:'rgba(16, 185, 129, 0.1)', color:'#10b981', borderRight:'4px solid #10b981'} 
+                      : {color:'rgba(16, 185, 129, 0.6)'}}
+                  >
+                    <span className="material-symbols-outlined" style={{fontSize:'16px'}}>terminal</span>
+                    <span style={{fontFamily:'DM Mono', fontSize:'11px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis'}}>
+                      {proj.title}
+                    </span>
+                  </Link>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Score widget */}

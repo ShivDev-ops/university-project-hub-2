@@ -78,11 +78,56 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+  const session = await getServerSession(authOptions)
   const { searchParams } = new URL(req.url)
+  const isMyProjects = searchParams.get('my') === 'true'
   const q = searchParams.get('q')
   const status = searchParams.get('status') ?? 'open'
   const limit = Math.min(parseInt(searchParams.get('limit') ?? '20'), 50)
   const offset = parseInt(searchParams.get('offset') ?? '0')
+
+  if (isMyProjects) {
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Fetch user's owned projects
+    const { data: ownedProjects } = await supabaseAdmin
+      .from('projects')
+      .select('id, title, status')
+      .eq('owner_id', session.user.id)
+    
+    // Fetch user's joined projects (accepted status)
+    // We fetch the project IDs first to be safe about joins
+    const { data: joinedApps } = await supabaseAdmin
+      .from('applications')
+      .select('project_id')
+      .eq('applicant_id', session.user.id)
+      .eq('status', 'accepted')
+    
+    const joinedProjectIds = (joinedApps || []).map(a => a.project_id)
+    
+    let joinedProjects: any[] = []
+    if (joinedProjectIds.length > 0) {
+      const { data } = await supabaseAdmin
+        .from('projects')
+        .select('id, title, status')
+        .in('id', joinedProjectIds)
+      joinedProjects = data || []
+    }
+
+    // Merge and dedupe
+    const allProjects = [...(ownedProjects || []), ...joinedProjects]
+    const seen = new Set()
+    const deduped = allProjects.filter(p => {
+      const isDuplicate = seen.has(p.id)
+      seen.add(p.id)
+      // Only show active/in-progress projects in Mission Control
+      return !isDuplicate && p.status !== 'completed'
+    })
+
+    return NextResponse.json(deduped)
+  }
 
   let query = supabaseAdmin
     .from('projects')

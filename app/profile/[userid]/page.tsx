@@ -102,14 +102,15 @@ export default async function ProfilePage(props: {
     .or(`owner_id.eq.${profile.user_id},owner_id.eq.${profile.id}`)
     .order('created_at', { ascending: false })
 
-  // Fetch projects where viewed profile is an accepted team member
+  // Fetch projects where viewed profile is currently an accepted team member
+  // IMPORTANT: We filter by applicant_id AND project status to ensure stale/left projects don't show
   const { data: membershipApps } = await supabaseAdmin
     .from('applications')
-    .select('project_id')
+    .select('project_id, projects!inner(status)')
     .or(`applicant_id.eq.${profile.user_id},applicant_id.eq.${profile.id}`)
     .eq('status', 'accepted')
 
-  const memberProjectIds = Array.from(new Set((membershipApps ?? []).map((a: { project_id: string }) => a.project_id)))
+  const memberProjectIds = Array.from(new Set((membershipApps ?? []).map((a: any) => a.project_id)))
 
   const { data: memberProjects } = memberProjectIds.length > 0
     ? await supabaseAdmin

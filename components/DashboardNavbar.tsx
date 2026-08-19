@@ -6,30 +6,43 @@ import { usePathname } from 'next/navigation'
 export default function DashboardNavbar({ profile }: { profile: any }) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [unreadCount, setUnreadCount] = useState(0)
+  const [userProjects, setUserProjects] = useState<any[]>([])
   const pathname = usePathname()
   const profileHref = profile?.user_id ? `/profile/${profile.user_id}` : '/profile/edit'
+
+  // Robust project ID detection: /projects/[id]/...
+  const pathParts = pathname.split('/')
+  const projectsIndex = pathParts.indexOf('projects')
+  const projectId = projectsIndex !== -1 && pathParts[projectsIndex + 1] ? pathParts[projectsIndex + 1] : null
+  const isActualProject = projectId && projectId !== 'create'
+  const currentLabHref = isActualProject ? `/projects/${projectId}/lab` : null
 
   useEffect(() => {
     let active = true
 
-    async function loadUnreadCount() {
+    async function loadData() {
       try {
-        const res = await fetch('/api/notifications/unread-count', { cache: 'no-store' })
-        if (!res.ok) return
-        const data = await res.json()
-        if (active) {
-          setUnreadCount(typeof data?.unreadCount === 'number' ? data.unreadCount : 0)
+        // Notifications
+        const notifRes = await fetch('/api/notifications/unread-count', { cache: 'no-store' })
+        if (notifRes.ok) {
+          const data = await notifRes.json()
+          if (active) setUnreadCount(typeof data?.unreadCount === 'number' ? data.unreadCount : 0)
         }
-      } catch {
-        if (active) setUnreadCount(0)
+
+        // Projects
+        const projRes = await fetch('/api/projects?my=true', { cache: 'no-store' })
+        if (projRes.ok) {
+          const data = await projRes.json()
+          if (active) setUserProjects(Array.isArray(data) ? data : [])
+        }
+      } catch (err) {
+        console.error('Failed to load navbar data:', err)
       }
     }
 
-    void loadUnreadCount()
-    return () => {
-      active = false
-    }
-  }, [])
+    void loadData()
+    return () => { active = false }
+  }, [profile?.user_id])
 
   return (
     <>
@@ -43,9 +56,39 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
         </Link>
         <nav className="hidden md:flex items-center gap-6">
           <Link href="/dashboard" style={{fontSize:'14px', fontWeight:500, color:'#adc6ff', borderBottom:'2px solid #adc6ff', paddingBottom:'4px'}}>Discover</Link>
-          <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Labs</a>
+{projectId ? (
+  <Link href={`/projects/${projectId}/lab`} style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Labs</Link>
+) : (
+  <div className="relative group">
+    <button style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors flex items-center gap-1">
+      Labs
+      <span className="material-symbols-outlined" style={{fontSize:'16px'}}>expand_more</span>
+    </button>
+    {userProjects.length > 0 && (
+      <div className="absolute top-full left-0 mt-2 w-64 rounded-xl border border-zinc-700/50 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
+        style={{background:'rgba(14,19,34,0.96)'}}>
+        <div className="p-2 border-b border-zinc-700/30">
+          <span style={{fontFamily:'DM Mono', fontSize:'9px', fontWeight:700, color:'rgba(16,185,129,0.5)', textTransform:'uppercase', letterSpacing:'0.15em', padding:'4px 8px'}}>Select Project Lab</span>
+        </div>
+        <div className="p-1 max-h-60 overflow-y-auto">
+          {userProjects.map((proj: any) => (
+            <Link key={proj.id} href={`/projects/${proj.id}/lab`}
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-emerald-500/10 transition-colors"
+              style={{color:'rgba(194,198,214,0.85)'}}>
+              <span className="material-symbols-outlined" style={{fontSize:'16px', color:'#10b981'}}>terminal</span>
+              <span style={{fontFamily:'DM Mono', fontSize:'12px'}} className="truncate">{proj.title}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+)}
           <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Teams</a>
           <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Archive</a>
+          <Link href="/portfolio" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors flex items-center gap-1">
+            Portfolio
+          </Link>
         </nav>
       </div>
       <div className="flex items-center gap-2 md:gap-4">
@@ -121,6 +164,30 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
               <span style={{ fontFamily:'DM Mono', fontSize:'12px' }}>{item.label}</span>
             </Link>
           ))}
+
+          {userProjects.length > 0 && (
+            <div className="mt-4 pt-3 border-t border-emerald-500/10">
+              <div style={{fontFamily:'DM Mono', fontSize:'10px', fontWeight:700, color:'rgba(16, 185, 129, 0.4)', padding:'0 12px 8px', textTransform:'uppercase', letterSpacing:'0.2em'}}>
+                Mission Control
+              </div>
+              <div className="space-y-1">
+                {userProjects.map(proj => {
+                  const href = `/projects/${proj.id}/lab`
+                  const active = pathname === href
+                  return (
+                    <Link key={proj.id} href={href} onClick={() => setMobileOpen(false)}
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg transition-all"
+                      style={active 
+                        ? { background:'rgba(16, 185, 129, 0.12)', color:'#10b981' } 
+                        : { color:'rgba(16, 185, 129, 0.8)' }}>
+                      <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>terminal</span>
+                      <span style={{ fontFamily:'DM Mono', fontSize:'11px' }}>{proj.title}</span>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )}
