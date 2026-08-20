@@ -941,61 +941,6 @@ export default function LandingClient({ projects }: Props) {
         </div>
       </section>
 
-      {/* ── STICKY BOTTOM BANNER ── */}
-      <div className="bottom-banner-shell" style={{
-        position: 'fixed', bottom: 0, left: 0, right: 0,
-        zIndex: 60, padding: '16px 24px',
-        display: 'flex', justifyContent: 'center',
-        pointerEvents: 'none',
-      }}>
-        <div
-          className="bottom-banner"
-          style={{
-            pointerEvents: 'auto',
-            display: 'flex', alignItems: 'center',
-            justifyContent: 'space-between', gap: 32,
-            padding: '14px 28px',
-            background: 'rgba(24,24,27,0.85)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(140,144,159,0.15)',
-            borderRadius: 9999,
-            boxShadow: '0 -8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(16,185,129,0.08)',
-            maxWidth: 700, width: '100%',
-          }}
-        >
-          <div className="bottom-banner-copy" style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%',
-              background: '#10B981',
-              boxShadow: '0 0 10px #10B981',
-              display: 'inline-block',
-            }} />
-            <p style={{ fontSize: 14, color: '#f4f4f5', fontWeight: 500, whiteSpace: 'nowrap' }}>
-              Sign in to unlock full details, apply, and find teammates
-            </p>
-          </div>
-          <Link className="bottom-banner-action" href="/login" style={{ textDecoration: 'none', flexShrink: 0 }}>
-            <button style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              background: 'transparent', border: 'none',
-              cursor: 'pointer', padding: '4px 0',
-              fontFamily: 'DM Mono, monospace', fontWeight: 700,
-              fontSize: 13, color: '#10B981',
-              letterSpacing: '0.06em', whiteSpace: 'nowrap',
-              transition: 'gap 0.2s ease',
-            }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.gap = '10px' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.gap = '6px' }}
-            >
-              GET STARTED
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="9 18 15 12 9 6"/>
-              </svg>
-            </button>
-          </Link>
-        </div>
-      </div>
     </>
   )
 }
