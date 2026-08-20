@@ -46,21 +46,21 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
 
   return (
     <>
-      <header className="fixed top-0 w-full h-[60px] backdrop-blur-xl border-b border-zinc-800 flex justify-between items-center px-4 md:px-6 z-50 bg-zinc-950/80 shadow-[0_0_20px_rgba(16,185,129,0.05)]">
-      <div className="flex items-center gap-4 md:gap-8">
+      <header className="fixed top-0 left-0 right-0 h-[60px] flex items-center px-[18px] z-50 pointer-events-none">
+      <div className="w-full max-w-[1180px] min-h-[47px] mx-auto px-4 md:px-5 py-[5px] flex justify-between items-center rounded-[15px] border border-slate-400/10 bg-[#141b2b]/80 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl pointer-events-auto">
+      <div className="flex items-center gap-4 md:gap-6">
         <Link href="/dashboard">
-          <div className="font-mono tracking-widest uppercase font-bold text-emerald-500 cursor-pointer flex items-center gap-2 text-sm">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+          <div className="font-mono tracking-[0.02em] uppercase font-bold text-[#6bd8cb] cursor-pointer flex items-center gap-2 text-sm">
             PROJECT_HUB
           </div>
         </Link>
-        <nav className="hidden md:flex items-center gap-6">
-          <Link href="/dashboard" className="text-[11px] font-mono tracking-widest uppercase font-bold text-white border-b-2 border-emerald-500 pb-1">Discover</Link>
+        <nav className="hidden md:flex items-center gap-0.5">
+          <Link href="/dashboard" className="px-2.5 py-2 rounded-[9px] text-[11px] font-mono tracking-widest uppercase font-bold text-zinc-200 bg-emerald-400/10">Discover</Link>
 {projectId ? (
-  <Link href={`/projects/${projectId}/lab`} className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors">Labs</Link>
+  <Link href={`/projects/${projectId}/lab`} className="px-2.5 py-2 rounded-[9px] text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-zinc-200 hover:bg-emerald-400/10 transition-colors">Labs</Link>
 ) : (
   <div className="relative group">
-    <button className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
+    <button className="px-2.5 py-2 rounded-[9px] text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-zinc-200 hover:bg-emerald-400/10 transition-colors flex items-center gap-1">
       Labs
       <span className="material-symbols-outlined" style={{fontSize:'16px'}}>expand_more</span>
     </button>
@@ -82,9 +82,9 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
     )}
   </div>
 )}
-          <a href="#" className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors">Teams</a>
-          <a href="#" className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors">Archive</a>
-          <Link href="/portfolio" className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
+          <a href="#" className="px-2.5 py-2 rounded-[9px] text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-zinc-200 hover:bg-emerald-400/10 transition-colors">Teams</a>
+          <a href="#" className="px-2.5 py-2 rounded-[9px] text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-zinc-200 hover:bg-emerald-400/10 transition-colors">Archive</a>
+          <Link href="/portfolio" className="px-2.5 py-2 rounded-[9px] text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-zinc-200 hover:bg-emerald-400/10 transition-colors flex items-center gap-1">
             Portfolio
           </Link>
         </nav>
@@ -140,6 +140,7 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
         >
           <span className="material-symbols-outlined" style={{color:'#d4d4d8'}}>{mobileOpen ? 'close' : 'menu'}</span>
         </button>
+      </div>
       </div>
     </header>
 

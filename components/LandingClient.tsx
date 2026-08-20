@@ -409,6 +409,35 @@ export default function LandingClient({ projects }: Props) {
         .logo-mark { transition: color 0.2s; }
         .logo-mark:hover { color: #6BD8CB; }
 
+        .site-nav-link {
+          color: #a8afc1;
+          font-size: 13px;
+          letter-spacing: 0.01em;
+          padding: 8px 11px;
+          border-radius: 9px;
+          transition: color 0.2s ease, background 0.2s ease;
+        }
+
+        .site-nav-link:hover {
+          color: #e5e7eb;
+          background: rgba(107,216,203,0.08);
+        }
+
+        .site-nav-link::after {
+          display: none;
+        }
+
+        .nav-frame {
+          width: min(100%, 1180px);
+          min-height: 46px;
+          margin: 0 auto;
+          padding: 5px 7px 5px 16px;
+          border: 1px solid rgba(148,163,184,0.12);
+          border-radius: 15px;
+          background: rgba(20,27,43,0.68);
+          box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
         /* Notification/terminal icon button */
         .icon-btn {
           width: 36px; height: 36px; border-radius: 50%;
@@ -466,6 +495,7 @@ export default function LandingClient({ projects }: Props) {
           .hero-right { display: none !important; }
           .nav-links  { display: none !important; }
           .hero-content-grid { grid-template-columns: 1fr !important; }
+          .nav-frame { padding-left: 14px; }
           .projects-section-header {
             align-items: flex-start !important;
             flex-direction: column;
@@ -501,7 +531,7 @@ export default function LandingClient({ projects }: Props) {
 
       {/* ── BACKGROUND BLOBS (fixed, behind everything) ── */}
       <div aria-hidden style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}>
-        <div className="hero-content-grid" style={{
+        <div style={{
           position: 'absolute', top: 0, right: 0,
           width: 600, height: 600, borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
@@ -522,66 +552,65 @@ export default function LandingClient({ projects }: Props) {
       </div>
 
       {/* ── NAVBAR ── */}
-      <nav style={{
-        position: 'fixed', top: 0, left: 0, right: 0, height: 60, zIndex: 50,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        padding: '0 24px',
-        background: 'rgba(9,9,11,0.65)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(140,144,159,0.10)',
-        boxShadow: '0 0 30px rgba(16,185,129,0.06)',
+      <nav className="site-nav" style={{
+        position: 'fixed', top: 0, left: 0, right: 0, height: 72, zIndex: 50,
+        display: 'flex', alignItems: 'center',
+        padding: '0 18px',
+        background: 'transparent',
+        pointerEvents: 'none',
       }}>
-        {/* Left: logo + nav links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
-          <Link href="/" style={{ textDecoration: 'none' }}>
-            <span
-              className="logo-mark"
-              style={{
-                fontFamily: 'Inter, sans-serif', fontWeight: 800,
-                fontSize: 18, color: '#10B981',
-                letterSpacing: '-0.03em', display: 'block',
-              }}
-            >
-              PROJECT_HUB
-            </span>
-          </Link>
-          <div className="nav-links" style={{ display: 'flex', gap: 28 }}>
-            {['Discover', 'Labs', 'Teams', 'Archive'].map(l => (
-              <Link key={l} href="/login" className="nav-link">{l}</Link>
-            ))}
+        <div className="nav-frame" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', pointerEvents: 'auto' }}>
+          {/* Left: logo + nav links */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
+            <Link href="/" style={{ textDecoration: 'none' }}>
+              <span
+                className="logo-mark"
+                style={{
+                  fontFamily: 'Inter, sans-serif', fontWeight: 700,
+                  fontSize: 16, color: '#6BD8CB',
+                  letterSpacing: '0.02em', display: 'block',
+                }}
+              >
+                PROJECT_HUB
+              </span>
+            </Link>
+            <div className="nav-links" style={{ display: 'flex', gap: 2 }}>
+              {['Discover', 'Labs', 'Teams', 'Archive'].map(l => (
+                <Link key={l} href="/login" className="nav-link site-nav-link">{l}</Link>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* Right: icons + avatar */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button className="icon-btn" title="Notifications" onClick={() => {}}>
+          {/* Right: icons + avatar */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+            <button className="icon-btn" title="Notifications" onClick={() => {}}>
             {/* Bell icon */}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
               <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
             </svg>
           </button>
-          <button className="icon-btn" title="Terminal">
+            <button className="icon-btn" title="Terminal">
             {/* Terminal icon */}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="4 17 10 11 4 5"/>
               <line x1="12" y1="19" x2="20" y2="19"/>
             </svg>
           </button>
-          <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="avatar-ring">
-              <div style={{
-                width: '100%', height: '100%',
-                background: 'linear-gradient(135deg, #10B981, #059669)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontFamily: 'DM Mono, monospace', fontSize: 12,
-                fontWeight: 500, color: 'white',
-              }}>
-                ?
+            <Link href="/login" style={{ textDecoration: 'none' }}>
+              <div className="avatar-ring">
+                <div style={{
+                  width: '100%', height: '100%',
+                  background: 'linear-gradient(135deg, #10B981, #059669)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontFamily: 'DM Mono, monospace', fontSize: 12,
+                  fontWeight: 500, color: 'white',
+                }}>
+                  ?
+                </div>
               </div>
-            </div>
-          </Link>
+            </Link>
+          </div>
         </div>
       </nav>
 
