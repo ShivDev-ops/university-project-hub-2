@@ -438,6 +438,18 @@ export default function LandingClient({ projects }: Props) {
           opacity: 0;
         }
 
+        .projects-heading-row {
+          flex-wrap: wrap;
+        }
+
+        .live-badge {
+          flex-shrink: 0;
+        }
+
+        .projects-section-header {
+          gap: 20px;
+        }
+
         /* Particle drift */
         @keyframes drift1 { 0%,100%{transform:translate(0,0)} 25%{transform:translate(6px,-8px)} 75%{transform:translate(-4px,6px)} }
         @keyframes drift2 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-8px,5px)} 66%{transform:translate(5px,-6px)} }
@@ -453,19 +465,43 @@ export default function LandingClient({ projects }: Props) {
         @media (max-width: 768px) {
           .hero-right { display: none !important; }
           .nav-links  { display: none !important; }
+          .hero-content-grid { grid-template-columns: 1fr !important; }
+          .projects-section-header {
+            align-items: flex-start !important;
+            flex-direction: column;
+          }
           .hero-h1    { font-size: 52px !important; }
           .hero-h1-sub { font-size: 42px !important; }
+          .bottom-banner {
+            border-radius: 16px;
+            gap: 12px;
+            padding: 12px 16px;
+          }
+          .bottom-banner-copy p {
+            white-space: normal !important;
+            font-size: 13px !important;
+            line-height: 1.35;
+          }
         }
 
         @media (max-width: 480px) {
           .hero-h1    { font-size: 40px !important; }
           .hero-h1-sub { font-size: 32px !important; }
+          .bottom-banner-shell { padding: 10px 12px !important; }
+          .bottom-banner {
+            align-items: flex-start;
+            flex-direction: column;
+            width: 100%;
+          }
+          .bottom-banner-action {
+            align-self: flex-end;
+          }
         }
       `}</style>
 
       {/* ── BACKGROUND BLOBS (fixed, behind everything) ── */}
       <div aria-hidden style={{ position: 'fixed', inset: 0, zIndex: -1, pointerEvents: 'none' }}>
-        <div style={{
+        <div className="hero-content-grid" style={{
           position: 'absolute', top: 0, right: 0,
           width: 600, height: 600, borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
@@ -611,15 +647,15 @@ export default function LandingClient({ projects }: Props) {
                 animationDelay: '0.1s',
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '7px 16px', borderRadius: 9999,
-                background: 'rgba(16,185,129,0.08)',
-                border: '1px solid rgba(16,185,129,0.25)',
+                background: 'rgba(107,216,203,0.10)',
+                border: '1px solid rgba(107,216,203,0.28)',
                 animation: 'hero-in 0.7s ease 0.1s forwards, badge-glow 3s ease-in-out 1s infinite',
               }}
             >
               <span style={{ fontSize: 14 }}>🎓</span>
               <span style={{
                 fontFamily: 'DM Mono, monospace', fontSize: 11,
-                color: '#ADC6FF', fontWeight: 600,
+                color: '#6BD8CB', fontWeight: 600,
                 letterSpacing: '0.10em', textTransform: 'uppercase',
               }}>
                 University-Exclusive Platform
@@ -840,17 +876,17 @@ export default function LandingClient({ projects }: Props) {
         position: 'relative',
       }}>
         {/* Section header */}
-        <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 52 }}>
+        <div className="projects-section-header" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 52 }}>
           <div>
             {/* Heading + live badge */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <div className="projects-heading-row" style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <h2 style={{
                 fontFamily: 'Inter, sans-serif', fontWeight: 800,
                 fontSize: 38, letterSpacing: '-0.03em', color: '#f4f4f5',
               }}>
                 Active Projects
               </h2>
-              <span style={{
+              <span className="live-badge" style={{
                 display: 'flex', alignItems: 'center', gap: 6,
                 padding: '4px 12px', borderRadius: 9999,
                 background: 'rgba(107,216,203,0.10)',
@@ -906,7 +942,7 @@ export default function LandingClient({ projects }: Props) {
       </section>
 
       {/* ── STICKY BOTTOM BANNER ── */}
-      <div style={{
+      <div className="bottom-banner-shell" style={{
         position: 'fixed', bottom: 0, left: 0, right: 0,
         zIndex: 60, padding: '16px 24px',
         display: 'flex', justifyContent: 'center',
@@ -928,7 +964,7 @@ export default function LandingClient({ projects }: Props) {
             maxWidth: 700, width: '100%',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="bottom-banner-copy" style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
             <span style={{
               width: 8, height: 8, borderRadius: '50%',
               background: '#10B981',
@@ -939,7 +975,7 @@ export default function LandingClient({ projects }: Props) {
               Sign in to unlock full details, apply, and find teammates
             </p>
           </div>
-          <Link href="/login" style={{ textDecoration: 'none' }}>
+          <Link className="bottom-banner-action" href="/login" style={{ textDecoration: 'none', flexShrink: 0 }}>
             <button style={{
               display: 'flex', alignItems: 'center', gap: 6,
               background: 'transparent', border: 'none',
