@@ -47,7 +47,7 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 h-[60px] flex items-center px-[18px] z-50 pointer-events-none">
-      <div className="w-full max-w-[1180px] min-h-[47px] mx-auto px-4 md:px-5 py-[5px] flex justify-between items-center rounded-[15px] border border-slate-400/10 bg-[#141b2b]/80 shadow-[0_10px_30px_rgba(0,0,0,0.12)] backdrop-blur-xl pointer-events-auto">
+      <div className="w-full max-w-[1180px] min-h-[47px] mx-auto px-4 md:px-5 py-[5px] flex justify-between items-center rounded-[15px] border border-slate-300/10 bg-[#141b2b]/55 shadow-[0_10px_30px_rgba(0,0,0,0.10)] backdrop-blur-xl pointer-events-auto">
       <div className="flex items-center gap-4 md:gap-6">
         <Link href="/dashboard">
           <div className="font-mono tracking-[0.02em] uppercase font-bold text-[#6bd8cb] cursor-pointer flex items-center gap-2 text-sm">
@@ -65,14 +65,14 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
       <span className="material-symbols-outlined" style={{fontSize:'16px'}}>expand_more</span>
     </button>
     {userProjects.length > 0 && (
-      <div className="absolute top-full left-0 mt-2 w-64 rounded-md border border-zinc-800 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 bg-zinc-950">
-        <div className="p-2 border-b border-zinc-800">
+      <div className="absolute top-full left-0 mt-2 w-64 rounded-[12px] border border-slate-300/10 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 bg-[#141b2b]/75 backdrop-blur-xl">
+        <div className="p-2 border-b border-slate-300/10">
           <span className="font-mono text-[9px] font-bold text-emerald-500/50 uppercase tracking-[0.15em] px-2 py-1">Select Project Lab</span>
         </div>
         <div className="p-1 max-h-60 overflow-y-auto">
           {userProjects.map((proj: any) => (
             <Link key={proj.id} href={`/projects/${proj.id}/lab`}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-sm hover:bg-emerald-500/10 transition-colors text-zinc-300">
+              className="flex items-center gap-3 px-3 py-2.5 rounded-[9px] hover:bg-emerald-400/10 transition-colors text-zinc-300">
               <span className="material-symbols-outlined text-emerald-500 text-[16px]">terminal</span>
               <span className="font-mono text-[11px] truncate">{proj.title}</span>
             </Link>
