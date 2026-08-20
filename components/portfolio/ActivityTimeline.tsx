@@ -6,7 +6,7 @@ export default function ActivityTimeline({ data }: { data: any }) {
 
   if (!telemetry || telemetry.length === 0) {
     return (
-      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-2xl text-center text-zinc-400 glass-panel">
+      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-md text-center text-zinc-400 glass-panel">
         <Activity className="mx-auto w-12 h-12 text-zinc-700 mb-4" />
         <p className="text-lg">No activity telemetry found.</p>
         <p className="text-sm mt-2 text-zinc-500">System audit logs were not captured.</p>
@@ -20,12 +20,12 @@ export default function ActivityTimeline({ data }: { data: any }) {
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
           <Activity className="text-emerald-500" /> System Telemetry
         </h2>
-        <div className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-3 py-1.5 rounded-lg border border-zinc-800">
+        <div className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-3 py-1.5 rounded-sm border border-zinc-800">
           {telemetry.length} Events Logged
         </div>
       </div>
 
-      <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden glass-panel">
+      <div className="bg-zinc-900/40 border border-zinc-800 rounded-md overflow-hidden glass-panel">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>

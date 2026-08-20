@@ -3,7 +3,7 @@ size?: 'sm' | 'md' | 'lg'
 color?: string
 }
 const sizes = { sm: 'w-4 h-4', md: 'w-7 h-7', lg: 'w-10 h-10' }
-export function Spinner({ size = 'md', color = '#adc6ff' }: SpinnerProps) {
+export function Spinner({ size = 'md', color = '#10b981' }: SpinnerProps) {
 return (
 <svg
 className={`${sizes[size]} animate-spin`}

@@ -68,16 +68,16 @@ export default async function ChatPage() {
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
       <style>{`
-        body { font-family: 'Manrope', sans-serif; background-color: #0e1322; color: #dee1f7; }
+        body { font-family: 'Manrope', sans-serif; background-color: #09090b; color: #f4f4f5; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .glass-card { backdrop-filter: blur(16px); background: rgba(26, 31, 47, 0.6); }
+        .glass-card { backdrop-filter: blur(16px); background: rgba(24, 24, 27, 0.6); }
         .dot-grid {
           background-image: radial-gradient(circle, rgba(77, 142, 255, 0.05) 1px, transparent 1px);
           background-size: 24px 24px;
         }
       `}</style>
 
-      <div className="bg-[#0e1322] min-h-screen selection:bg-[#4d8eff]/30">
+      <div className="bg-[#09090b] min-h-screen selection:bg-[#10b981]/30">
         <DashboardNavbar profile={profile} />
         <div className="flex pt-[60px] min-h-screen dot-grid">
           <DashboardSidebar profile={profile} session={session} />

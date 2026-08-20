@@ -83,18 +83,18 @@ function Avatar({
     <div className="relative flex-shrink-0" style={{ width: size, height: size }}>
       <div style={{
         width: size, height: size, borderRadius: '50%', overflow: 'hidden',
-        border: ring ? '2px solid rgba(77,142,255,0.4)' : '2px solid rgba(66,71,84,0.3)',
+        border: ring ? '2px solid rgba(16,185,129,0.4)' : '2px solid rgba(39,39,42,0.3)',
         background: '#1a1f2f', display: 'flex', alignItems: 'center', justifyContent: 'center',
       }}>
         {src
           ? <img src={src} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          : <span style={{ fontFamily: 'Space Grotesk', fontSize: size * 0.36, fontWeight: 700, color: '#adc6ff' }}>{initials}</span>
+          : <span style={{ fontFamily: 'Space Grotesk', fontSize: size * 0.36, fontWeight: 700, color: '#10b981' }}>{initials}</span>
         }
       </div>
       {online && (
         <span style={{
           position: 'absolute', bottom: 1, right: 1, width: 10, height: 10,
-          borderRadius: '50%', background: '#6bd8cb', border: '2px solid #0e1322',
+          borderRadius: '50%', background: '#6bd8cb', border: '2px solid #09090b',
           boxShadow: '0 0 6px #6bd8cb',
         }} />
       )}
@@ -175,10 +175,10 @@ function ConfirmModal({
           </span>
         </div>
 
-        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 17, color: '#dee1f7', marginBottom: 10 }}>
+        <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 17, color: '#f4f4f5', marginBottom: 10 }}>
           {config.title}
         </div>
-        <div style={{ fontFamily: 'Manrope', fontSize: 13, color: '#8c909f', lineHeight: 1.6, marginBottom: 24 }}>
+        <div style={{ fontFamily: 'Inter', fontSize: 13, color: '#71717a', lineHeight: 1.6, marginBottom: 24 }}>
           {config.body}
         </div>
 
@@ -188,11 +188,11 @@ function ConfirmModal({
             style={{
               flex: 1, padding: '10px', borderRadius: 10, cursor: 'pointer',
               background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-              color: '#8c909f', fontFamily: 'DM Mono', fontSize: 12,
+              color: '#71717a', fontFamily: 'DM Mono', fontSize: 12,
               transition: 'all 0.15s',
             }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#dee1f7' }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#8c909f' }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#f4f4f5' }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#71717a' }}
           >
             Cancel
           </button>
@@ -549,7 +549,7 @@ export default function ChatClient({
           padding: '14px 16px 10px',
           borderBottom: '1px solid rgba(255,255,255,0.05)',
         }}>
-          <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: '#adc6ff' }}>
+          <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: '#10b981' }}>
             Conversations
           </span>
           <button
@@ -557,7 +557,7 @@ export default function ChatClient({
             style={{
               background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 8, width: 30, height: 30, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8c909f',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#71717a',
             }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
@@ -570,7 +570,7 @@ export default function ChatClient({
         <div style={{ position: 'relative' }}>
           <span className="material-symbols-outlined" style={{
             position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)',
-            fontSize: 18, color: '#8c909f', pointerEvents: 'none',
+            fontSize: 18, color: '#71717a', pointerEvents: 'none',
           }}>search</span>
           <input
             value={searchQuery}
@@ -579,36 +579,36 @@ export default function ChatClient({
             placeholder="Search by name or email..."
             style={{
               width: '100%', padding: '9px 12px 9px 36px',
-              background: 'rgba(37,41,58,0.7)', border: '1px solid rgba(66,71,84,0.3)',
-              borderRadius: 10, color: '#dee1f7', fontSize: 13,
+              background: 'rgba(37,41,58,0.7)', border: '1px solid rgba(39,39,42,0.3)',
+              borderRadius: 10, color: '#f4f4f5', fontSize: 13,
               fontFamily: 'DM Mono', outline: 'none', boxSizing: 'border-box',
             }}
           />
           {showSearch && searchQuery.length >= 2 && (
             <div style={{
               position: 'absolute', top: '110%', left: 0, right: 0, zIndex: 100,
-              background: '#161b2b', border: '1px solid rgba(66,71,84,0.4)',
+              background: '#18181b', border: '1px solid rgba(39,39,42,0.4)',
               borderRadius: 12, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
             }}>
-              {searching && <div style={{ padding: '12px 14px', fontSize: 12, color: '#8c909f', fontFamily: 'DM Mono' }}>Searching...</div>}
-              {!searching && searchResults.length === 0 && <div style={{ padding: '12px 14px', fontSize: 12, color: '#8c909f', fontFamily: 'DM Mono' }}>No users found</div>}
+              {searching && <div style={{ padding: '12px 14px', fontSize: 12, color: '#71717a', fontFamily: 'DM Mono' }}>Searching...</div>}
+              {!searching && searchResults.length === 0 && <div style={{ padding: '12px 14px', fontSize: 12, color: '#71717a', fontFamily: 'DM Mono' }}>No users found</div>}
               {searchResults.map((user: any) => (
                 <div key={user.user_id} style={{
                   display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-                  borderBottom: '1px solid rgba(66,71,84,0.2)', transition: 'background 0.15s',
+                  borderBottom: '1px solid rgba(39,39,42,0.2)', transition: 'background 0.15s',
                 }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(77,142,255,0.08)')}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(16,185,129,0.08)')}
                   onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                 >
                   <Avatar src={user.avatar_url} name={user.full_name} size={34} />
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 13, color: '#dee1f7', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.full_name}</div>
-                    <div style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#8c909f', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</div>
+                    <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 13, color: '#f4f4f5', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.full_name}</div>
+                    <div style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#71717a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.email}</div>
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
                     <button onClick={() => startDM(user.user_id)} title="Message" style={{
-                      background: 'rgba(77,142,255,0.15)', border: '1px solid rgba(77,142,255,0.3)',
-                      borderRadius: 7, padding: '4px 8px', cursor: 'pointer', color: '#adc6ff',
+                      background: 'rgba(16,185,129,0.15)', border: '1px solid rgba(16,185,129,0.3)',
+                      borderRadius: 7, padding: '4px 8px', cursor: 'pointer', color: '#10b981',
                       fontFamily: 'DM Mono', display: 'flex', alignItems: 'center', gap: 3,
                     }}>
                       <span className="material-symbols-outlined" style={{ fontSize: 14 }}>chat</span>
@@ -634,25 +634,25 @@ export default function ChatClient({
       {pendingIncoming.length > 0 && (
         <div onClick={() => setShowRequests(!showRequests)} style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-          background: 'rgba(77,142,255,0.07)', borderBottom: '1px solid rgba(77,142,255,0.1)', cursor: 'pointer',
+          background: 'rgba(16,185,129,0.07)', borderBottom: '1px solid rgba(16,185,129,0.1)', cursor: 'pointer',
         }}>
-          <span className="material-symbols-outlined" style={{ fontSize: 18, color: '#adc6ff' }}>notifications</span>
-          <span style={{ fontFamily: 'DM Mono', fontSize: 11, color: '#adc6ff', flex: 1 }}>
+          <span className="material-symbols-outlined" style={{ fontSize: 18, color: '#10b981' }}>notifications</span>
+          <span style={{ fontFamily: 'DM Mono', fontSize: 11, color: '#10b981', flex: 1 }}>
             {pendingIncoming.length} friend request{pendingIncoming.length > 1 ? 's' : ''}
           </span>
-          <span className="material-symbols-outlined" style={{ fontSize: 16, color: '#adc6ff' }}>{showRequests ? 'expand_less' : 'expand_more'}</span>
+          <span className="material-symbols-outlined" style={{ fontSize: 16, color: '#10b981' }}>{showRequests ? 'expand_less' : 'expand_more'}</span>
         </div>
       )}
 
       {showRequests && pendingIncoming.map((req) => (
         <div key={req.id} style={{
           display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px',
-          borderBottom: '1px solid rgba(66,71,84,0.15)', background: 'rgba(77,142,255,0.04)',
+          borderBottom: '1px solid rgba(39,39,42,0.15)', background: 'rgba(16,185,129,0.04)',
         }}>
           <Avatar src={first(req.sender).avatar_url} name={first(req.sender).full_name} size={32} />
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12, color: '#dee1f7' }}>{first(req.sender).full_name}</div>
-            <div style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#8c909f' }}>wants to connect</div>
+            <div style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12, color: '#f4f4f5' }}>{first(req.sender).full_name}</div>
+            <div style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#71717a' }}>wants to connect</div>
           </div>
           <button onClick={() => respondToRequest(req.id, 'accept')} style={{
             background: 'rgba(107,216,203,0.2)', border: '1px solid rgba(107,216,203,0.3)',
@@ -669,8 +669,8 @@ export default function ChatClient({
       <div style={{ flex: 1, overflowY: 'auto' }}>
         {threads.length === 0 ? (
           <div style={{ padding: 24, textAlign: 'center' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: 40, color: '#424754' }}>chat_bubble</span>
-            <p style={{ fontFamily: 'DM Mono', fontSize: 11, color: '#8c909f', marginTop: 8 }}>
+            <span className="material-symbols-outlined" style={{ fontSize: 40, color: '#27272a' }}>chat_bubble</span>
+            <p style={{ fontFamily: 'DM Mono', fontSize: 11, color: '#71717a', marginTop: 8 }}>
               No conversations yet.<br />Search for a user to start chatting.
             </p>
           </div>
@@ -690,8 +690,8 @@ export default function ChatClient({
               onClick={() => handleSelectThread(thread)}
               style={{
                 display: 'flex', alignItems: 'center', gap: 12, padding: '12px 14px',
-                borderRight: isActive ? '2px solid #adc6ff' : '2px solid transparent',
-                background: isActive ? 'rgba(77,142,255,0.08)' : 'transparent',
+                borderRight: isActive ? '2px solid #10b981' : '2px solid transparent',
+                background: isActive ? 'rgba(16,185,129,0.08)' : 'transparent',
                 cursor: 'pointer', borderBottom: '1px solid rgba(255,255,255,0.03)', transition: 'all 0.15s',
                 opacity: threadBlocked ? 0.5 : 1,
               }}
@@ -715,20 +715,20 @@ export default function ChatClient({
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 3 }}>
                   <span style={{
                     fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 13,
-                    color: isActive ? '#adc6ff' : '#dee1f7',
+                    color: isActive ? '#10b981' : '#f4f4f5',
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 130,
                   }}>{displayName}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
                     {threadMuted && (
-                      <span className="material-symbols-outlined" style={{ fontSize: 13, color: '#424754', fontVariationSettings: "'FILL' 1" }}>notifications_off</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: 13, color: '#27272a', fontVariationSettings: "'FILL' 1" }}>notifications_off</span>
                     )}
-                    <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#8c909f' }}>
+                    <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#71717a' }}>
                       {thread.chat_messages?.length ? formatTime(thread.chat_messages[thread.chat_messages.length - 1]?.created_at) : ''}
                     </span>
                   </div>
                 </div>
                 <div style={{
-                  fontFamily: 'Manrope', fontSize: 12, color: threadBlocked ? '#424754' : '#8c909f',
+                  fontFamily: 'Inter', fontSize: 12, color: threadBlocked ? '#27272a' : '#71717a',
                   whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                   fontStyle: threadBlocked ? 'italic' : 'normal',
                 }}>
@@ -741,7 +741,7 @@ export default function ChatClient({
                     background: badge.bg, border: `1px solid ${badge.border}`, color: badge.color,
                   }}>{badge.label}</span>
                   {thread.type === 'team' && thread.name && (
-                    <span style={{ fontFamily: 'DM Mono', fontSize: 9, color: '#424754', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
+                    <span style={{ fontFamily: 'DM Mono', fontSize: 9, color: '#27272a', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                       {thread.name}
                     </span>
                   )}
@@ -765,7 +765,7 @@ export default function ChatClient({
           padding: '14px 16px 10px',
           borderBottom: '1px solid rgba(255,255,255,0.05)',
         }}>
-          <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: '#adc6ff' }}>
+          <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: '#10b981' }}>
             Members
           </span>
           <button
@@ -773,7 +773,7 @@ export default function ChatClient({
             style={{
               background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)',
               borderRadius: 8, width: 30, height: 30, cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8c909f',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#71717a',
             }}
           >
             <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
@@ -783,7 +783,7 @@ export default function ChatClient({
 
       {!isMobile && (
         <div style={{ padding: '14px 14px 10px', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-          <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             Members — {activeMembers.length}
           </span>
         </div>
@@ -798,7 +798,7 @@ export default function ChatClient({
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{
                   fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12,
-                  color: isMe ? '#adc6ff' : '#dee1f7',
+                  color: isMe ? '#10b981' : '#f4f4f5',
                   whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                 }}>
                   {member.profiles?.full_name ?? 'Unknown'}{isMe ? ' (you)' : ''}
@@ -830,7 +830,7 @@ export default function ChatClient({
       {/* Team: explain auto-managed membership */}
       {activeThread?.type === 'team' && (
         <div style={{ padding: '10px 14px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          <p style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#424754', textAlign: 'center', lineHeight: 1.6 }}>
+          <p style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#27272a', textAlign: 'center', lineHeight: 1.6 }}>
             Members are managed automatically through team settings.
           </p>
         </div>
@@ -908,24 +908,24 @@ export default function ChatClient({
 
       {/* ── Main Chat Area ──────────────────────────────────────────────── */}
       {!activeThread ? (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#424754' }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', color: '#27272a' }}>
           {/* Mobile: hamburger to open sidebar when no thread selected */}
           {isMobile && (
             <button
               onClick={() => setSidebarOpen(true)}
               style={{
                 position: 'absolute', top: 12, left: 12,
-                background: 'rgba(77,142,255,0.12)', border: '1px solid rgba(77,142,255,0.25)',
+                background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.25)',
                 borderRadius: 10, width: 38, height: 38, cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#adc6ff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#10b981',
               }}
             >
               <span className="material-symbols-outlined" style={{ fontSize: 20 }}>menu</span>
             </button>
           )}
           <span className="material-symbols-outlined" style={{ fontSize: 56 }}>forum</span>
-          <p style={{ fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: 700, color: '#c2c6d6', marginTop: 16 }}>Select a conversation</p>
-          <p style={{ fontFamily: 'DM Mono', fontSize: 12, color: '#8c909f', marginTop: 6, textAlign: 'center', padding: '0 24px' }}>
+          <p style={{ fontFamily: 'Space Grotesk', fontSize: 18, fontWeight: 700, color: '#d4d4d8', marginTop: 16 }}>Select a conversation</p>
+          <p style={{ fontFamily: 'DM Mono', fontSize: 12, color: '#71717a', marginTop: 6, textAlign: 'center', padding: '0 24px' }}>
             {isMobile ? 'Tap the menu icon to see your chats' : 'or search for a user to start chatting'}
           </p>
         </div>
@@ -948,7 +948,7 @@ export default function ChatClient({
                   style={{
                     background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)',
                     borderRadius: 8, width: 34, height: 34, cursor: 'pointer',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8c909f',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#71717a',
                     flexShrink: 0,
                   }}
                 >
@@ -973,14 +973,14 @@ export default function ChatClient({
                   <span style={{
                     fontFamily: 'Space Grotesk', fontWeight: 700,
                     fontSize: isMobile ? 13 : 15,
-                    color: isTeamThread ? '#ffc864' : '#adc6ff',
+                    color: isTeamThread ? '#ffc864' : '#10b981',
                     whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                     maxWidth: isMobile ? 120 : 220,
                   }}>
                     {getThreadDisplayName(activeThread, currentUser.user_id)}
                   </span>
                   {isMuted && (
-                    <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#424754', fontVariationSettings: "'FILL' 1", flexShrink: 0 }} title="Muted">notifications_off</span>
+                    <span className="material-symbols-outlined" style={{ fontSize: 14, color: '#27272a', fontVariationSettings: "'FILL' 1", flexShrink: 0 }} title="Muted">notifications_off</span>
                   )}
                   {isBlocked && (
                     <span style={{
@@ -1009,10 +1009,10 @@ export default function ChatClient({
                   title="Members"
                   style={{
                     width: 34, height: 34, borderRadius: 8, cursor: 'pointer',
-                    background: membersOpen ? 'rgba(77,142,255,0.15)' : 'rgba(255,255,255,0.04)',
-                    border: membersOpen ? '1px solid rgba(77,142,255,0.3)' : '1px solid rgba(255,255,255,0.07)',
+                    background: membersOpen ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.04)',
+                    border: membersOpen ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(255,255,255,0.07)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: membersOpen ? '#adc6ff' : '#8c909f',
+                    color: membersOpen ? '#10b981' : '#71717a',
                   }}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: 18 }}>group</span>
@@ -1023,9 +1023,9 @@ export default function ChatClient({
                   style={{
                     display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px',
                     borderRadius: 8, cursor: 'pointer',
-                    background: showMembers ? 'rgba(77,142,255,0.15)' : 'rgba(255,255,255,0.04)',
-                    border: showMembers ? '1px solid rgba(77,142,255,0.3)' : '1px solid rgba(255,255,255,0.07)',
-                    color: showMembers ? '#adc6ff' : '#8c909f', fontFamily: 'DM Mono', fontSize: 11, transition: 'all 0.2s',
+                    background: showMembers ? 'rgba(16,185,129,0.15)' : 'rgba(255,255,255,0.04)',
+                    border: showMembers ? '1px solid rgba(16,185,129,0.3)' : '1px solid rgba(255,255,255,0.07)',
+                    color: showMembers ? '#10b981' : '#71717a', fontFamily: 'DM Mono', fontSize: 11, transition: 'all 0.2s',
                   }}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: 16 }}>group</span>
@@ -1043,10 +1043,10 @@ export default function ChatClient({
                     background: showHeaderMenu ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.04)',
                     border: '1px solid rgba(255,255,255,0.07)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#8c909f', transition: 'all 0.15s',
+                    color: '#71717a', transition: 'all 0.15s',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#dee1f7' }}
-                  onMouseLeave={(e) => { if (!showHeaderMenu) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#8c909f' } }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = '#f4f4f5' }}
+                  onMouseLeave={(e) => { if (!showHeaderMenu) { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#71717a' } }}
                 >
                   <span className="material-symbols-outlined" style={{ fontSize: 18 }}>more_vert</span>
                 </button>
@@ -1064,7 +1064,7 @@ export default function ChatClient({
                     <MenuButton
                       icon={isMuted ? 'notifications' : 'notifications_off'}
                       label={isMuted ? 'Unmute notifications' : 'Mute notifications'}
-                      color={isMuted ? '#adc6ff' : '#8c909f'}
+                      color={isMuted ? '#10b981' : '#71717a'}
                       onClick={() => toggleMute(activeThread.id)}
                     />
 
@@ -1154,12 +1154,12 @@ export default function ChatClient({
               <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '16px 14px' : '20px 24px' }}>
                 {loadingMessages ? (
                   <div style={{ display: 'flex', justifyContent: 'center', padding: 40 }}>
-                    <div style={{ fontFamily: 'DM Mono', fontSize: 12, color: '#8c909f' }}>Loading messages...</div>
+                    <div style={{ fontFamily: 'DM Mono', fontSize: 12, color: '#71717a' }}>Loading messages...</div>
                   </div>
                 ) : messages.length === 0 ? (
-                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 60, color: '#424754' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 60, color: '#27272a' }}>
                     <span className="material-symbols-outlined" style={{ fontSize: 48 }}>chat_bubble_outline</span>
-                    <p style={{ fontFamily: 'DM Mono', fontSize: 12, color: '#8c909f', marginTop: 12 }}>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: 12, color: '#71717a', marginTop: 12 }}>
                       {isTeamThread ? 'Team chat is empty. Say hello to the team!' : 'No messages yet. Say hello!'}
                     </p>
                   </div>
@@ -1168,7 +1168,7 @@ export default function ChatClient({
                     <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0 16px' }}>
                       <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.05)' }} />
                       <span style={{
-                        fontFamily: 'DM Mono', fontSize: 10, color: '#8c909f',
+                        fontFamily: 'DM Mono', fontSize: 10, color: '#71717a',
                         textTransform: 'uppercase', letterSpacing: '0.12em',
                         padding: '3px 10px', background: 'rgba(255,255,255,0.03)',
                         border: '1px solid rgba(255,255,255,0.05)', borderRadius: 20,
@@ -1186,23 +1186,23 @@ export default function ChatClient({
                           <div style={{ maxWidth: isMobile ? '82%' : '70%', display: 'flex', flexDirection: 'column', alignItems: isOwn ? 'flex-end' : 'flex-start' }}>
                             {!isOwn && (
                               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12, color: '#c2c6d6' }}>
+                                <span style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 12, color: '#d4d4d8' }}>
                                   {msg.sender?.full_name ?? 'Unknown'}
                                 </span>
-                                <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#8c909f' }}>{formatTime(msg.created_at)}</span>
+                                <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#71717a' }}>{formatTime(msg.created_at)}</span>
                               </div>
                             )}
                             <div style={{
                               padding: isMobile ? '8px 12px' : '10px 14px',
                               borderRadius: isOwn ? '16px 4px 16px 16px' : '4px 16px 16px 16px',
-                              background: isOwn ? 'rgba(77,142,255,0.18)' : 'rgba(37,41,58,0.8)',
-                              border: isOwn ? '1px solid rgba(77,142,255,0.25)' : '1px solid rgba(255,255,255,0.06)',
+                              background: isOwn ? 'rgba(16,185,129,0.18)' : 'rgba(37,41,58,0.8)',
+                              border: isOwn ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(255,255,255,0.06)',
                               backdropFilter: 'blur(8px)', fontSize: isMobile ? 13 : 14, lineHeight: 1.55,
-                              color: '#dee1f7', fontFamily: 'Manrope',
-                              boxShadow: isOwn ? '0 0 20px rgba(77,142,255,0.06)' : 'none',
+                              color: '#f4f4f5', fontFamily: 'Inter',
+                              boxShadow: isOwn ? '0 0 20px rgba(16,185,129,0.06)' : 'none',
                             }}>{msg.content}</div>
                             {isOwn && (
-                              <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#8c909f', marginTop: 4 }}>{formatTime(msg.created_at)}</span>
+                              <span style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#71717a', marginTop: 4 }}>{formatTime(msg.created_at)}</span>
                             )}
                           </div>
                         </div>
@@ -1220,7 +1220,7 @@ export default function ChatClient({
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   background: 'rgba(255,107,107,0.04)',
                 }}>
-                  <span style={{ fontFamily: 'DM Mono', fontSize: 11, color: '#424754' }}>
+                  <span style={{ fontFamily: 'DM Mono', fontSize: 11, color: '#27272a' }}>
                     Unblock this user to send messages.
                   </span>
                 </div>
@@ -1228,17 +1228,17 @@ export default function ChatClient({
                 <div style={{ padding: isMobile ? '0 12px 14px' : '0 20px 20px', flexShrink: 0 }}>
                   <div style={{
                     display: 'flex', alignItems: 'flex-end', gap: 8,
-                    background: 'rgba(26,31,47,0.7)', backdropFilter: 'blur(16px)',
+                    background: 'rgba(24,24,27,0.7)', backdropFilter: 'blur(16px)',
                     border: '1px solid rgba(255,255,255,0.08)', borderRadius: 14,
                     padding: '8px 8px 8px 14px', transition: 'border-color 0.2s',
                   }}>
                     {!isMobile && (
                       <button style={{
                         background: 'none', border: 'none', cursor: 'pointer', padding: '6px',
-                        color: '#8c909f', borderRadius: 8, display: 'flex', alignItems: 'center', transition: 'color 0.15s',
+                        color: '#71717a', borderRadius: 8, display: 'flex', alignItems: 'center', transition: 'color 0.15s',
                       }}
-                        onMouseEnter={(e) => (e.currentTarget.style.color = '#adc6ff')}
-                        onMouseLeave={(e) => (e.currentTarget.style.color = '#8c909f')}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = '#10b981')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = '#71717a')}
                       >
                         <span className="material-symbols-outlined" style={{ fontSize: 20 }}>attach_file</span>
                       </button>
@@ -1252,7 +1252,7 @@ export default function ChatClient({
                       rows={1}
                       style={{
                         flex: 1, background: 'transparent', border: 'none', outline: 'none',
-                        color: '#dee1f7', fontSize: isMobile ? 15 : 14, fontFamily: 'Manrope', lineHeight: 1.5,
+                        color: '#f4f4f5', fontSize: isMobile ? 15 : 14, fontFamily: 'Inter', lineHeight: 1.5,
                         resize: 'none', maxHeight: 120, padding: '6px 0',
                       }}
                       onInput={(e) => {
@@ -1267,20 +1267,20 @@ export default function ChatClient({
                       style={{
                         width: 38, height: 38, borderRadius: 10, border: 'none',
                         cursor: input.trim() ? 'pointer' : 'default',
-                        background: input.trim() ? '#4d8eff' : 'rgba(77,142,255,0.15)',
+                        background: input.trim() ? '#10b981' : 'rgba(16,185,129,0.15)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        boxShadow: input.trim() ? '0 0 16px rgba(77,142,255,0.4)' : 'none',
+                        boxShadow: input.trim() ? '0 0 16px rgba(16,185,129,0.4)' : 'none',
                         transition: 'all 0.2s', flexShrink: 0,
                       }}
                     >
                       <span className="material-symbols-outlined" style={{
-                        fontSize: 18, color: input.trim() ? '#fff' : '#8c909f',
+                        fontSize: 18, color: input.trim() ? '#fff' : '#71717a',
                         fontVariationSettings: "'FILL' 1",
                       }}>send</span>
                     </button>
                   </div>
                   {!isMobile && (
-                    <p style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#424754', marginTop: 6, textAlign: 'center' }}>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: 10, color: '#27272a', marginTop: 6, textAlign: 'center' }}>
                       Enter to send · Shift+Enter for new line
                     </p>
                   )}
@@ -1307,7 +1307,7 @@ export default function ChatClient({
 
 // ─── Small helper: dropdown menu button ──────────────────────────────────────
 function MenuButton({
-  icon, label, color = '#dee1f7', onClick,
+  icon, label, color = '#f4f4f5', onClick,
 }: { icon: string; label: string; color?: string; onClick: () => void }) {
   const [hovered, setHovered] = useState(false)
   return (

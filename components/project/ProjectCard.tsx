@@ -24,7 +24,7 @@ export function ProjectCard({ project, isOwner }: { project: Project; isOwner?: 
   const extraSkills = project.required_skills.length - 4
 
   return (
-    <div className="bg-[#1E293B] rounded-xl p-4 ring-1 ring-slate-700 hover:ring-slate-500 transition-all flex flex-col gap-3">
+    <div className="bg-[#1E293B] rounded-md p-4 ring-1 ring-slate-700 hover:ring-slate-500 transition-all flex flex-col gap-3">
       {/* Title + Description */}
       <div>
         <h3 className="text-slate-100 font-semibold text-base line-clamp-1">{project.title}</h3>
@@ -57,7 +57,7 @@ export function ProjectCard({ project, isOwner }: { project: Project; isOwner?: 
         </div>
 
         <a href={`/projects/${project.id}`}
-          className="text-sm bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition-colors">
+          className="text-sm bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-sm transition-colors">
           View →
         </a>
       </div>

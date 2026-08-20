@@ -216,8 +216,8 @@ export default function EditProfilePage() {
   // ── Loading skeleton ──
   if (loading || status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#0e1322' }}>
-        <div style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#09090b' }}>
+        <div style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
           Loading profile...
         </div>
       </div>
@@ -234,41 +234,41 @@ export default function EditProfilePage() {
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
       <style>{`
-        body { font-family:'Manrope',sans-serif; background:#0e1322; color:#dee1f7; margin:0; }
+        body { font-family:'Manrope',sans-serif; background:#09090b; color:#f4f4f5; margin:0; }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
-        .neon-primary { box-shadow:0 0 15px rgba(173,198,255,0.2),0 0 30px rgba(173,198,255,0.1); }
+        .neon-primary { box-shadow:0 0 15px rgba(16,185,129,0.2),0 0 30px rgba(16,185,129,0.1); }
         .neon-secondary { box-shadow:0 0 15px rgba(107,216,203,0.2),0 0 30px rgba(107,216,203,0.1); }
         .neon-tertiary { box-shadow:0 0 15px rgba(208,188,255,0.2),0 0 30px rgba(208,188,255,0.1); }
         .custom-scrollbar::-webkit-scrollbar { width:4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background:#4d8eff; border-radius:10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background:#10b981; border-radius:10px; }
         .dotted-bg {
-          background-image: radial-gradient(circle,rgba(77,142,255,0.08) 1px,transparent 1px);
+          background-image: radial-gradient(circle,rgba(16,185,129,0.08) 1px,transparent 1px);
           background-size: 24px 24px;
         }
         .input-underline {
           width:100%; background:rgba(22,27,43,0.6);
-          border:none; border-bottom:2px solid rgba(66,71,84,0.4);
-          color:#dee1f7; outline:none; padding:12px 16px;
+          border:none; border-bottom:2px solid rgba(39,39,42,0.4);
+          color:#f4f4f5; outline:none; padding:12px 16px;
           transition:border-color 0.2s;
         }
-        .input-underline:focus { border-bottom-color:#adc6ff; }
+        .input-underline:focus { border-bottom-color:#10b981; }
         .input-box {
           width:100%; background:rgba(22,27,43,0.6);
-          border:1px solid rgba(66,71,84,0.3);
-          color:#dee1f7; outline:none; padding:10px 14px;
+          border:1px solid rgba(39,39,42,0.3);
+          color:#f4f4f5; outline:none; padding:10px 14px;
           transition:border-color 0.2s;
         }
-        .input-box:focus { border-color:#adc6ff; }
+        .input-box:focus { border-color:#10b981; }
         select.input-underline { appearance:none; cursor:pointer; }
         select.input-box { appearance:none; cursor:pointer; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
         .animate-pulse { animation:pulse 2s ease-in-out infinite; }
         .toggle-track {
           position:relative; width:48px; height:26px;
-          background:rgba(66,71,84,0.4); border-radius:13px;
+          background:rgba(39,39,42,0.4); border-radius:13px;
           display:inline-block; transition:background 0.2s; cursor:pointer;
         }
-        .toggle-track.on { background:#4d8eff; }
+        .toggle-track.on { background:#10b981; }
         .toggle-thumb {
           position:absolute; top:3px; width:20px; height:20px;
           background:#fff; border-radius:50%; transition:left 0.2s;
@@ -277,11 +277,11 @@ export default function EditProfilePage() {
         .toggle-track.off .toggle-thumb { left:3px; }
       `}</style>
 
-      <div className="min-h-screen dotted-bg" style={{ background: '#0e1322' }}>
+      <div className="min-h-screen dotted-bg" style={{ background: '#09090b' }}>
 
         {/* ── Fixed glow blobs ── */}
         <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full" style={{ background: 'rgba(173,198,255,0.04)', filter: 'blur(120px)' }} />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full" style={{ background: 'rgba(16,185,129,0.04)', filter: 'blur(120px)' }} />
           <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] rounded-full" style={{ background: 'rgba(208,188,255,0.04)', filter: 'blur(150px)' }} />
         </div>
 
@@ -295,7 +295,7 @@ export default function EditProfilePage() {
             {/* ── Page header ── */}
             <div className="flex justify-between items-end mb-10">
               <div>
-                <h1 style={{ fontFamily:'Syne', fontSize:'clamp(28px,4vw,40px)', fontWeight:800, color:'#adc6ff', letterSpacing:'-0.04em', textTransform:'uppercase', marginBottom:'8px' }}>
+                <h1 style={{ fontFamily:'Inter', fontSize:'clamp(28px,4vw,40px)', fontWeight:800, color:'#10b981', letterSpacing:'-0.04em', textTransform:'uppercase', marginBottom:'8px' }}>
                   Edit Neural Profile
                 </h1>
                 <p style={{ fontFamily:'DM Mono', fontSize:'12px', color:'rgba(194,198,214,0.7)' }}>
@@ -329,7 +329,7 @@ export default function EditProfilePage() {
 
             {/* ── Glass card ── */}
             <div className="p-10 mb-20 space-y-12"
-              style={{ background:'rgba(26,31,47,0.6)', backdropFilter:'blur(24px)', border:'1px solid rgba(66,71,84,0.15)', borderRadius:'16px', boxShadow:'0 25px 50px -12px rgba(0,0,0,0.5)' }}>
+              style={{ background:'rgba(24,24,27,0.6)', backdropFilter:'blur(24px)', border:'1px solid rgba(39,39,42,0.15)', borderRadius:'6px', boxShadow:'0 25px 50px -12px rgba(0,0,0,0.5)' }}>
 
               {/* ── Error banner ── */}
               {error && (
@@ -345,8 +345,8 @@ export default function EditProfilePage() {
               {/* ──────────────────────────────────────────────────────────── */}
               <section>
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="material-symbols-outlined" style={{ color:'#adc6ff' }}>account_circle</span>
-                  <h2 style={{ fontFamily:'Syne', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#dee1f7' }}>
+                  <span className="material-symbols-outlined" style={{ color:'#10b981' }}>account_circle</span>
+                  <h2 style={{ fontFamily:'Inter', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#f4f4f5' }}>
                     Profile Identity
                   </h2>
                 </div>
@@ -366,12 +366,12 @@ export default function EditProfilePage() {
                       </svg>
                       {/* Avatar image */}
                       <div className="absolute inset-2 rounded-full overflow-hidden"
-                        style={{ border:'1px solid rgba(66,71,84,0.4)' }}>
+                        style={{ border:'1px solid rgba(39,39,42,0.4)' }}>
                         {displayAvatar ? (
                           <img src={displayAvatar} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center" style={{ background:'#25293a' }}>
-                            <span className="material-symbols-outlined" style={{ fontSize:'40px', color:'#adc6ff' }}>person</span>
+                          <div className="w-full h-full flex items-center justify-center" style={{ background:'#18181b' }}>
+                            <span className="material-symbols-outlined" style={{ fontSize:'40px', color:'#10b981' }}>person</span>
                           </div>
                         )}
                       </div>
@@ -380,7 +380,7 @@ export default function EditProfilePage() {
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploading}
                         className="absolute bottom-0 right-0 p-2 rounded-full transition-transform hover:scale-110"
-                        style={{ background:'#4d8eff', color:'#002e6a', boxShadow:'0 0 10px rgba(77,142,255,0.4)' }}>
+                        style={{ background:'#10b981', color:'#000000', boxShadow:'0 0 10px rgba(16,185,129,0.4)' }}>
                         <span className="material-symbols-outlined" style={{ fontSize:'16px' }}>
                           {uploading ? 'hourglass_empty' : 'edit'}
                         </span>
@@ -419,11 +419,11 @@ export default function EditProfilePage() {
                             value={department}
                             onChange={e => setDepartment(e.target.value)}
                             className="input-underline"
-                            style={{ fontFamily:'Manrope', paddingRight:'36px' }}>
+                            style={{ fontFamily:'Inter', paddingRight:'36px' }}>
                             <option value="">Select...</option>
                             {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
                           </select>
-                          <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ fontSize:'18px', color:'#8c909f' }}>expand_more</span>
+                          <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ fontSize:'18px', color:'#71717a' }}>expand_more</span>
                         </div>
                       </div>
 
@@ -436,11 +436,11 @@ export default function EditProfilePage() {
                             value={year}
                             onChange={e => setYear(Number(e.target.value))}
                             className="input-underline"
-                            style={{ fontFamily:'Manrope', paddingRight:'36px' }}>
+                            style={{ fontFamily:'Inter', paddingRight:'36px' }}>
                             <option value="">Select...</option>
                             {YEARS.map(y => <option key={y.value} value={y.value}>{y.label}</option>)}
                           </select>
-                          <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ fontSize:'18px', color:'#8c909f' }}>expand_more</span>
+                          <span className="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ fontSize:'18px', color:'#71717a' }}>expand_more</span>
                         </div>
                       </div>
                     </div>
@@ -448,17 +448,17 @@ export default function EditProfilePage() {
                 </div>
               </section>
 
-              <div style={{ borderTop:'1px solid rgba(66,71,84,0.15)' }} />
+              <div style={{ borderTop:'1px solid rgba(39,39,42,0.15)' }} />
 
               {/* ──────────────────────────────────────────────────────────── */}
               {/* Section 2 — Bio / Scriptorium                               */}
               {/* ──────────────────────────────────────────────────────────── */}
               <section>
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="material-symbols-outlined" style={{ color:'#adc6ff' }}>history_edu</span>
-                  <h2 style={{ fontFamily:'Syne', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#dee1f7' }}>
+                  <span className="material-symbols-outlined" style={{ color:'#10b981' }}>history_edu</span>
+                  <h2 style={{ fontFamily:'Inter', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#f4f4f5' }}>
                     The Scriptorium
-                    <span style={{ fontFamily:'DM Mono', fontSize:'11px', fontWeight:400, color:'#8c909f', marginLeft:'8px' }}>(Bio)</span>
+                    <span style={{ fontFamily:'DM Mono', fontSize:'11px', fontWeight:400, color:'#71717a', marginLeft:'8px' }}>(Bio)</span>
                   </h2>
                 </div>
 
@@ -478,40 +478,40 @@ export default function EditProfilePage() {
                 </div>
               </section>
 
-              <div style={{ borderTop:'1px solid rgba(66,71,84,0.15)' }} />
+              <div style={{ borderTop:'1px solid rgba(39,39,42,0.15)' }} />
 
               {/* ──────────────────────────────────────────────────────────── */}
               {/* Section 3 — Skills / Neural Matrix                          */}
               {/* ──────────────────────────────────────────────────────────── */}
               <section id="skills">
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="material-symbols-outlined" style={{ color:'#adc6ff' }}>psychology</span>
-                  <h2 style={{ fontFamily:'Syne', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#dee1f7' }}>
+                  <span className="material-symbols-outlined" style={{ color:'#10b981' }}>psychology</span>
+                  <h2 style={{ fontFamily:'Inter', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#f4f4f5' }}>
                     Neural Matrix
-                    <span style={{ fontFamily:'DM Mono', fontSize:'11px', fontWeight:400, color:'#8c909f', marginLeft:'8px' }}>(Skills)</span>
+                    <span style={{ fontFamily:'DM Mono', fontSize:'11px', fontWeight:400, color:'#71717a', marginLeft:'8px' }}>(Skills)</span>
                   </h2>
                 </div>
 
                 <div className="space-y-4">
                   {/* Search input */}
                   <div className="relative">
-                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2" style={{ color:'#8c909f', fontSize:'18px' }}>search</span>
+                    <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2" style={{ color:'#71717a', fontSize:'18px' }}>search</span>
                     <input
                       value={skillQuery}
                       onChange={e => setSkillQuery(e.target.value)}
                       onKeyDown={e => { if (e.key === 'Enter' && skillQuery.trim()) { e.preventDefault(); addSkill(skillQuery.trim()) } }}
                       placeholder="Search and add skills... (Enter to add)"
                       className="input-box"
-                      style={{ paddingLeft:'44px', borderRadius:'999px', fontFamily:'Manrope' }}
+                      style={{ paddingLeft:'44px', borderRadius:'999px', fontFamily:'Inter' }}
                     />
                     {/* Suggestions */}
                     {skillSuggestions.length > 0 && (
                       <div className="absolute top-full left-0 right-0 mt-1 z-20 overflow-hidden"
-                        style={{ background:'#1a1f2f', border:'1px solid rgba(66,71,84,0.3)', borderRadius:'8px' }}>
+                        style={{ background:'#1a1f2f', border:'1px solid rgba(39,39,42,0.3)', borderRadius:'4px' }}>
                         {skillSuggestions.slice(0, 6).map(s => (
                           <button key={s} onClick={() => addSkill(s)}
-                            className="w-full text-left px-4 py-2.5 hover:bg-[#25293a] transition-colors"
-                            style={{ fontFamily:'DM Mono', fontSize:'11px', color:'#dee1f7', display:'block' }}>
+                            className="w-full text-left px-4 py-2.5 hover:bg-[#18181b] transition-colors"
+                            style={{ fontFamily:'DM Mono', fontSize:'11px', color:'#f4f4f5', display:'block' }}>
                             {s}
                           </button>
                         ))}
@@ -554,17 +554,17 @@ export default function EditProfilePage() {
                 </div>
               </section>
 
-              <div style={{ borderTop:'1px solid rgba(66,71,84,0.15)' }} />
+              <div style={{ borderTop:'1px solid rgba(39,39,42,0.15)' }} />
 
               {/* ──────────────────────────────────────────────────────────── */}
               {/* Section 4 — System Sync / Connections                       */}
               {/* ──────────────────────────────────────────────────────────── */}
               <section>
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="material-symbols-outlined" style={{ color:'#adc6ff' }}>sync_alt</span>
-                  <h2 style={{ fontFamily:'Syne', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#dee1f7' }}>
+                  <span className="material-symbols-outlined" style={{ color:'#10b981' }}>sync_alt</span>
+                  <h2 style={{ fontFamily:'Inter', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#f4f4f5' }}>
                     System Sync
-                    <span style={{ fontFamily:'DM Mono', fontSize:'11px', fontWeight:400, color:'#8c909f', marginLeft:'8px' }}>(Connections)</span>
+                    <span style={{ fontFamily:'DM Mono', fontSize:'11px', fontWeight:400, color:'#71717a', marginLeft:'8px' }}>(Connections)</span>
                   </h2>
                 </div>
 
@@ -611,15 +611,15 @@ export default function EditProfilePage() {
                 </div>
               </section>
 
-              <div style={{ borderTop:'1px solid rgba(66,71,84,0.15)' }} />
+              <div style={{ borderTop:'1px solid rgba(39,39,42,0.15)' }} />
 
               {/* ──────────────────────────────────────────────────────────── */}
               {/* Section 5 — Security & Privacy                              */}
               {/* ──────────────────────────────────────────────────────────── */}
               <section>
                 <div className="flex items-center gap-3 mb-6">
-                  <span className="material-symbols-outlined" style={{ color:'#adc6ff' }}>shield</span>
-                  <h2 style={{ fontFamily:'Syne', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#dee1f7' }}>
+                  <span className="material-symbols-outlined" style={{ color:'#10b981' }}>shield</span>
+                  <h2 style={{ fontFamily:'Inter', fontSize:'18px', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.05em', color:'#f4f4f5' }}>
                     Security & Privacy
                   </h2>
                 </div>
@@ -627,9 +627,9 @@ export default function EditProfilePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Public visibility */}
                   <div className="flex items-center justify-between p-4"
-                    style={{ background:'rgba(37,41,58,0.4)', border:'1px solid rgba(66,71,84,0.15)', borderRadius:'8px' }}>
+                    style={{ background:'rgba(37,41,58,0.4)', border:'1px solid rgba(39,39,42,0.15)', borderRadius:'4px' }}>
                     <div>
-                      <p style={{ fontSize:'14px', fontFamily:'Space Grotesk', fontWeight:500, color:'#dee1f7', marginBottom:'2px' }}>Public Visibility</p>
+                      <p style={{ fontSize:'14px', fontFamily:'Space Grotesk', fontWeight:500, color:'#f4f4f5', marginBottom:'2px' }}>Public Visibility</p>
                       <p style={{ fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.5)' }}>Broadcast identity to the Global Hub</p>
                     </div>
                     <div className={`toggle-track ${isPublic ? 'on' : 'off'}`} onClick={() => setIsPublic(p => !p)}>
@@ -639,9 +639,9 @@ export default function EditProfilePage() {
 
                   {/* Notifications */}
                   <div className="flex items-center justify-between p-4"
-                    style={{ background:'rgba(37,41,58,0.4)', border:'1px solid rgba(66,71,84,0.15)', borderRadius:'8px' }}>
+                    style={{ background:'rgba(37,41,58,0.4)', border:'1px solid rgba(39,39,42,0.15)', borderRadius:'4px' }}>
                     <div>
-                      <p style={{ fontSize:'14px', fontFamily:'Space Grotesk', fontWeight:500, color:'#dee1f7', marginBottom:'2px' }}>Neural Notifications</p>
+                      <p style={{ fontSize:'14px', fontFamily:'Space Grotesk', fontWeight:500, color:'#f4f4f5', marginBottom:'2px' }}>Neural Notifications</p>
                       <p style={{ fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.5)' }}>Real-time alert sync for results</p>
                     </div>
                     <div className={`toggle-track ${notifications ? 'on' : 'off'}`} onClick={() => setNotifications(n => !n)}>
@@ -653,10 +653,10 @@ export default function EditProfilePage() {
 
               {/* ── Footer Actions ── */}
               <div className="flex flex-col sm:flex-row justify-end gap-4 pt-8"
-                style={{ borderTop:'1px solid rgba(66,71,84,0.2)' }}>
+                style={{ borderTop:'1px solid rgba(39,39,42,0.2)' }}>
                 <Link href="/dashboard">
-                  <button className="px-8 py-3 transition-all hover:bg-[#25293a]"
-                    style={{ border:'1px solid rgba(66,71,84,0.4)', color:'rgba(194,198,214,0.7)', fontFamily:'DM Mono', fontSize:'11px', textTransform:'uppercase', letterSpacing:'0.15em', background:'transparent', cursor:'pointer' }}>
+                  <button className="px-8 py-3 transition-all hover:bg-[#18181b]"
+                    style={{ border:'1px solid rgba(39,39,42,0.4)', color:'rgba(194,198,214,0.7)', fontFamily:'DM Mono', fontSize:'11px', textTransform:'uppercase', letterSpacing:'0.15em', background:'transparent', cursor:'pointer' }}>
                     Discard
                   </button>
                 </Link>
@@ -665,11 +665,11 @@ export default function EditProfilePage() {
                   disabled={saving}
                   className="px-10 py-3 transition-all hover:scale-105 active:scale-95"
                   style={{
-                    background: saving ? 'rgba(77,142,255,0.4)' : '#4d8eff',
-                    color: '#002e6a',
+                    background: saving ? 'rgba(16,185,129,0.4)' : '#10b981',
+                    color: '#000000',
                     fontFamily: 'DM Mono', fontSize:'12px', fontWeight:700,
                     textTransform:'uppercase', letterSpacing:'0.15em',
-                    boxShadow: saving ? 'none' : '0 0 20px rgba(77,142,255,0.4)',
+                    boxShadow: saving ? 'none' : '0 0 20px rgba(16,185,129,0.4)',
                     cursor: saving ? 'wait' : 'pointer', border:'none',
                   }}>
                   {saving ? 'Saving...' : 'Save Changes'}
@@ -682,15 +682,15 @@ export default function EditProfilePage() {
         {/* ── Status bar (bottom right) ── */}
         <footer className="fixed bottom-0 right-0 p-4 z-50 pointer-events-none">
           <div className="flex items-center gap-4 px-4 py-2"
-            style={{ background:'rgba(14,19,34,0.8)', backdropFilter:'blur(12px)', border:'1px solid rgba(66,71,84,0.2)', borderRadius:'8px' }}>
+            style={{ background:'rgba(14,19,34,0.8)', backdropFilter:'blur(12px)', border:'1px solid rgba(39,39,42,0.2)', borderRadius:'4px' }}>
             <div className="flex flex-col">
               <span style={{ fontFamily:'DM Mono', fontSize:'8px', color:'rgba(194,198,214,0.5)', textTransform:'uppercase' }}>Core_Temp</span>
               <span style={{ fontFamily:'DM Mono', fontSize:'10px', color:'#6bd8cb' }}>32.4°C</span>
             </div>
-            <div style={{ width:'1px', height:'24px', background:'rgba(66,71,84,0.3)' }} />
+            <div style={{ width:'1px', height:'24px', background:'rgba(39,39,42,0.3)' }} />
             <div className="flex flex-col">
               <span style={{ fontFamily:'DM Mono', fontSize:'8px', color:'rgba(194,198,214,0.5)', textTransform:'uppercase' }}>Latency</span>
-              <span style={{ fontFamily:'DM Mono', fontSize:'10px', color:'#adc6ff' }}>12ms</span>
+              <span style={{ fontFamily:'DM Mono', fontSize:'10px', color:'#10b981' }}>12ms</span>
             </div>
           </div>
         </footer>

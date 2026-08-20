@@ -18,7 +18,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({ tasks, onTaskMove, onPortClic
   return (
     <div className="grid grid-cols-4 gap-4 h-full p-4">
       {COLUMNS.map((status) => (
-        <div key={status} className="flex flex-col h-full bg-zinc-950/20 rounded-xl border border-zinc-900/50">
+        <div key={status} className="flex flex-col h-full bg-zinc-950/20 rounded-md border border-zinc-900/50">
           <div className="p-3 border-b border-zinc-900/50 flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">{status}</span>
             <span className="text-[10px] font-mono text-zinc-600">{tasks.filter(t => t.status === status).length}</span>

@@ -55,7 +55,7 @@ export function ApplySection({
   if (isOwner) {
     return (
       <section style={{
-        background: 'rgba(26,31,47,0.7)', backdropFilter: 'blur(16px)',
+        background: 'rgba(24,24,27,0.7)', backdropFilter: 'blur(16px)',
         border: '1px solid rgba(107,216,203,0.2)', padding: '24px',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
@@ -74,8 +74,8 @@ export function ApplySection({
             View Applicants
           </a>
           <a href={`/projects/${projectId}/edit`}
-            style={{ display: 'block', padding: '10px 16px', background: 'transparent', border: '1px solid rgba(66,71,84,0.3)', color: 'rgba(194,198,214,0.6)', fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', textDecoration: 'none', textAlign: 'center' }}
-            className="hover:bg-[#25293a] transition-all">
+            style={{ display: 'block', padding: '10px 16px', background: 'transparent', border: '1px solid rgba(39,39,42,0.3)', color: 'rgba(194,198,214,0.6)', fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', textDecoration: 'none', textAlign: 'center' }}
+            className="hover:bg-[#18181b] transition-all">
             Edit Project
           </a>
         </div>
@@ -109,9 +109,9 @@ export function ApplySection({
   // ── Not logged in ──
   if (!isLoggedIn) {
     return (
-      <section style={{ background: 'rgba(26,31,47,0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(66,71,84,0.15)', padding: '24px' }}>
-        <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f', marginBottom: '16px' }}>Sign in to apply to this project.</p>
-        <a href="/api/auth/signin" style={{ display: 'block', padding: '12px', background: '#adc6ff', color: '#002e6a', fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', textDecoration: 'none', textAlign: 'center' }}>
+      <section style={{ background: 'rgba(24,24,27,0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(39,39,42,0.15)', padding: '24px' }}>
+        <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#71717a', marginBottom: '16px' }}>Sign in to apply to this project.</p>
+        <a href="/api/auth/signin" style={{ display: 'block', padding: '12px', background: '#10b981', color: '#000000', fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', textDecoration: 'none', textAlign: 'center' }}>
           Sign In to Apply
         </a>
       </section>
@@ -121,8 +121,8 @@ export function ApplySection({
   // ── Project closed or full ──
   if (projectStatus !== 'open' || spotsLeft === 0) {
     return (
-      <section style={{ background: 'rgba(26,31,47,0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(66,71,84,0.15)', padding: '24px' }}>
-        <button disabled style={{ width: '100%', padding: '14px', background: 'rgba(66,71,84,0.3)', color: '#8c909f', fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', border: 'none', cursor: 'not-allowed' }}>
+      <section style={{ background: 'rgba(24,24,27,0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(39,39,42,0.15)', padding: '24px' }}>
+        <button disabled style={{ width: '100%', padding: '14px', background: 'rgba(39,39,42,0.3)', color: '#71717a', fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', border: 'none', cursor: 'not-allowed' }}>
           {spotsLeft === 0 ? 'No Slots Available' : 'Project Closed'}
         </button>
       </section>
@@ -132,15 +132,15 @@ export function ApplySection({
   // ── Can apply ──
   return (
     <>
-      <section style={{ background: 'rgba(26,31,47,0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(173,198,255,0.15)', padding: '24px', position: 'relative', overflow: 'hidden' }}>
+      <section style={{ background: 'rgba(24,24,27,0.7)', backdropFilter: 'blur(16px)', border: '1px solid rgba(16,185,129,0.15)', padding: '24px', position: 'relative', overflow: 'hidden' }}>
         {/* Glow effect */}
-        <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '120px', height: '120px', borderRadius: '50%', background: 'rgba(173,198,255,0.08)', filter: 'blur(40px)', pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '120px', height: '120px', borderRadius: '50%', background: 'rgba(16,185,129,0.08)', filter: 'blur(40px)', pointerEvents: 'none' }} />
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
           <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#34d399', display: 'inline-block' }} className="animate-pulse" />
           <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#34d399', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Accepting Applications</span>
         </div>
-        <h3 style={{ fontFamily: 'Syne', fontSize: '18px', fontWeight: 700, color: '#dee1f7', marginBottom: '8px' }}>
+        <h3 style={{ fontFamily: 'Inter', fontSize: '18px', fontWeight: 700, color: '#f4f4f5', marginBottom: '8px' }}>
           Join This Project
         </h3>
         <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: 'rgba(194,198,214,0.5)', marginBottom: '20px', lineHeight: 1.6 }}>
@@ -163,11 +163,11 @@ export function ApplySection({
           onClick={() => setShowModal(true)}
           style={{
             width: '100%', padding: '14px',
-            background: '#adc6ff', color: '#002e6a',
+            background: '#10b981', color: '#000000',
             fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700,
             textTransform: 'uppercase', letterSpacing: '0.1em',
             border: 'none', cursor: 'pointer',
-            boxShadow: '0 0 24px rgba(173,198,255,0.25)',
+            boxShadow: '0 0 24px rgba(16,185,129,0.25)',
             transition: 'all 0.2s',
           }}
           className="hover:bg-[#c0d4ff] transition-all"
@@ -188,12 +188,12 @@ export function ApplySection({
         >
           <div style={{
             width: '100%', maxWidth: '480px', background: '#1a1f2f',
-            border: '1px solid rgba(66,71,84,0.3)', padding: '32px',
+            border: '1px solid rgba(39,39,42,0.3)', padding: '32px',
           }}>
             {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
               <div>
-                <h2 style={{ fontFamily: 'Syne', fontSize: '22px', fontWeight: 700, color: '#dee1f7', marginBottom: '4px' }}>
+                <h2 style={{ fontFamily: 'Inter', fontSize: '22px', fontWeight: 700, color: '#f4f4f5', marginBottom: '4px' }}>
                   Apply to Project
                 </h2>
                 <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
@@ -201,12 +201,12 @@ export function ApplySection({
                 </p>
               </div>
               <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}>
-                <span className="material-symbols-outlined" style={{ color: '#8c909f', fontSize: '20px' }}>close</span>
+                <span className="material-symbols-outlined" style={{ color: '#71717a', fontSize: '20px' }}>close</span>
               </button>
             </div>
 
             {/* Message */}
-            <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '8px' }}>
               Intro Message <span style={{ color: 'rgba(140,144,159,0.5)' }}>(optional, max 300 chars)</span>
             </label>
             <textarea
@@ -216,7 +216,7 @@ export function ApplySection({
               placeholder="Why are you a great fit for this project?"
               style={{
                 width: '100%', background: 'rgba(14,19,34,0.6)',
-                border: '1px solid rgba(66,71,84,0.3)', color: '#dee1f7',
+                border: '1px solid rgba(39,39,42,0.3)', color: '#f4f4f5',
                 fontFamily: 'DM Mono', fontSize: '13px', padding: '12px 14px',
                 resize: 'none', outline: 'none', lineHeight: 1.6,
                 boxSizing: 'border-box',
@@ -235,8 +235,8 @@ export function ApplySection({
             <div style={{ display: 'flex', gap: '12px' }}>
               <button
                 onClick={() => setShowModal(false)}
-                style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid rgba(66,71,84,0.3)', color: '#c2c6d6', fontFamily: 'DM Mono', fontSize: '11px', cursor: 'pointer' }}
-                className="hover:bg-[#25293a] transition-all"
+                style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid rgba(39,39,42,0.3)', color: '#d4d4d8', fontFamily: 'DM Mono', fontSize: '11px', cursor: 'pointer' }}
+                className="hover:bg-[#18181b] transition-all"
               >
                 Cancel
               </button>
@@ -245,8 +245,8 @@ export function ApplySection({
                 disabled={loading}
                 style={{
                   flex: 2, padding: '12px',
-                  background: loading ? 'rgba(173,198,255,0.4)' : '#adc6ff',
-                  color: '#002e6a', fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700,
+                  background: loading ? 'rgba(16,185,129,0.4)' : '#10b981',
+                  color: '#000000', fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700,
                   border: 'none', cursor: loading ? 'wait' : 'pointer',
                   textTransform: 'uppercase', letterSpacing: '0.05em',
                 }}

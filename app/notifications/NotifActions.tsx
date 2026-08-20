@@ -24,11 +24,11 @@ function MarkAllRead() {
       disabled={loading}
       style={{
         padding: '8px 16px', background: 'transparent',
-        border: '1px solid rgba(66,71,84,0.3)', color: 'rgba(194,198,214,0.6)',
+        border: '1px solid rgba(39,39,42,0.3)', color: 'rgba(194,198,214,0.6)',
         fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase',
         letterSpacing: '0.1em', cursor: 'pointer',
       }}
-      className="hover:bg-[#25293a] transition-all"
+      className="hover:bg-[#18181b] transition-all"
     >
       {loading ? 'Marking...' : 'Mark All Read'}
     </button>
@@ -145,7 +145,7 @@ function AcceptReject({ applicationId, notifId, applicantName, applicantScore, a
           </button>
           <button
             onClick={() => setConfirm(null)}
-            style={{ padding: '5px 14px', fontFamily: 'DM Mono', fontSize: '10px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(66,71,84,0.3)', color: '#8c909f' }}
+            style={{ padding: '5px 14px', fontFamily: 'DM Mono', fontSize: '10px', cursor: 'pointer', background: 'transparent', border: '1px solid rgba(39,39,42,0.3)', color: '#71717a' }}
           >
             Cancel
           </button>
@@ -186,14 +186,14 @@ function AcceptReject({ applicationId, notifId, applicantName, applicantScore, a
                   fontSize: '11px',
                   fontWeight: 700,
                   cursor: 'pointer',
-                  background: 'rgba(173,198,255,0.08)',
-                  color: '#adc6ff',
-                  border: '1px solid rgba(173,198,255,0.25)',
+                  background: 'rgba(16,185,129,0.08)',
+                  color: '#10b981',
+                  border: '1px solid rgba(16,185,129,0.25)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.05em',
                   transition: 'all 0.15s',
                 }}
-                className="hover:bg-[#adc6ff]/20 transition-all"
+                className="hover:bg-[#10b981]/20 transition-all"
               >
                 View Profile
               </button>

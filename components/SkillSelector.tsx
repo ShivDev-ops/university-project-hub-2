@@ -40,25 +40,25 @@ addSkill(query.trim())
 }
 }}
 placeholder={placeholder || 'Search or add a skill...'}
-className="w-full rounded-xl px-4 py-3 text-sm outline-none"
+className="w-full rounded-md px-4 py-3 text-sm outline-none"
 style={{
 background: 'rgba(14,19,34,0.6)',
-border: '1px solid rgba(66,71,84,0.3)',
-color: '#dee1f7',
-fontFamily: 'Manrope',
+border: '1px solid rgba(39,39,42,0.3)',
+color: '#f4f4f5',
+fontFamily: 'Inter',
 }}
 />
 {suggestions.length > 0 && (
 <div
-className="absolute top-full left-0 right-0 mt-1 rounded-xl overflow-hidden z-10"
-style={{ background: '#1a1f2f', border: '1px solid rgba(66,71,84,0.3)' }}
+className="absolute top-full left-0 right-0 mt-1 rounded-md overflow-hidden z-10"
+style={{ background: '#1a1f2f', border: '1px solid rgba(39,39,42,0.3)' }}
 >
 {suggestions.map(s => (
 <button
 key={s}
 onClick={() => addSkill(s)}
-className="w-full px-4 py-2.5 text-left text-sm hover:bg-[#25293a] transition-colors"
-style={{ fontFamily: 'DM Mono', color: '#dee1f7' }}
+className="w-full px-4 py-2.5 text-left text-sm hover:bg-[#18181b] transition-colors"
+style={{ fontFamily: 'DM Mono', color: '#f4f4f5' }}
 >
 {s}
 </button>

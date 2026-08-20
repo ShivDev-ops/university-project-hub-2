@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       subject: 'Project Hub — Password Reset Code',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0f0f0f; border-radius: 16px;">
-          <h2 style="color: #adc6ff; margin-bottom: 8px;">Password Reset</h2>
+          <h2 style="color: #10b981; margin-bottom: 8px;">Password Reset</h2>
           <p style="color: #9ca3af; margin-bottom: 24px;">Your password reset code is:</p>
           <div style="background: #1f1f2f; border-radius: 12px; padding: 24px; text-align: center; margin-bottom: 24px;">
             <h1 style="color: #a855f7; font-size: 48px; letter-spacing: 12px; margin: 0;">${otp}</h1>

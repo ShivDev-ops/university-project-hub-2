@@ -6,7 +6,7 @@ export default function GitTimeline({ data }: { data: any }) {
 
   if (!commits || commits.length === 0) {
     return (
-      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-2xl text-center text-zinc-400 glass-panel">
+      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-md text-center text-zinc-400 glass-panel">
         <GitCommit className="mx-auto w-12 h-12 text-zinc-700 mb-4" />
         <p className="text-lg">No commit history available.</p>
         <p className="text-sm mt-2 text-zinc-500">Version control telemetry was not captured for this project.</p>
@@ -20,7 +20,7 @@ export default function GitTimeline({ data }: { data: any }) {
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
           <Github className="text-emerald-500" /> Version Registry
         </h2>
-        <div className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-3 py-1.5 rounded-lg border border-zinc-800">
+        <div className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-3 py-1.5 rounded-sm border border-zinc-800">
           {commits.length} Commits Logged
         </div>
       </div>
@@ -35,7 +35,7 @@ export default function GitTimeline({ data }: { data: any }) {
               {/* Timeline Dot */}
               <div className="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
               
-              <div className="bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/30 transition-colors p-5 rounded-xl glass-panel">
+              <div className="bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/30 transition-colors p-5 rounded-md glass-panel">
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-3">
                   <div>
                     <h3 className="text-base font-bold text-zinc-200 leading-tight">

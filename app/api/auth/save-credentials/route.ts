@@ -57,15 +57,15 @@ export async function POST(req: NextRequest) {
       subject: 'Welcome to Project Hub — Your Login Details',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto; padding: 32px; background: #0f0f0f; border-radius: 16px;">
-          <h2 style="color: #adc6ff; margin-bottom: 8px; font-size: 24px;">Welcome to Project Hub!</h2>
+          <h2 style="color: #10b981; margin-bottom: 8px; font-size: 24px;">Welcome to Project Hub!</h2>
           <p style="color: #9ca3af; margin-bottom: 24px;">Your account has been created successfully. Here are your login details:</p>
           <div style="background: #1f1f2f; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
             <p style="color: #6b7280; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">Email</p>
-            <p style="color: #adc6ff; font-size: 16px; font-weight: bold; margin-bottom: 16px;">${token.email}</p>
+            <p style="color: #10b981; font-size: 16px; font-weight: bold; margin-bottom: 16px;">${token.email}</p>
             <p style="color: #6b7280; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">Username</p>
-            <p style="color: #adc6ff; font-size: 16px; font-weight: bold; margin-bottom: 16px;">@${username}</p>
+            <p style="color: #10b981; font-size: 16px; font-weight: bold; margin-bottom: 16px;">@${username}</p>
             <p style="color: #6b7280; font-size: 12px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em;">Password</p>
-            <p style="color: #adc6ff; font-size: 16px; font-weight: bold;">${password}</p>
+            <p style="color: #10b981; font-size: 16px; font-weight: bold;">${password}</p>
           </div>
           <p style="color: #6b7280; font-size: 13px; margin-bottom: 8px;">You can sign in at any time using your email and password.</p>
           <p style="color: #6b7280; font-size: 12px;">If you didn't create this account, please ignore this email.</p>

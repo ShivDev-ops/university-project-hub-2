@@ -172,30 +172,30 @@ export default async function ProfilePage(props: {
       />
 
       <style>{`
-        body { font-family: 'Manrope', sans-serif; background: #0e1322; color: #dee1f7; margin: 0; }
+        body { font-family: 'Manrope', sans-serif; background: #09090b; color: #f4f4f5; margin: 0; }
         .material-symbols-outlined { font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24; }
-        .glass-panel { background: rgba(26,31,47,0.7); backdrop-filter: blur(16px); }
-        .ghost-border { border: 1px solid rgba(66,71,84,0.15); }
-        .neon-primary { box-shadow: 0 0 40px -10px rgba(173,198,255,0.15); }
+        .glass-panel { background: rgba(24,24,27,0.7); backdrop-filter: blur(16px); }
+        .ghost-border { border: 1px solid rgba(39,39,42,0.15); }
+        .neon-primary { box-shadow: 0 0 40px -10px rgba(16,185,129,0.15); }
         .neon-secondary { box-shadow: 0 0 40px -10px rgba(107,216,203,0.15); }
         .dot-grid {
-          background-image: radial-gradient(circle, rgba(77,142,255,0.05) 1px, transparent 1px);
+          background-image: radial-gradient(circle, rgba(16,185,129,0.05) 1px, transparent 1px);
           background-size: 24px 24px;
         }
         .card-hover { transition: all 0.3s; }
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 40px -10px rgba(77,142,255,0.2); }
-        .avatar-glow { box-shadow: 0 0 0 2px rgba(173,198,255,0.3), 0 0 40px -10px rgba(173,198,255,0.2); }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 12px 40px -10px rgba(16,185,129,0.2); }
+        .avatar-glow { box-shadow: 0 0 0 2px rgba(16,185,129,0.3), 0 0 40px -10px rgba(16,185,129,0.2); }
         .skill-chip { transition: all 0.15s; }
         .skill-chip:hover { border-color: rgba(107,216,203,0.4); color: #6bd8cb; }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4d8eff; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
         .animate-pulse { animation: pulse 2s ease-in-out infinite; }
         @keyframes ping { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
         .animate-ping { animation: ping 2s ease-in-out infinite; }
       `}</style>
 
-      <div className="bg-[#0e1322] min-h-screen dot-grid overflow-x-hidden">
+      <div className="bg-[#09090b] min-h-screen dot-grid overflow-x-hidden">
 
         {/* ── Top Nav ── */}
         <DashboardNavbar profile={viewerProfile} />
@@ -227,9 +227,9 @@ export default async function ProfilePage(props: {
                 {/* Avatar */}
                 <div className="relative group flex-shrink-0">
                   <div className="absolute -inset-1 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"
-                    style={{ background: 'linear-gradient(135deg, #adc6ff, #d0bcff)' }} />
+                    style={{ background: 'linear-gradient(135deg, #10b981, #d0bcff)' }} />
                   <div className="relative w-44 h-44 rounded-full overflow-hidden avatar-glow"
-                    style={{ border: '2px solid rgba(66,71,84,0.4)' }}>
+                    style={{ border: '2px solid rgba(39,39,42,0.4)' }}>
                     {profile.avatar_url ? (
                       <img
                         src={profile.avatar_url}
@@ -238,45 +238,45 @@ export default async function ProfilePage(props: {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center"
-                        style={{ background: '#25293a' }}>
-                        <span className="material-symbols-outlined" style={{ fontSize: '64px', color: '#adc6ff' }}>person</span>
+                        style={{ background: '#18181b' }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: '64px', color: '#10b981' }}>person</span>
                       </div>
                     )}
                   </div>
                   {/* Verified badge */}
                   <div className="absolute bottom-2 right-2 w-10 h-10 rounded-full border-4 flex items-center justify-center"
-                    style={{ background: '#6bd8cb', borderColor: '#0e1322' }}>
+                    style={{ background: '#6bd8cb', borderColor: '#09090b' }}>
                     <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#003732', fontVariationSettings: "'FILL' 1" }}>verified</span>
                   </div>
                 </div>
 
                 {/* Name + meta */}
                 <div className="text-center md:text-left">
-                  <h1 style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: 'clamp(40px,6vw,72px)', letterSpacing: '-0.04em', lineHeight: 1, textTransform: 'uppercase', marginBottom: '16px' }}>
+                  <h1 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 'clamp(40px,6vw,72px)', letterSpacing: '-0.04em', lineHeight: 1, textTransform: 'uppercase', marginBottom: '16px' }}>
                     {profile.full_name.split(' ')[0]}<br />
-                    <span style={{ color: '#adc6ff' }}>{profile.full_name.split(' ').slice(1).join(' ')}</span>
+                    <span style={{ color: '#10b981' }}>{profile.full_name.split(' ').slice(1).join(' ')}</span>
                   </h1>
 
                   <div className="flex flex-wrap justify-center md:justify-start gap-3">
                     <span className="flex items-center gap-2 px-3 py-1"
-                      style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#c2c6d6' }}>
+                      style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d4d4d8' }}>
                       <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#6bd8cb' }} />
                       {profile.department ?? 'Researcher'}
                     </span>
                     <span className="flex items-center gap-2 px-3 py-1"
-                      style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#c2c6d6' }}>
+                      style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d4d4d8' }}>
                       Node ID: {profile.user_id.slice(0, 6).toUpperCase()}
                     </span>
                     {profile.year && (
                       <span className="flex items-center gap-2 px-3 py-1"
-                        style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#c2c6d6' }}>
+                        style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d4d4d8' }}>
                         Year {profile.year}
                       </span>
                     )}
                     {profile.email && (
                       <a href={`mailto:${profile.email}`}
-                        className="flex items-center gap-2 px-3 py-1 hover:border-[#adc6ff]/40 transition-all"
-                        style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#adc6ff' }}>
+                        className="flex items-center gap-2 px-3 py-1 hover:border-[#10b981]/40 transition-all"
+                        style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#10b981' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>mail</span>
                         {profile.email}
                       </a>
@@ -284,7 +284,7 @@ export default async function ProfilePage(props: {
                     {githubUrl && (
                       <a href={githubUrl} target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-1 hover:border-[#6bd8cb]/40 transition-all"
-                        style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#6bd8cb' }}>
+                        style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#6bd8cb' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>code</span>
                         GitHub
                       </a>
@@ -292,14 +292,14 @@ export default async function ProfilePage(props: {
                     {linkedinUrl ? (
                       <a href={linkedinUrl} target="_blank" rel="noopener noreferrer"
                         className="flex items-center gap-2 px-3 py-1 hover:border-[#d0bcff]/40 transition-all"
-                        style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d0bcff' }}>
+                        style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#d0bcff' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>hub</span>
                         LinkedIn
                       </a>
                     ) : portfolioUrl ? (
                       <a href={portfolioUrl} target="_blank" rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-3 py-1 hover:border-[#adc6ff]/40 transition-all"
-                        style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#adc6ff' }}>
+                        className="flex items-center gap-2 px-3 py-1 hover:border-[#10b981]/40 transition-all"
+                        style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: '#10b981' }}>
                         <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>open_in_new</span>
                         Portfolio
                       </a>
@@ -308,7 +308,7 @@ export default async function ProfilePage(props: {
 
                   {/* Bio */}
                   {profile.bio && (
-                    <p className="mt-4 max-w-lg" style={{ fontSize: '14px', color: '#c2c6d6', lineHeight: 1.7, textAlign: 'left' }}>
+                    <p className="mt-4 max-w-lg" style={{ fontSize: '14px', color: '#d4d4d8', lineHeight: 1.7, textAlign: 'left' }}>
                       {profile.bio}
                     </p>
                   )}
@@ -317,8 +317,8 @@ export default async function ProfilePage(props: {
                   <div className="flex gap-3 mt-5 justify-center md:justify-start">
                     {isOwnProfile && (
                       <Link href="/profile/edit">
-                        <button className="flex items-center gap-2 px-5 py-2.5 transition-all hover:bg-[#adc6ff] hover:text-[#002e6a]"
-                          style={{ background: 'rgba(173,198,255,0.1)', border: '1px solid rgba(173,198,255,0.25)', color: '#adc6ff', fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        <button className="flex items-center gap-2 px-5 py-2.5 transition-all hover:bg-[#10b981] hover:text-[#000000]"
+                          style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', color: '#10b981', fontFamily: 'DM Mono', fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                           <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>edit</span>
                           Edit Profile
                         </button>
@@ -354,7 +354,7 @@ export default async function ProfilePage(props: {
                     <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color, textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '4px' }}>
                       Score
                     </span>
-                    <span style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '52px', color: '#dee1f7', lineHeight: 1 }}>
+                    <span style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: '52px', color: '#f4f4f5', lineHeight: 1 }}>
                       {profile.score}
                     </span>
                     <span style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '9px', color: 'rgba(194,198,214,0.6)', marginTop: '8px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
@@ -372,7 +372,7 @@ export default async function ProfilePage(props: {
               <div id="skills" className="lg:col-span-4 glass-panel ghost-border p-8 neon-secondary"
                 style={{ borderLeft: '2px solid #d0bcff' }}>
                 <h3 className="flex items-center gap-3 mb-6"
-                  style={{ fontFamily: 'Syne', fontWeight: 700, fontSize: '20px', textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#d0bcff' }}>
+                  style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '20px', textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#d0bcff' }}>
                   <span className="material-symbols-outlined">terminal</span>
                   Tech_Stack
                 </h3>
@@ -397,14 +397,14 @@ export default async function ProfilePage(props: {
                     )}
 
                     {/* All skills */}
-                    <div className="pt-4" style={{ borderTop: '1px solid rgba(66,71,84,0.15)' }}>
+                    <div className="pt-4" style={{ borderTop: '1px solid rgba(39,39,42,0.15)' }}>
                       <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '10px' }}>
                         All Skills
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {profile.skills.map((skill: string) => (
                           <span key={skill} className="skill-chip px-3 py-1"
-                            style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', color: '#c2c6d6', fontFamily: 'DM Mono', fontSize: '10px' }}>
+                            style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', color: '#d4d4d8', fontFamily: 'DM Mono', fontSize: '10px' }}>
                             {skill}
                           </span>
                         ))}
@@ -412,9 +412,9 @@ export default async function ProfilePage(props: {
                     </div>
 
                     {/* Top skill proficiency bar */}
-                    <div className="pt-4" style={{ borderTop: '1px solid rgba(66,71,84,0.15)' }}>
+                    <div className="pt-4" style={{ borderTop: '1px solid rgba(39,39,42,0.15)' }}>
                       <div className="flex justify-between items-center mb-2">
-                        <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#dee1f7', textTransform: 'uppercase' }}>
+                        <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#f4f4f5', textTransform: 'uppercase' }}>
                           {profile.skills[0]}
                         </span>
                         <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#d0bcff' }}>Primary</span>
@@ -426,8 +426,8 @@ export default async function ProfilePage(props: {
 
                     {isOwnProfile && (
                       <Link href="/profile/edit">
-                        <button className="w-full py-2 transition-all hover:bg-[#25293a]"
-                          style={{ border: '1px solid rgba(66,71,84,0.3)', fontFamily: 'DM Mono', fontSize: '9px', color: '#c2c6d6', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                        <button className="w-full py-2 transition-all hover:bg-[#18181b]"
+                          style={{ border: '1px solid rgba(39,39,42,0.3)', fontFamily: 'DM Mono', fontSize: '9px', color: '#d4d4d8', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                           Manage_Skills
                         </button>
                       </Link>
@@ -435,12 +435,12 @@ export default async function ProfilePage(props: {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-10">
-                    <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#424754', marginBottom: '10px' }}>code_off</span>
-                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#8c909f' }}>No skills added yet</p>
+                    <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#27272a', marginBottom: '10px' }}>code_off</span>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#71717a' }}>No skills added yet</p>
                     {isOwnProfile && (
                       <Link href="/profile/edit">
                         <button className="mt-4 px-4 py-2 text-xs"
-                          style={{ background: 'rgba(173,198,255,0.1)', border: '1px solid rgba(173,198,255,0.2)', color: '#adc6ff', fontFamily: 'DM Mono' }}>
+                          style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.2)', color: '#10b981', fontFamily: 'DM Mono' }}>
                           Add Skills
                         </button>
                       </Link>
@@ -453,60 +453,60 @@ export default async function ProfilePage(props: {
               <div className="lg:col-span-8 glass-panel ghost-border p-8 neon-primary">
                 <div className="flex justify-between items-center mb-6">
                   <div>
-                    <h3 style={{ fontFamily: 'Syne', fontWeight: 700, fontSize: '20px', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+                    <h3 style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '20px', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
                       Activity_Nodes
                     </h3>
-                    <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.2em', marginTop: '4px' }}>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.2em', marginTop: '4px' }}>
                       Project Participation History
                     </p>
                   </div>
                   <div className="flex gap-2">
                     {/* Stats summary chips */}
-                    <div className="px-3 py-2 text-center" style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)' }}>
-                      <div style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '20px', color: '#adc6ff' }}>
+                    <div className="px-3 py-2 text-center" style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)' }}>
+                      <div style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: '20px', color: '#10b981' }}>
                         {(activeProjects?.length ?? 0) + (completedProjects?.length ?? 0)}
                       </div>
-                      <div style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f', textTransform: 'uppercase' }}>Total</div>
+                      <div style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a', textTransform: 'uppercase' }}>Total</div>
                     </div>
-                    <div className="px-3 py-2 text-center" style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)' }}>
-                      <div style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '20px', color: '#6bd8cb' }}>
+                    <div className="px-3 py-2 text-center" style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)' }}>
+                      <div style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: '20px', color: '#6bd8cb' }}>
                         {completedProjects?.length ?? 0}
                       </div>
-                      <div style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f', textTransform: 'uppercase' }}>Done</div>
+                      <div style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a', textTransform: 'uppercase' }}>Done</div>
                     </div>
-                    <div className="px-3 py-2 text-center" style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)' }}>
-                      <div style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: '20px', color, }}>
+                    <div className="px-3 py-2 text-center" style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)' }}>
+                      <div style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: '20px', color, }}>
                         {profile.score}
                       </div>
-                      <div style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f', textTransform: 'uppercase' }}>Score</div>
+                      <div style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a', textTransform: 'uppercase' }}>Score</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Mini activity chart (decorative) */}
-                <div className="h-40 w-full relative" style={{ borderLeft: '1px solid rgba(66,71,84,0.2)', borderBottom: '1px solid rgba(66,71,84,0.2)' }}>
+                <div className="h-40 w-full relative" style={{ borderLeft: '1px solid rgba(39,39,42,0.2)', borderBottom: '1px solid rgba(39,39,42,0.2)' }}>
                   <svg className="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 800 160">
                     <defs>
                       <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#adc6ff" stopOpacity="0.3" />
-                        <stop offset="100%" stopColor="#adc6ff" stopOpacity="0" />
+                        <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
                       </linearGradient>
                     </defs>
-                    <path d="M0,140 Q100,120 200,80 T400,90 T600,40 T800,60" fill="none" stroke="#adc6ff" strokeWidth="2" />
+                    <path d="M0,140 Q100,120 200,80 T400,90 T600,40 T800,60" fill="none" stroke="#10b981" strokeWidth="2" />
                     <path d="M0,140 Q100,120 200,80 T400,90 T600,40 T800,60 L800,160 L0,160 Z" fill="url(#lineGrad)" />
-                    <circle cx="200" cy="80" r="3" fill="#adc6ff" className="animate-pulse" />
-                    <circle cx="600" cy="40" r="3" fill="#adc6ff" className="animate-pulse" />
+                    <circle cx="200" cy="80" r="3" fill="#10b981" className="animate-pulse" />
+                    <circle cx="600" cy="40" r="3" fill="#10b981" className="animate-pulse" />
                   </svg>
                   <div className="absolute bottom-0 left-0 w-full flex justify-between px-2 pb-1"
-                    style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f', textTransform: 'uppercase' }}>
+                    style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a', textTransform: 'uppercase' }}>
                     {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map(m => <span key={m}>{m}</span>)}
                   </div>
                 </div>
 
                 {/* Member since */}
                 <div className="mt-4 flex items-center gap-2">
-                  <span className="material-symbols-outlined" style={{ fontSize: '14px', color: '#8c909f' }}>calendar_today</span>
-                  <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '14px', color: '#71717a' }}>calendar_today</span>
+                  <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                     Member since {new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
                   </span>
                 </div>
@@ -515,12 +515,12 @@ export default async function ProfilePage(props: {
               {/* ── Active Projects ── */}
               <div id="active" className="lg:col-span-12 mt-4">
                 <div className="flex items-end gap-4 mb-8">
-                  <h2 style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: 'clamp(28px,4vw,40px)', textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                  <h2 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 'clamp(28px,4vw,40px)', textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1 }}>
                     Active<br />
                     <span style={{ color: '#6bd8cb' }}>Projects</span>
                   </h2>
-                  <div className="flex-grow mb-2" style={{ borderBottom: '1px solid rgba(66,71,84,0.2)' }} />
-                  <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '8px' }}>
+                  <div className="flex-grow mb-2" style={{ borderBottom: '1px solid rgba(39,39,42,0.2)' }} />
+                  <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '8px' }}>
                     Current_Projects
                   </span>
                 </div>
@@ -529,8 +529,8 @@ export default async function ProfilePage(props: {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {activeProjects.map((project: Project) => {
                       const spotsLeft = project.slots - project.filled_slots
-                      const statusColor = project.status === 'open' ? '#6bd8cb' : '#adc6ff'
-                      const borderColor = project.status === 'open' ? '#6bd8cb' : '#adc6ff'
+                      const statusColor = project.status === 'open' ? '#6bd8cb' : '#10b981'
+                      const borderColor = project.status === 'open' ? '#6bd8cb' : '#10b981'
                       return (
                         <Link key={project.id} href={`/projects/${project.id}`}>
                           <div className="glass-panel ghost-border p-6 relative card-hover cursor-pointer"
@@ -540,29 +540,29 @@ export default async function ProfilePage(props: {
                                 style={{ background: `${statusColor}15`, border: `1px solid ${statusColor}30`, color: statusColor, fontFamily: 'DM Mono', fontSize: '9px', textTransform: 'uppercase' }}>
                                 Status: {project.status === 'open' ? 'Active' : 'In Progress'}
                               </span>
-                              <span style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f', textTransform: 'uppercase' }}>
+                              <span style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a', textTransform: 'uppercase' }}>
                                 {spotsLeft} slots left
                               </span>
                             </div>
-                            <h4 style={{ fontFamily: 'Syne', fontWeight: 700, fontSize: '18px', textTransform: 'uppercase', marginBottom: '4px', lineHeight: 1.2 }}>
+                            <h4 style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '18px', textTransform: 'uppercase', marginBottom: '4px', lineHeight: 1.2 }}>
                               {project.title}
                             </h4>
-                            <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '10px' }}>
+                            <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '10px' }}>
                               Role: {project.role === 'member' ? 'Team Member' : 'Owner'}
                             </p>
-                            <p style={{ fontSize: '12px', color: '#c2c6d6', marginBottom: '20px', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            <p style={{ fontSize: '12px', color: '#d4d4d8', marginBottom: '20px', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                               {project.description}
                             </p>
                             <div className="flex flex-wrap gap-1 mb-4">
                               {project.required_skills?.slice(0, 3).map((s: string) => (
-                                <span key={s} style={{ padding: '2px 6px', background: '#25293a', fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f' }}>
+                                <span key={s} style={{ padding: '2px 6px', background: '#18181b', fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a' }}>
                                   {s}
                                 </span>
                               ))}
                             </div>
                             <div className="flex justify-between items-center">
                               <span className="material-symbols-outlined" style={{ color: statusColor, fontSize: '18px' }}>trending_up</span>
-                              <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff' }}>View →</span>
+                              <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#10b981' }}>View →</span>
                             </div>
                           </div>
                         </Link>
@@ -571,15 +571,15 @@ export default async function ProfilePage(props: {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16 glass-panel ghost-border">
-                    <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#424754', marginBottom: '12px' }}>rocket_launch</span>
-                    <p style={{ fontFamily: 'Syne', fontSize: '18px', fontWeight: 700, color: '#c2c6d6' }}>No active projects</p>
-                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#8c909f', marginTop: '6px' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#27272a', marginBottom: '12px' }}>rocket_launch</span>
+                    <p style={{ fontFamily: 'Inter', fontSize: '18px', fontWeight: 700, color: '#d4d4d8' }}>No active projects</p>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#71717a', marginTop: '6px' }}>
                       {isOwnProfile ? 'Post your first project to get started' : 'No active projects at the moment'}
                     </p>
                     {isOwnProfile && (
                       <Link href="/projects/create">
                         <button className="mt-5 px-5 py-2.5 neon-primary"
-                          style={{ background: '#adc6ff', color: '#002e6a', fontFamily: 'DM Mono', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
+                          style={{ background: '#10b981', color: '#000000', fontFamily: 'DM Mono', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>
                           + Post Project
                         </button>
                       </Link>
@@ -591,12 +591,12 @@ export default async function ProfilePage(props: {
               {/* ── Completed Projects ── */}
               <div id="completed" className="lg:col-span-12 mt-4">
                 <div className="flex items-end gap-4 mb-8">
-                  <h2 style={{ fontFamily: 'Syne', fontWeight: 800, fontSize: 'clamp(28px,4vw,40px)', textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1 }}>
+                  <h2 style={{ fontFamily: 'Inter', fontWeight: 800, fontSize: 'clamp(28px,4vw,40px)', textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1 }}>
                     Completed<br />
-                    <span style={{ color: '#4d8eff' }}>Archivals</span>
+                    <span style={{ color: '#10b981' }}>Archivals</span>
                   </h2>
-                  <div className="flex-grow mb-2" style={{ borderBottom: '1px solid rgba(66,71,84,0.2)' }} />
-                  <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '8px' }}>
+                  <div className="flex-grow mb-2" style={{ borderBottom: '1px solid rgba(39,39,42,0.2)' }} />
+                  <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '8px' }}>
                     {completedProjects?.length ?? 0} Archivals
                   </span>
                 </div>
@@ -609,7 +609,7 @@ export default async function ProfilePage(props: {
                           className={`glass-panel ghost-border group card-hover overflow-hidden relative cursor-pointer ${index === completedProjects.length - 1 && completedProjects.length % 4 === 1 ? 'md:col-span-2' : ''}`}
                         >
                           {/* Top color bar */}
-                          <div style={{ height: '3px', background: 'linear-gradient(to right, #adc6ff, #6bd8cb, transparent)' }} />
+                          <div style={{ height: '3px', background: 'linear-gradient(to right, #10b981, #6bd8cb, transparent)' }} />
 
                           <div className="p-6">
                             <div className="flex items-center justify-between mb-3">
@@ -617,19 +617,19 @@ export default async function ProfilePage(props: {
                                 style={{ background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.2)', color: '#34d399', fontFamily: 'DM Mono', fontSize: '9px', textTransform: 'uppercase' }}>
                                 #Completed
                               </span>
-                              <span style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f' }}>
+                              <span style={{ fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a' }}>
                                 {new Date(project.created_at).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit' }).replace('/', '.')}
                               </span>
                             </div>
 
-                            <h4 className="group-hover:text-[#adc6ff] transition-colors"
-                              style={{ fontFamily: 'Syne', fontWeight: 700, fontSize: '18px', textTransform: 'uppercase', marginBottom: '4px', lineHeight: 1.2 }}>
+                            <h4 className="group-hover:text-[#10b981] transition-colors"
+                              style={{ fontFamily: 'Inter', fontWeight: 700, fontSize: '18px', textTransform: 'uppercase', marginBottom: '4px', lineHeight: 1.2 }}>
                               {project.title}
                             </h4>
                             <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#6bd8cb', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '10px' }}>
                               Role: {project.role === 'member' ? 'Team Member' : 'Owner'}
                             </p>
-                            <p style={{ fontSize: '12px', color: '#c2c6d6', marginBottom: '14px', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                            <p style={{ fontSize: '12px', color: '#d4d4d8', marginBottom: '14px', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                               {project.description}
                             </p>
 
@@ -637,7 +637,7 @@ export default async function ProfilePage(props: {
                             {project.required_skills?.length > 0 && (
                               <div className="flex flex-wrap gap-1">
                                 {project.required_skills.slice(0, 3).map((s: string) => (
-                                  <span key={s} style={{ padding: '2px 6px', background: '#25293a', fontFamily: 'DM Mono', fontSize: '9px', color: '#8c909f' }}>
+                                  <span key={s} style={{ padding: '2px 6px', background: '#18181b', fontFamily: 'DM Mono', fontSize: '9px', color: '#71717a' }}>
                                     {s}
                                   </span>
                                 ))}
@@ -650,9 +650,9 @@ export default async function ProfilePage(props: {
                   </div>
                 ) : (
                   <div className="flex flex-col items-center justify-center py-16 glass-panel ghost-border mb-12">
-                    <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#424754', marginBottom: '12px' }}>inventory_2</span>
-                    <p style={{ fontFamily: 'Syne', fontSize: '18px', fontWeight: 700, color: '#c2c6d6' }}>No completed projects yet</p>
-                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#8c909f', marginTop: '6px' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '40px', color: '#27272a', marginBottom: '12px' }}>inventory_2</span>
+                    <p style={{ fontFamily: 'Inter', fontSize: '18px', fontWeight: 700, color: '#d4d4d8' }}>No completed projects yet</p>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#71717a', marginTop: '6px' }}>
                       Completed projects will appear here as a portfolio
                     </p>
                   </div>
@@ -663,7 +663,7 @@ export default async function ProfilePage(props: {
           </main>
         </div>
 
-        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#0e1322]/90 backdrop-blur-xl border-t border-[#adc6ff]/10 z-50 flex justify-around items-center h-20 px-4">
+        <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#09090b]/90 backdrop-blur-xl border-t border-[#10b981]/10 z-50 flex justify-around items-center h-20 px-4">
           <Link href="/dashboard" className="flex flex-col items-center gap-1 text-on-surface-variant">
             <span className="material-symbols-outlined">grid_view</span>
             <span className="text-[9px] font-['DM_Mono'] uppercase">Nodes</span>
@@ -689,7 +689,7 @@ export default async function ProfilePage(props: {
 
         {/* Background particles */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ opacity: 0.25 }}>
-          <div className="animate-ping" style={{ position: 'absolute', top: '25%', left: '25%', width: '2px', height: '2px', background: '#adc6ff', borderRadius: '50%' }} />
+          <div className="animate-ping" style={{ position: 'absolute', top: '25%', left: '25%', width: '2px', height: '2px', background: '#10b981', borderRadius: '50%' }} />
           <div style={{ position: 'absolute', top: '75%', right: '33%', width: '3px', height: '3px', background: '#6bd8cb', borderRadius: '50%', animation: 'ping 3s ease-in-out infinite' }} />
           <div style={{ position: 'absolute', bottom: '25%', left: '60%', width: '2px', height: '2px', background: '#d0bcff', borderRadius: '50%' }} />
         </div>

@@ -1,6 +1,7 @@
 'use client'
 import { signIn } from 'next-auth/react'
 import Link from 'next/link'
+import SquaresBackground from '@/components/ui/SquaresBackground'
 
 export default function RegisterPage() {
   function handleMicrosoftSignIn() {
@@ -9,57 +10,57 @@ export default function RegisterPage() {
 
   return (
     <>
-      <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=Manrope:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet" />
-      <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0e1322; color: #dee1f7; font-family: 'Manrope', sans-serif; }
-        .glass { background: rgba(26,31,47,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(173,198,255,0.1); }
-        .mesh { background: radial-gradient(circle at 50% 50%, rgba(77,142,255,0.05) 0%, #0e1322 70%); }
-        .dots { background-image: radial-gradient(rgba(173,198,255,0.08) 1px, transparent 0); background-size: 24px 24px; }
-        .neon { box-shadow: 0 0 24px rgba(77,142,255,0.35); }
-      `}</style>
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+      
+      <div className="relative min-h-screen flex flex-col items-center justify-center p-6 overflow-hidden bg-zinc-950">
+        <SquaresBackground />
+        
+        <div className="relative z-10 w-full max-w-md">
+          {/* Logo */}
+          <div className="text-center mb-10">
+            <h1 className="font-sans text-3xl font-bold text-emerald-500 tracking-tight flex items-center justify-center gap-3 uppercase">
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              PROJECT_HUB
+            </h1>
+            <p className="font-mono text-[10px] text-zinc-500 tracking-[0.2em] uppercase mt-2">
+              Create Account
+            </p>
+          </div>
 
-      <div style={{position:'fixed', inset:0, zIndex:-1}} className="mesh" />
-      <div style={{position:'fixed', inset:0, zIndex:-1, opacity:0.3}} className="dots" />
+          <div className="bg-zinc-900/60 backdrop-blur-xl border border-zinc-800 rounded-md p-8 relative overflow-hidden shadow-2xl">
+            {/* Accents */}
+            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 blur-3xl pointer-events-none" />
+            
+            <h2 className="font-sans text-xl font-bold text-zinc-100 mb-1">
+              Get started
+            </h2>
+            <p className="font-mono text-xs text-zinc-400 mb-8">
+              Sign up with your university account to continue
+            </p>
 
-      <div style={{minHeight:'100vh', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', padding:'24px'}}>
+            <button
+              onClick={handleMicrosoftSignIn}
+              className="w-full flex items-center justify-center gap-3 py-3.5 rounded-sm border-none bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-mono font-bold text-xs tracking-widest uppercase transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_25px_rgba(16,185,129,0.4)] mb-8"
+            >
+              <svg width="18" height="18" viewBox="0 0 21 21" fill="none">
+                <rect x="1" y="1" width="9" height="9" fill="#000000" fillOpacity="0.7"/>
+                <rect x="11" y="1" width="9" height="9" fill="#000000" fillOpacity="0.7"/>
+                <rect x="1" y="11" width="9" height="9" fill="#000000" fillOpacity="0.7"/>
+                <rect x="11" y="11" width="9" height="9" fill="#000000" fillOpacity="0.7"/>
+              </svg>
+              Continue with Microsoft
+            </button>
 
-        <div style={{textAlign:'center', marginBottom:'32px'}}>
-          <h1 style={{fontFamily:'Syne', fontSize:'2.5rem', fontWeight:900, color:'#adc6ff', letterSpacing:'-0.05em', textTransform:'uppercase'}}>
-            PROJECT_HUB
-          </h1>
-          <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#8c909f', letterSpacing:'0.2em', textTransform:'uppercase', marginTop:'6px'}}>
-            Create Account
-          </p>
-        </div>
+            <p className="font-mono text-[11px] text-zinc-500 text-center">
+              Already have an account?{' '}
+              <Link href="/login" className="text-emerald-500 hover:text-emerald-400 hover:underline transition-all">
+                Sign in
+              </Link>
+            </p>
+          </div>
 
-        <div className="glass" style={{width:'100%', maxWidth:'400px', padding:'32px', borderRadius:'16px', position:'relative', overflow:'hidden'}}>
-          <div style={{position:'absolute', top:0, right:0, width:'96px', height:'96px', background:'linear-gradient(to bottom-left, rgba(160,120,255,0.1), transparent)', pointerEvents:'none'}} />
-
-          <h2 style={{fontFamily:'Syne', fontSize:'22px', fontWeight:700, marginBottom:'6px'}}>
-            Get started
-          </h2>
-          <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#8c909f', marginBottom:'32px'}}>
-            Sign up with your email address to create anccount to continue
-          </p>
-
-          <button
-            onClick={handleMicrosoftSignIn}
-            className="neon"
-            style={{width:'100%', padding:'14px', borderRadius:'10px', border:'none', background:'#adc6ff', color:'#002e6a', fontFamily:'Syne', fontWeight:900, fontSize:'14px', textTransform:'uppercase', letterSpacing:'0.15em', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center', gap:'12px', marginBottom:'24px'}}
-          >
-            <svg width="20" height="20" viewBox="0 0 21 21" fill="none">
-              <rect x="1" y="1" width="9" height="9" fill="#f25022"/>
-              <rect x="11" y="1" width="9" height="9" fill="#7fba00"/>
-              <rect x="1" y="11" width="9" height="9" fill="#00a4ef"/>
-              <rect x="11" y="11" width="9" height="9" fill="#ffb900"/>
-            </svg>
-            Continue with Microsoft
-          </button>
-
-          <p style={{fontFamily:'DM Mono', fontSize:'11px', color:'#8c909f', textAlign:'center'}}>
-            Already have an account?{' '}
-            <Link href="/login" style={{color:'#adc6ff', textDecoration:'underline'}}>Sign in</Link>
+          <p className="font-mono text-[9px] text-zinc-700 text-center mt-8 uppercase tracking-widest">
+            © 2024 PROJECT_HUB — Encrypted Connection
           </p>
         </div>
       </div>

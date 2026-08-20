@@ -21,13 +21,13 @@ const initials = name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase
 return (
 <div className="relative inline-block">
 <div
-className={`${s.box} rounded-xl overflow-hidden flex items-center justify-center`}
-style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)' }}
+className={`${s.box} rounded-md overflow-hidden flex items-center justify-center`}
+style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)' }}
 >
 {src ? (
 <img src={src} alt={name} className="w-full h-full object-cover" />
 ) : (
-<span style={{ fontSize: s.text, color: '#adc6ff', fontWeight: 700 }}>
+<span style={{ fontSize: s.text, color: '#10b981', fontWeight: 700 }}>
 {initials}
 </span>
 )}

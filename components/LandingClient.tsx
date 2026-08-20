@@ -26,8 +26,8 @@ interface Props {
 // ─── Skill → category color ───────────────────────────────────────────────────
 function skillColor(skill: string): string {
   const s = skill.toLowerCase()
-  if (['react', 'next.js', 'vue', 'angular', 'html', 'css', 'tailwind', 'three.js'].some(k => s.includes(k))) return '#4D8EFF'
-  if (['python', 'node', 'express', 'fastapi', 'django', 'go', 'rust', 'java', 'spring'].some(k => s.includes(k))) return '#A078FF'
+  if (['react', 'next.js', 'vue', 'angular', 'html', 'css', 'tailwind', 'three.js'].some(k => s.includes(k))) return '#10B981'
+  if (['python', 'node', 'express', 'fastapi', 'django', 'go', 'rust', 'java', 'spring'].some(k => s.includes(k))) return '#059669'
   if (['ml', 'pytorch', 'tensorflow', 'nlp', 'ai', 'neural', 'openai'].some(k => s.includes(k))) return '#8B5CF6'
   if (['docker', 'kubernetes', 'aws', 'gcp', 'azure', 'ci/cd', 'linux'].some(k => s.includes(k))) return '#F97316'
   if (['react native', 'flutter', 'android', 'ios', 'swift', 'kotlin'].some(k => s.includes(k))) return '#10B981'
@@ -37,7 +37,7 @@ function skillColor(skill: string): string {
 }
 
 // ─── Project card accent color ────────────────────────────────────────────────
-const CARD_ACCENTS = ['#4D8EFF', '#6BD8CB', '#A078FF', '#F59E0B', '#10B981', '#F43F5E']
+const CARD_ACCENTS = ['#10B981', '#6BD8CB', '#059669', '#F59E0B', '#10B981', '#F43F5E']
 
 // ─── Time ago helper ──────────────────────────────────────────────────────────
 function timeAgo(dateStr: string): string {
@@ -55,7 +55,7 @@ function vacancyLabel(slots: number, filled: number) {
   const open = slots - filled
   if (open <= 0) return { text: 'Full', color: '#F43F5E' }
   if (open === 1) return { text: '1 spot left', color: '#F59E0B' }
-  return { text: `${open} vacancies`, color: '#4D8EFF' }
+  return { text: `${open} vacancies`, color: '#10B981' }
 }
 
 // ─── PROJECT CARD ─────────────────────────────────────────────────────────────
@@ -71,10 +71,10 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         position: 'relative',
-        background: 'rgba(26,31,47,0.6)',
+        background: 'rgba(24,24,27,0.6)',
         backdropFilter: 'blur(20px)',
         border: `1px solid ${hovered ? accent + '55' : 'rgba(140,144,159,0.12)'}`,
-        borderRadius: 20,
+        borderRadius: 6,
         overflow: 'hidden',
         transform: hovered ? 'translateY(-6px)' : 'translateY(0)',
         boxShadow: hovered
@@ -123,8 +123,8 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
 
         {/* Title */}
         <h4 style={{
-          fontFamily: 'Syne, sans-serif', fontWeight: 800,
-          fontSize: 20, color: hovered ? accent : '#DEE1F7',
+          fontFamily: 'Inter, sans-serif', fontWeight: 800,
+          fontSize: 20, color: hovered ? accent : '#f4f4f5',
           marginBottom: 10, lineHeight: 1.3,
           transition: 'color 0.25s ease',
         }}>
@@ -171,7 +171,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <div style={{
         position: 'absolute', inset: 'auto 0 0 0',
         height: '52%',
-        background: `linear-gradient(to top, rgba(14,19,34,0.97) 40%, rgba(14,19,34,0.85) 70%, transparent)`,
+        background: `linear-gradient(to top, rgba(9,9,11,0.97) 40%, rgba(9,9,11,0.85) 70%, transparent)`,
         display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'flex-end',
         paddingBottom: 24, gap: 10,
@@ -240,10 +240,10 @@ function FloatingCard({
   return (
     <div style={{
       position: 'absolute',
-      background: 'rgba(26,31,47,0.65)',
+      background: 'rgba(24,24,27,0.65)',
       backdropFilter: `blur(${blur ? 4 : 20}px)`,
       border: '1px solid rgba(140,144,159,0.15)',
-      borderRadius: 16, padding: 24, width: 300,
+      borderRadius: 4, padding: 24, width: 300,
       transform: `scale(${scale})`,
       opacity: blur ? 0.45 : 1,
       filter: blur ? 'blur(1.5px)' : 'none',
@@ -271,8 +271,8 @@ function FloatingCard({
         </span>
       </div>
       <h3 style={{
-        fontFamily: 'Syne, sans-serif', fontWeight: 800,
-        fontSize: 18, color: '#DEE1F7', marginBottom: 8,
+        fontFamily: 'Inter, sans-serif', fontWeight: 800,
+        fontSize: 18, color: '#f4f4f5', marginBottom: 8,
       }}>
         {title}
       </h3>
@@ -325,7 +325,7 @@ export default function LandingClient({ projects }: Props) {
 
         body {
           background: #0E1322;
-          color: #DEE1F7;
+          color: #f4f4f5;
           font-family: 'DM Sans', sans-serif;
           overflow-x: hidden;
           -webkit-font-smoothing: antialiased;
@@ -335,7 +335,7 @@ export default function LandingClient({ projects }: Props) {
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #0E1322; }
         ::-webkit-scrollbar-thumb { background: #2F3445; border-radius: 9999px; }
-        ::-webkit-scrollbar-thumb:hover { background: #4D8EFF40; }
+        ::-webkit-scrollbar-thumb:hover { background: #10B98140; }
 
         /* Float animation for hero cards */
         @keyframes float {
@@ -362,7 +362,7 @@ export default function LandingClient({ projects }: Props) {
 
         /* Nav link hover underline slide */
         .nav-link {
-          position: relative; color: #C2C6D6;
+          position: relative; color: #d4d4d8;
           font-size: 14px; font-weight: 500;
           text-decoration: none; padding: 4px 0;
           transition: color 0.2s ease;
@@ -371,10 +371,10 @@ export default function LandingClient({ projects }: Props) {
           content: '';
           position: absolute; bottom: 0; left: 0;
           width: 0; height: 1.5px;
-          background: #4D8EFF;
+          background: #10B981;
           transition: width 0.25s ease;
         }
-        .nav-link:hover { color: #4D8EFF; }
+        .nav-link:hover { color: #10B981; }
         .nav-link:hover::after { width: 100%; }
 
         /* CTA button shimmer */
@@ -401,28 +401,28 @@ export default function LandingClient({ projects }: Props) {
 
         /* Eyebrow badge pulse glow */
         @keyframes badge-glow {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(77,142,255,0); }
-          50%       { box-shadow: 0 0 16px 3px rgba(77,142,255,0.25); }
+          0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+          50%       { box-shadow: 0 0 16px 3px rgba(16,185,129,0.25); }
         }
 
-        /* Logo spin on hover */
-        .logo-mark { transition: transform 0.6s cubic-bezier(0.34,1.56,0.64,1), color 0.2s; }
-        .logo-mark:hover { transform: rotate(180deg); color: #6BD8CB; }
+        /* Logo styles */
+        .logo-mark { transition: color 0.2s; }
+        .logo-mark:hover { color: #6BD8CB; }
 
         /* Notification/terminal icon button */
         .icon-btn {
           width: 36px; height: 36px; border-radius: 50%;
           background: transparent; border: none; cursor: pointer;
           display: flex; align-items: center; justify-content: center;
-          color: #C2C6D6; transition: all 0.2s ease;
+          color: #d4d4d8; transition: all 0.2s ease;
           position: relative;
         }
-        .icon-btn:hover { background: rgba(77,142,255,0.12); color: #4D8EFF; }
+        .icon-btn:hover { background: rgba(16,185,129,0.12); color: #10B981; }
 
         /* Avatar ring */
         .avatar-ring {
           width: 34px; height: 34px; border-radius: 50%;
-          border: 2px solid rgba(77,142,255,0.4);
+          border: 2px solid rgba(16,185,129,0.4);
           overflow: hidden; cursor: pointer;
           transition: border-color 0.2s ease;
         }
@@ -468,7 +468,7 @@ export default function LandingClient({ projects }: Props) {
         <div style={{
           position: 'absolute', top: 0, right: 0,
           width: 600, height: 600, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(77,142,255,0.06) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(16,185,129,0.06) 0%, transparent 70%)',
           filter: 'blur(40px)',
         }} />
         <div style={{
@@ -490,11 +490,11 @@ export default function LandingClient({ projects }: Props) {
         position: 'fixed', top: 0, left: 0, right: 0, height: 60, zIndex: 50,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         padding: '0 24px',
-        background: 'rgba(14,19,34,0.65)',
+        background: 'rgba(9,9,11,0.65)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(140,144,159,0.10)',
-        boxShadow: '0 0 30px rgba(77,142,255,0.06)',
+        boxShadow: '0 0 30px rgba(16,185,129,0.06)',
       }}>
         {/* Left: logo + nav links */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 36 }}>
@@ -502,8 +502,8 @@ export default function LandingClient({ projects }: Props) {
             <span
               className="logo-mark"
               style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                fontSize: 18, color: '#ADC6FF',
+                fontFamily: 'Inter, sans-serif', fontWeight: 800,
+                fontSize: 18, color: '#10B981',
                 letterSpacing: '-0.03em', display: 'block',
               }}
             >
@@ -537,7 +537,7 @@ export default function LandingClient({ projects }: Props) {
             <div className="avatar-ring">
               <div style={{
                 width: '100%', height: '100%',
-                background: 'linear-gradient(135deg, #4D8EFF, #A078FF)',
+                background: 'linear-gradient(135deg, #10B981, #059669)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontFamily: 'DM Mono, monospace', fontSize: 12,
                 fontWeight: 500, color: 'white',
@@ -555,7 +555,7 @@ export default function LandingClient({ projects }: Props) {
         display: 'flex', alignItems: 'center',
         paddingTop: 60,
         background: `
-          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(77,142,255,0.13) 0%, transparent 60%),
+          radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,0.13) 0%, transparent 60%),
           radial-gradient(ellipse 60% 40% at 85% 75%, rgba(160,120,255,0.09) 0%, transparent 50%),
           radial-gradient(ellipse 50% 40% at 10% 90%, rgba(107,216,203,0.07) 0%, transparent 50%),
           #0E1322
@@ -573,14 +573,14 @@ export default function LandingClient({ projects }: Props) {
         {/* Floating particles */}
         <div aria-hidden style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }}>
           {[
-            { top: '22%', left: '18%', size: 3, color: 'rgba(77,142,255,0.5)',  anim: 'drift1 9s ease-in-out infinite' },
+            { top: '22%', left: '18%', size: 3, color: 'rgba(16,185,129,0.5)',  anim: 'drift1 9s ease-in-out infinite' },
             { top: '35%', right: '22%', size: 4, color: 'rgba(107,216,203,0.4)', anim: 'drift2 11s ease-in-out infinite' },
             { bottom: '28%', left: '45%', size: 2, color: 'rgba(160,120,255,0.5)', anim: 'drift3 7s ease-in-out infinite' },
-            { top: '60%', right: '35%', size: 2, color: 'rgba(77,142,255,0.7)',  anim: 'drift1 13s ease-in-out infinite 2s' },
-            { top: '12%', left: '38%', size: 3, color: 'rgba(77,142,255,0.4)',  anim: 'drift2 10s ease-in-out infinite 1s' },
+            { top: '60%', right: '35%', size: 2, color: 'rgba(16,185,129,0.7)',  anim: 'drift1 13s ease-in-out infinite 2s' },
+            { top: '12%', left: '38%', size: 3, color: 'rgba(16,185,129,0.4)',  anim: 'drift2 10s ease-in-out infinite 1s' },
             { bottom: '15%', right: '12%', size: 3, color: 'rgba(107,216,203,0.35)', anim: 'drift3 12s ease-in-out infinite 3s' },
             { top: '48%', left: '8%',  size: 2, color: 'rgba(160,120,255,0.4)', anim: 'drift1 8s ease-in-out infinite 0.5s' },
-            { top: '75%', left: '62%', size: 2, color: 'rgba(77,142,255,0.35)', anim: 'drift2 14s ease-in-out infinite 4s' },
+            { top: '75%', left: '62%', size: 2, color: 'rgba(16,185,129,0.35)', anim: 'drift2 14s ease-in-out infinite 4s' },
           ].map((p, i) => (
             <div key={i} style={{
               position: 'absolute',
@@ -611,8 +611,8 @@ export default function LandingClient({ projects }: Props) {
                 animationDelay: '0.1s',
                 display: 'inline-flex', alignItems: 'center', gap: 8,
                 padding: '7px 16px', borderRadius: 9999,
-                background: 'rgba(77,142,255,0.08)',
-                border: '1px solid rgba(77,142,255,0.25)',
+                background: 'rgba(16,185,129,0.08)',
+                border: '1px solid rgba(16,185,129,0.25)',
                 animation: 'hero-in 0.7s ease 0.1s forwards, badge-glow 3s ease-in-out 1s infinite',
               }}
             >
@@ -631,9 +631,9 @@ export default function LandingClient({ projects }: Props) {
               <h1
                 className="hero-h1"
                 style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'Inter, sans-serif', fontWeight: 800,
                   fontSize: 72, lineHeight: 1.0,
-                  letterSpacing: '-0.03em', color: '#DEE1F7',
+                  letterSpacing: '-0.03em', color: '#f4f4f5',
                   display: 'block',
                 }}
               >
@@ -642,7 +642,7 @@ export default function LandingClient({ projects }: Props) {
               <h1
                 className="hero-h1-sub"
                 style={{
-                  fontFamily: 'Syne, sans-serif', fontWeight: 800,
+                  fontFamily: 'Inter, sans-serif', fontWeight: 800,
                   fontSize: 62, lineHeight: 1.1,
                   letterSpacing: '-0.03em',
                   color: 'rgba(222,225,247,0.68)',
@@ -658,7 +658,7 @@ export default function LandingClient({ projects }: Props) {
               className="hero-el"
               style={{
                 animationDelay: '0.35s',
-                fontSize: 17, color: '#C2C6D6',
+                fontSize: 17, color: '#d4d4d8',
                 lineHeight: 1.7, maxWidth: 440,
               }}
             >
@@ -673,24 +673,24 @@ export default function LandingClient({ projects }: Props) {
                   style={{
                     display: 'flex', alignItems: 'center', gap: 10,
                     height: 52, padding: '0 28px',
-                    background: '#4D8EFF',
+                    background: '#10B981',
                     color: 'white',
                     border: 'none', borderRadius: 9999,
                     fontFamily: 'DM Sans, sans-serif',
                     fontSize: 15, fontWeight: 700,
                     cursor: 'pointer',
-                    boxShadow: '0 0 30px rgba(77,142,255,0.45), 0 4px 16px rgba(77,142,255,0.25)',
+                    boxShadow: '0 0 30px rgba(16,185,129,0.45), 0 4px 16px rgba(16,185,129,0.25)',
                     transition: 'all 0.25s ease',
                   }}
                   onMouseEnter={e => {
                     const btn = e.currentTarget as HTMLButtonElement
                     btn.style.transform = 'scale(1.04)'
-                    btn.style.boxShadow = '0 0 40px rgba(77,142,255,0.6), 0 8px 24px rgba(77,142,255,0.3)'
+                    btn.style.boxShadow = '0 0 40px rgba(16,185,129,0.6), 0 8px 24px rgba(16,185,129,0.3)'
                   }}
                   onMouseLeave={e => {
                     const btn = e.currentTarget as HTMLButtonElement
                     btn.style.transform = 'scale(1)'
-                    btn.style.boxShadow = '0 0 30px rgba(77,142,255,0.45), 0 4px 16px rgba(77,142,255,0.25)'
+                    btn.style.boxShadow = '0 0 30px rgba(16,185,129,0.45), 0 4px 16px rgba(16,185,129,0.25)'
                   }}
                 >
                   {/* Terminal icon */}
@@ -714,8 +714,8 @@ export default function LandingClient({ projects }: Props) {
               {/* Stacked avatars */}
               <div style={{ display: 'flex' }}>
                 {[
-                  'linear-gradient(135deg,#4D8EFF,#A078FF)',
-                  'linear-gradient(135deg,#6BD8CB,#4D8EFF)',
+                  'linear-gradient(135deg,#10B981,#059669)',
+                  'linear-gradient(135deg,#6BD8CB,#10B981)',
                   'linear-gradient(135deg,#F59E0B,#F43F5E)',
                   'linear-gradient(135deg,#10B981,#6BD8CB)',
                 ].map((bg, i) => (
@@ -737,14 +737,14 @@ export default function LandingClient({ projects }: Props) {
                   background: '#25293A', marginLeft: -10,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontFamily: 'DM Mono, monospace', fontSize: 9,
-                  color: '#4D8EFF', fontWeight: 700,
+                  color: '#10B981', fontWeight: 700,
                 }}>
                   +196
                 </div>
               </div>
-              <p style={{ fontSize: 13, color: '#8C909F', fontFamily: 'DM Mono, monospace' }}>
+              <p style={{ fontSize: 13, color: '#71717a', fontFamily: 'DM Mono, monospace' }}>
                 Trusted by{' '}
-                <span style={{ color: '#4D8EFF', fontWeight: 600 }}>200+ students</span>
+                <span style={{ color: '#10B981', fontWeight: 600 }}>200+ students</span>
               </p>
             </div>
           </div>
@@ -760,11 +760,11 @@ export default function LandingClient({ projects }: Props) {
               width: 290, zIndex: 0, opacity: 0.4,
               filter: 'blur(2px)', transform: 'scale(0.92)',
               animation: 'float 12s ease-in-out infinite -6s',
-              background: 'rgba(26,31,47,0.5)',
+              background: 'rgba(24,24,27,0.5)',
               border: '1px solid rgba(140,144,159,0.10)',
-              borderRadius: 16, padding: 22,
+              borderRadius: 4, padding: 22,
             }}>
-              <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 16, color: '#DEE1F7', marginBottom: 8 }}>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 16, color: '#f4f4f5', marginBottom: 8 }}>
                 Neural Archiver
               </div>
               <p style={{ fontSize: 12, color: 'rgba(194,198,214,0.5)', lineHeight: 1.5 }}>
@@ -782,7 +782,7 @@ export default function LandingClient({ projects }: Props) {
               title="Mars Rover HUD"
               desc="Designing a real-time telemetry interface for the university robotics competition team."
               tags={['React', 'Three.js']}
-              accent="#4D8EFF"
+              accent="#10B981"
               icon="🚀"
               delay="0s"
             />
@@ -791,37 +791,37 @@ export default function LandingClient({ projects }: Props) {
             <div style={{
               position: 'absolute', bottom: 20, right: '-5%',
               animation: 'float 10s ease-in-out infinite -4s',
-              background: 'rgba(26,31,47,0.6)',
+              background: 'rgba(24,24,27,0.6)',
               backdropFilter: 'blur(20px)',
               border: '1px solid rgba(160,120,255,0.2)',
-              borderRadius: 16, padding: 22, width: 260, zIndex: 5,
+              borderRadius: 4, padding: 22, width: 260, zIndex: 5,
               opacity: 0.85,
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                 <div style={{
-                  width: 32, height: 32, borderRadius: 8,
+                  width: 32, height: 32, borderRadius: 4,
                   background: 'rgba(160,120,255,0.15)', border: '1px solid rgba(160,120,255,0.25)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16,
                 }}>🧠</div>
                 <span style={{
                   fontFamily: 'DM Mono, monospace', fontSize: 9,
-                  background: 'rgba(160,120,255,0.15)', color: '#A078FF',
+                  background: 'rgba(160,120,255,0.15)', color: '#059669',
                   border: '1px solid rgba(160,120,255,0.25)',
                   borderRadius: 9999, padding: '3px 8px',
                   letterSpacing: '0.08em', textTransform: 'uppercase',
                 }}>Active</span>
               </div>
-              <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 17, color: '#DEE1F7', marginBottom: 6 }}>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontWeight: 800, fontSize: 17, color: '#f4f4f5', marginBottom: 6 }}>
                 Quantum Auth
               </div>
               <p style={{ fontSize: 12, color: 'rgba(194,198,214,0.65)', lineHeight: 1.5, marginBottom: 12 }}>
                 Post-quantum cryptographic standards for decentralized identity.
               </p>
               <div style={{ display: 'flex', alignItems: 'center', gap: -6 }}>
-                {['#4D8EFF','#A078FF','#6BD8CB'].map((c,i) => (
+                {['#10B981','#059669','#6BD8CB'].map((c,i) => (
                   <div key={i} style={{
                     width: 22, height: 22, borderRadius: '50%',
-                    border: '2px solid rgba(14,19,34,0.8)',
+                    border: '2px solid rgba(9,9,11,0.8)',
                     background: `${c}30`, borderColor: `${c}60`,
                     marginLeft: i === 0 ? 0 : -6,
                   }} />
@@ -845,8 +845,8 @@ export default function LandingClient({ projects }: Props) {
             {/* Heading + live badge */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <h2 style={{
-                fontFamily: 'Syne, sans-serif', fontWeight: 800,
-                fontSize: 38, letterSpacing: '-0.03em', color: '#DEE1F7',
+                fontFamily: 'Inter, sans-serif', fontWeight: 800,
+                fontSize: 38, letterSpacing: '-0.03em', color: '#f4f4f5',
               }}>
                 Active Projects
               </h2>
@@ -872,7 +872,7 @@ export default function LandingClient({ projects }: Props) {
                 </span>
               </span>
             </div>
-            <p style={{ color: '#8C909F', fontSize: 15, maxWidth: 420, lineHeight: 1.6 }}>
+            <p style={{ color: '#71717a', fontSize: 15, maxWidth: 420, lineHeight: 1.6 }}>
               Browse ongoing collaborations within your network. Sign in to view full details and apply.
             </p>
           </div>
@@ -881,12 +881,12 @@ export default function LandingClient({ projects }: Props) {
           <Link href="/login" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
             <span style={{
               fontFamily: 'DM Mono, monospace', fontSize: 13,
-              color: '#4D8EFF', fontWeight: 600, letterSpacing: '0.05em',
+              color: '#10B981', fontWeight: 600, letterSpacing: '0.05em',
               transition: 'gap 0.2s ease',
             }}>
               VIEW ALL
             </span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4D8EFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12"/>
               <polyline points="12 5 19 12 12 19"/>
             </svg>
@@ -919,23 +919,23 @@ export default function LandingClient({ projects }: Props) {
             display: 'flex', alignItems: 'center',
             justifyContent: 'space-between', gap: 32,
             padding: '14px 28px',
-            background: 'rgba(26,31,47,0.85)',
+            background: 'rgba(24,24,27,0.85)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
             border: '1px solid rgba(140,144,159,0.15)',
             borderRadius: 9999,
-            boxShadow: '0 -8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(77,142,255,0.08)',
+            boxShadow: '0 -8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(16,185,129,0.08)',
             maxWidth: 700, width: '100%',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{
               width: 8, height: 8, borderRadius: '50%',
-              background: '#4D8EFF',
-              boxShadow: '0 0 10px #4D8EFF',
+              background: '#10B981',
+              boxShadow: '0 0 10px #10B981',
               display: 'inline-block',
             }} />
-            <p style={{ fontSize: 14, color: '#DEE1F7', fontWeight: 500, whiteSpace: 'nowrap' }}>
+            <p style={{ fontSize: 14, color: '#f4f4f5', fontWeight: 500, whiteSpace: 'nowrap' }}>
               Sign in to unlock full details, apply, and find teammates
             </p>
           </div>
@@ -945,7 +945,7 @@ export default function LandingClient({ projects }: Props) {
               background: 'transparent', border: 'none',
               cursor: 'pointer', padding: '4px 0',
               fontFamily: 'DM Mono, monospace', fontWeight: 700,
-              fontSize: 13, color: '#4D8EFF',
+              fontSize: 13, color: '#10B981',
               letterSpacing: '0.06em', whiteSpace: 'nowrap',
               transition: 'gap 0.2s ease',
             }}

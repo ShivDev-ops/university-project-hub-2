@@ -96,7 +96,7 @@ export default function ProfileSetupPage() {
 
       <style>{`
         .glass-panel {
-          background: rgba(26, 31, 47, 0.7);
+          background: rgba(24, 24, 27, 0.7);
           backdrop-filter: blur(20px);
           border: 1px solid rgba(173, 198, 255, 0.1);
         }
@@ -116,8 +116,8 @@ export default function ProfileSetupPage() {
           border-radius: 10px;
         }
         body { 
-          background-color: #0e1322; 
-          color: #dee1f7;
+          background-color: #09090b; 
+          color: #f4f4f5;
           font-family: 'Manrope', sans-serif;
         }
       `}</style>
@@ -141,10 +141,10 @@ export default function ProfileSetupPage() {
         {/* Branding Header */}
         <div className="w-full max-w-2xl mb-12 flex justify-between items-end">
           <div>
-            <h1 style={{fontFamily:'Syne', fontSize:'2.25rem', fontWeight:800, letterSpacing:'-0.05em', color:'#adc6ff', textTransform:'uppercase'}}>
+            <h1 style={{fontFamily:'Inter', fontSize:'2.25rem', fontWeight:800, letterSpacing:'-0.05em', color:'#10b981', textTransform:'uppercase'}}>
               PROJECT-HUB
             </h1>
-            <p style={{fontFamily:'DM Mono', fontSize:'10px', letterSpacing:'0.2em', color:'#8c909f', textTransform:'uppercase', marginTop:'4px'}}>
+            <p style={{fontFamily:'DM Mono', fontSize:'10px', letterSpacing:'0.2em', color:'#71717a', textTransform:'uppercase', marginTop:'4px'}}>
               Protocol: Profile_Setup_v1.0
             </p>
           </div>
@@ -165,36 +165,36 @@ export default function ProfileSetupPage() {
           <div className="absolute top-0 right-0 w-24 h-24 pointer-events-none"
             style={{background:'linear-gradient(to bottom-left, rgba(160,120,255,0.1), transparent)'}} />
           <div className="absolute bottom-0 left-0 w-24 h-24 pointer-events-none"
-            style={{background:'linear-gradient(to top-right, rgba(77,142,255,0.1), transparent)'}} />
+            style={{background:'linear-gradient(to top-right, rgba(16,185,129,0.1), transparent)'}} />
 
           <form onSubmit={handleSubmit} className="space-y-10">
 
             {/* Identity Section */}
             <section className="space-y-6">
               <div className="flex items-center gap-4">
-                <div className="h-px flex-1" style={{background:'linear-gradient(to right, transparent, rgba(66,71,84,0.3), transparent)'}} />
-                <span style={{fontFamily:'Syne', fontSize:'12px', fontWeight:700, letterSpacing:'0.2em', color:'#c2c6d6', textTransform:'uppercase'}}>
+                <div className="h-px flex-1" style={{background:'linear-gradient(to right, transparent, rgba(39,39,42,0.3), transparent)'}} />
+                <span style={{fontFamily:'Inter', fontSize:'12px', fontWeight:700, letterSpacing:'0.2em', color:'#d4d4d8', textTransform:'uppercase'}}>
                   Identity
                 </span>
-                <div className="h-px flex-1" style={{background:'linear-gradient(to right, transparent, rgba(66,71,84,0.3), transparent)'}} />
+                <div className="h-px flex-1" style={{background:'linear-gradient(to right, transparent, rgba(39,39,42,0.3), transparent)'}} />
               </div>
 
               <div className="flex flex-col md:flex-row gap-8 items-center">
                 {/* Avatar Upload */}
                 <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
                   <div className="w-24 h-24 rounded-full overflow-hidden flex items-center justify-center"
-                    style={{border:'2px dashed #424754', background:'#161b2b', transition:'border-color 0.2s'}}>
+                    style={{border:'2px dashed #27272a', background:'#18181b', transition:'border-color 0.2s'}}>
                     {avatarPreview ? (
                       <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="material-symbols-outlined" style={{fontSize:'2rem', color:'#424754'}}>
+                      <span className="material-symbols-outlined" style={{fontSize:'2rem', color:'#27272a'}}>
                         add_a_photo
                       </span>
                     )}
                   </div>
                   <div className="absolute -bottom-1 -right-1 rounded-full p-1 shadow-lg"
-                    style={{background:'#adc6ff'}}>
-                    <span className="material-symbols-outlined" style={{fontSize:'14px', color:'#002e6a'}}>
+                    style={{background:'#10b981'}}>
+                    <span className="material-symbols-outlined" style={{fontSize:'14px', color:'#000000'}}>
                       edit
                     </span>
                   </div>
@@ -209,29 +209,29 @@ export default function ProfileSetupPage() {
 
                 <div className="flex-1 w-full space-y-4">
                   <div>
-                    <label style={{fontFamily:'DM Mono', fontSize:'10px', color:'#adc6ff', textTransform:'uppercase', letterSpacing:'0.15em', display:'block', marginBottom:'4px'}}>
+                    <label style={{fontFamily:'DM Mono', fontSize:'10px', color:'#10b981', textTransform:'uppercase', letterSpacing:'0.15em', display:'block', marginBottom:'4px'}}>
                       Full Name
                     </label>
                     <input
                       value={fullName}
                       onChange={e => setFullName(e.target.value)}
                       placeholder="YOUR NAME"
-                      style={{width:'100%', background:'#161b2b', borderBottom:'2px solid #424754', color:'#dee1f7', padding:'8px 0', fontFamily:'Syne', fontWeight:700, textTransform:'uppercase', letterSpacing:'-0.02em', outline:'none'}}
-                      onFocus={e => e.target.style.borderBottomColor = '#adc6ff'}
-                      onBlur={e => e.target.style.borderBottomColor = '#424754'}
+                      style={{width:'100%', background:'#18181b', borderBottom:'2px solid #27272a', color:'#f4f4f5', padding:'8px 0', fontFamily:'Inter', fontWeight:700, textTransform:'uppercase', letterSpacing:'-0.02em', outline:'none'}}
+                      onFocus={e => e.target.style.borderBottomColor = '#10b981'}
+                      onBlur={e => e.target.style.borderBottomColor = '#27272a'}
                     />
                   </div>
                   <div>
-                    <label style={{fontFamily:'DM Mono', fontSize:'10px', color:'#adc6ff', textTransform:'uppercase', letterSpacing:'0.15em', display:'block', marginBottom:'4px'}}>
+                    <label style={{fontFamily:'DM Mono', fontSize:'10px', color:'#10b981', textTransform:'uppercase', letterSpacing:'0.15em', display:'block', marginBottom:'4px'}}>
                       Academic Focus
                     </label>
                     <input
                       value={academicFocus}
                       onChange={e => setAcademicFocus(e.target.value)}
                       placeholder="Your specialization"
-                      style={{width:'100%', background:'#161b2b', borderBottom:'2px solid #424754', color:'#c2c6d6', padding:'8px 0', fontSize:'14px', outline:'none'}}
-                      onFocus={e => e.target.style.borderBottomColor = '#adc6ff'}
-                      onBlur={e => e.target.style.borderBottomColor = '#424754'}
+                      style={{width:'100%', background:'#18181b', borderBottom:'2px solid #27272a', color:'#d4d4d8', padding:'8px 0', fontSize:'14px', outline:'none'}}
+                      onFocus={e => e.target.style.borderBottomColor = '#10b981'}
+                      onBlur={e => e.target.style.borderBottomColor = '#27272a'}
                     />
                   </div>
                 </div>
@@ -241,10 +241,10 @@ export default function ProfileSetupPage() {
             {/* Bio Section */}
             <section className="space-y-4">
               <div className="flex justify-between items-center">
-                <h3 style={{fontFamily:'Syne', fontSize:'18px', fontWeight:700, color:'#dee1f7', letterSpacing:'-0.02em'}}>
+                <h3 style={{fontFamily:'Inter', fontSize:'18px', fontWeight:700, color:'#f4f4f5', letterSpacing:'-0.02em'}}>
                   Research Statement
                 </h3>
-                <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'#8c909f'}}>
+                <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'#71717a'}}>
                   {bio.length} / 250
                 </span>
               </div>
@@ -255,9 +255,9 @@ export default function ProfileSetupPage() {
                   placeholder="Briefly describe your specialization and project interests..."
                   rows={4}
                   className="custom-scrollbar"
-                  style={{width:'100%', background:'rgba(22,27,43,0.5)', border:'1px solid rgba(66,71,84,0.3)', color:'#c2c6d6', padding:'16px', fontSize:'14px', resize:'none', outline:'none', transition:'border-color 0.2s'}}
+                  style={{width:'100%', background:'rgba(22,27,43,0.5)', border:'1px solid rgba(39,39,42,0.3)', color:'#d4d4d8', padding:'16px', fontSize:'14px', resize:'none', outline:'none', transition:'border-color 0.2s'}}
                   onFocus={e => e.target.style.borderColor = '#d0bcff'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(66,71,84,0.3)'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(39,39,42,0.3)'}
                 />
                 <div className="absolute top-0 right-0 h-1 w-1"
                   style={{background:'#d0bcff', boxShadow:'0 0 5px rgba(208,188,255,0.8)'}} />
@@ -266,7 +266,7 @@ export default function ProfileSetupPage() {
 
             {/* Skills Section */}
             <section className="space-y-4">
-              <h3 style={{fontFamily:'Syne', fontSize:'18px', fontWeight:700, color:'#dee1f7', letterSpacing:'-0.02em'}}>
+              <h3 style={{fontFamily:'Inter', fontSize:'18px', fontWeight:700, color:'#f4f4f5', letterSpacing:'-0.02em'}}>
                 Technical Specialization
               </h3>
               <div className="flex flex-wrap gap-2">
@@ -287,9 +287,9 @@ export default function ProfileSetupPage() {
                       alignItems:'center',
                       gap:'8px',
                       transition:'all 0.2s',
-                      background: selectedSkills.includes(skill) ? 'rgba(160,120,255,0.1)' : '#25293a',
-                      border: selectedSkills.includes(skill) ? '1px solid #d0bcff' : '1px solid rgba(66,71,84,0.2)',
-                      color: selectedSkills.includes(skill) ? '#d0bcff' : '#c2c6d6',
+                      background: selectedSkills.includes(skill) ? 'rgba(160,120,255,0.1)' : '#18181b',
+                      border: selectedSkills.includes(skill) ? '1px solid #d0bcff' : '1px solid rgba(39,39,42,0.2)',
+                      color: selectedSkills.includes(skill) ? '#d0bcff' : '#d4d4d8',
                     }}
                   >
                     <span>{skill}</span>
@@ -339,9 +339,9 @@ export default function ProfileSetupPage() {
                       onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addCustomSkill() } if (e.key === 'Escape') setShowCustomInput(false) }}
                       placeholder="Type skill..."
                       style={{
-                        background:'#161b2b',
-                        border:'1px solid #adc6ff',
-                        color:'#dee1f7',
+                        background:'#18181b',
+                        border:'1px solid #10b981',
+                        color:'#f4f4f5',
                         padding:'4px 12px',
                         borderRadius:'999px',
                         fontFamily:'DM Mono',
@@ -351,11 +351,11 @@ export default function ProfileSetupPage() {
                       }}
                     />
                     <button type="button" onClick={addCustomSkill}
-                      style={{color:'#adc6ff', fontFamily:'DM Mono', fontSize:'10px'}}>
+                      style={{color:'#10b981', fontFamily:'DM Mono', fontSize:'10px'}}>
                       Add
                     </button>
                     <button type="button" onClick={() => setShowCustomInput(false)}
-                      style={{color:'#8c909f', fontFamily:'DM Mono', fontSize:'10px'}}>
+                      style={{color:'#71717a', fontFamily:'DM Mono', fontSize:'10px'}}>
                       Cancel
                     </button>
                   </div>
@@ -374,8 +374,8 @@ export default function ProfileSetupPage() {
                       alignItems:'center',
                       gap:'4px',
                       background:'transparent',
-                      border:'1px solid rgba(66,71,84,0.3)',
-                      color:'#adc6ff',
+                      border:'1px solid rgba(39,39,42,0.3)',
+                      color:'#10b981',
                     }}
                   >
                     <span className="material-symbols-outlined" style={{fontSize:'12px'}}>add</span>
@@ -387,12 +387,12 @@ export default function ProfileSetupPage() {
 
             {/* GitHub Section */}
             <section className="space-y-4">
-              <h3 style={{fontFamily:'Syne', fontSize:'18px', fontWeight:700, color:'#dee1f7', letterSpacing:'-0.02em'}}>
+              <h3 style={{fontFamily:'Inter', fontSize:'18px', fontWeight:700, color:'#f4f4f5', letterSpacing:'-0.02em'}}>
                 Repository Link
               </h3>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <span className="material-symbols-outlined" style={{color:'#8c909f'}}>terminal</span>
+                  <span className="material-symbols-outlined" style={{color:'#71717a'}}>terminal</span>
                 </div>
                 <input
                   value={githubUrl}
@@ -401,20 +401,20 @@ export default function ProfileSetupPage() {
                   type="url"
                   style={{
                     width:'100%',
-                    background:'#161b2b',
-                    border:'1px solid rgba(66,71,84,0.3)',
-                    color:'#c2c6d6',
+                    background:'#18181b',
+                    border:'1px solid rgba(39,39,42,0.3)',
+                    color:'#d4d4d8',
                     paddingLeft:'48px',
                     paddingRight:'16px',
                     paddingTop:'12px',
                     paddingBottom:'12px',
                     fontSize:'14px',
                     outline:'none',
-                    borderRadius:'8px',
+                    borderRadius:'4px',
                     transition:'border-color 0.2s',
                   }}
-                  onFocus={e => e.target.style.borderColor = '#adc6ff'}
-                  onBlur={e => e.target.style.borderColor = 'rgba(66,71,84,0.3)'}
+                  onFocus={e => e.target.style.borderColor = '#10b981'}
+                  onBlur={e => e.target.style.borderColor = 'rgba(39,39,42,0.3)'}
                 />
               </div>
             </section>
@@ -432,14 +432,14 @@ export default function ProfileSetupPage() {
                 className="neon-glow-primary"
                 style={{
                   width:'100%',
-                  background: loading ? '#424754' : '#adc6ff',
-                  color:'#002e6a',
-                  fontFamily:'Syne',
+                  background: loading ? '#27272a' : '#10b981',
+                  color:'#000000',
+                  fontFamily:'Inter',
                   fontWeight:900,
                   textTransform:'uppercase',
                   letterSpacing:'0.2em',
                   padding:'20px',
-                  borderRadius:'8px',
+                  borderRadius:'4px',
                   display:'flex',
                   alignItems:'center',
                   justifyContent:'center',
@@ -454,7 +454,7 @@ export default function ProfileSetupPage() {
                   <span className="material-symbols-outlined" style={{fontSize:'20px'}}>double_arrow</span>
                 )}
               </button>
-              <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#424754', letterSpacing:'0.2em', textTransform:'uppercase'}}>
+              <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#27272a', letterSpacing:'0.2em', textTransform:'uppercase'}}>
                 By finalizing, you accept the Research Governance Protocol
               </p>
             </div>
@@ -466,18 +466,18 @@ export default function ProfileSetupPage() {
         <div className="mt-12 w-full max-w-2xl flex justify-between items-center px-4">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{border:'1px solid rgba(173,198,255,0.3)', background:'#161b2b'}}>
-              <span className="material-symbols-outlined" style={{fontSize:'16px', color:'#adc6ff'}}>
+              style={{border:'1px solid rgba(16,185,129,0.3)', background:'#18181b'}}>
+              <span className="material-symbols-outlined" style={{fontSize:'16px', color:'#10b981'}}>
                 shield
               </span>
             </div>
             <div className="flex flex-col">
-              <span style={{fontFamily:'DM Mono', fontSize:'9px', color:'#8c909f', lineHeight:1}}>SERVER_STATUS</span>
+              <span style={{fontFamily:'DM Mono', fontSize:'9px', color:'#71717a', lineHeight:1}}>SERVER_STATUS</span>
               <span style={{fontFamily:'DM Mono', fontSize:'9px', color:'#6bd8cb', lineHeight:1, marginTop:'4px'}}>ONLINE / ENCRYPTED</span>
             </div>
           </div>
           <div className="text-right">
-            <p style={{fontFamily:'DM Mono', fontSize:'9px', color:'#424754'}}>© 2024 NEON_SCHOLAR_NET</p>
+            <p style={{fontFamily:'DM Mono', fontSize:'9px', color:'#27272a'}}>© 2024 NEON_SCHOLAR_NET</p>
           </div>
         </div>
 

@@ -70,11 +70,11 @@ async function handleVerify() {
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
       <style>{`
-        body { background-color: #0e1322; color: #dee1f7; font-family: 'Manrope', sans-serif; }
-        .glass-panel { background: rgba(26,31,47,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(173,198,255,0.1); }
-        .mesh-gradient { background: radial-gradient(circle at 50% 50%, rgba(77,142,255,0.05) 0%, rgba(14,19,34,1) 70%); }
-        .dot-grid { background-image: radial-gradient(rgba(173,198,255,0.1) 1px, transparent 0); background-size: 24px 24px; }
-        .neon-glow { box-shadow: 0 0 20px rgba(77,142,255,0.3); }
+        body { background-color: #09090b; color: #f4f4f5; font-family: 'Manrope', sans-serif; }
+        .glass-panel { background: rgba(24,24,27,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(16,185,129,0.1); }
+        .mesh-gradient { background: radial-gradient(circle at 50% 50%, rgba(16,185,129,0.05) 0%, rgba(14,19,34,1) 70%); }
+        .dot-grid { background-image: radial-gradient(rgba(16,185,129,0.1) 1px, transparent 0); background-size: 24px 24px; }
+        .neon-glow { box-shadow: 0 0 20px rgba(16,185,129,0.3); }
       `}</style>
 
       <div className="fixed inset-0 mesh-gradient" style={{zIndex:-1}} />
@@ -84,10 +84,10 @@ async function handleVerify() {
 
         {/* Logo */}
         <div className="mb-8 text-center">
-          <h1 style={{fontFamily:'Syne', fontSize:'2.5rem', fontWeight:900, color:'#adc6ff', letterSpacing:'-0.05em', textTransform:'uppercase'}}>
+          <h1 style={{fontFamily:'Inter', fontSize:'2.5rem', fontWeight:900, color:'#10b981', letterSpacing:'-0.05em', textTransform:'uppercase'}}>
             PROJECT_HUB
           </h1>
-          <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#8c909f', letterSpacing:'0.2em', textTransform:'uppercase', marginTop:'4px'}}>
+          <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#71717a', letterSpacing:'0.2em', textTransform:'uppercase', marginTop:'4px'}}>
             Email Verification
           </p>
         </div>
@@ -97,23 +97,23 @@ async function handleVerify() {
             style={{background:'linear-gradient(to bottom-left, rgba(160,120,255,0.1), transparent)'}} />
 
           {/* Icon */}
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-6"
-            style={{background:'rgba(173,198,255,0.1)', border:'1px solid rgba(173,198,255,0.2)'}}>
-            <span className="material-symbols-outlined" style={{fontSize:'28px', color:'#adc6ff'}}>
+          <div className="w-14 h-14 rounded-md flex items-center justify-center mx-auto mb-6"
+            style={{background:'rgba(16,185,129,0.1)', border:'1px solid rgba(16,185,129,0.2)'}}>
+            <span className="material-symbols-outlined" style={{fontSize:'28px', color:'#10b981'}}>
               mark_email_read
             </span>
           </div>
 
-          <h2 style={{fontFamily:'Syne', fontSize:'22px', fontWeight:700, textAlign:'center', marginBottom:'8px'}}>
+          <h2 style={{fontFamily:'Inter', fontSize:'22px', fontWeight:700, textAlign:'center', marginBottom:'8px'}}>
             Verify Your Email
           </h2>
-          <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#8c909f', textAlign:'center', marginBottom:'24px'}}>
+          <p style={{fontFamily:'DM Mono', fontSize:'10px', color:'#71717a', textAlign:'center', marginBottom:'24px'}}>
             {sent ? 'We sent a 6-digit code to your email.' : 'Sending code...'}
           </p>
 
           {/* Dev mode OTP */}
           {devOtp && (
-            <div className="rounded-xl p-3 mb-4 text-center"
+            <div className="rounded-md p-3 mb-4 text-center"
               style={{background:'rgba(255,180,0,0.05)', border:'1px solid rgba(255,180,0,0.2)'}}>
               <p style={{fontFamily:'DM Mono', fontSize:'9px', color:'#fbbf24', textTransform:'uppercase', letterSpacing:'0.1em', marginBottom:'4px'}}>
                 Dev Mode — OTP:
@@ -133,10 +133,10 @@ async function handleVerify() {
             placeholder="123456"
             style={{
               width:'100%',
-              background:'#161b2b',
-              border:'1px solid rgba(66,71,84,0.5)',
-              borderRadius:'12px',
-              color:'#dee1f7',
+              background:'#18181b',
+              border:'1px solid rgba(39,39,42,0.5)',
+              borderRadius:'4px',
+              color:'#f4f4f5',
               padding:'16px',
               fontFamily:'DM Mono',
               fontSize:'28px',
@@ -146,8 +146,8 @@ async function handleVerify() {
               marginBottom:'16px',
               transition:'border-color 0.2s',
             }}
-            onFocus={e => e.target.style.borderColor = '#adc6ff'}
-            onBlur={e => e.target.style.borderColor = 'rgba(66,71,84,0.5)'}
+            onFocus={e => e.target.style.borderColor = '#10b981'}
+            onBlur={e => e.target.style.borderColor = 'rgba(39,39,42,0.5)'}
           />
 
           {error && (
@@ -159,11 +159,11 @@ async function handleVerify() {
           <button
             onClick={handleVerify}
             disabled={code.length !== 6 || loading}
-            className="neon-glow w-full py-4 rounded-xl transition-all"
+            className="neon-glow w-full py-4 rounded-md transition-all"
             style={{
-              background: (code.length !== 6 || loading) ? '#424754' : '#adc6ff',
-              color:'#002e6a',
-              fontFamily:'Syne',
+              background: (code.length !== 6 || loading) ? '#27272a' : '#10b981',
+              color:'#000000',
+              fontFamily:'Inter',
               fontWeight:900,
               textTransform:'uppercase',
               letterSpacing:'0.1em',
@@ -181,7 +181,7 @@ async function handleVerify() {
               width:'100%',
               background:'transparent',
               border:'none',
-              color:'#8c909f',
+              color:'#71717a',
               fontFamily:'DM Mono',
               fontSize:'11px',
               cursor:'pointer',
@@ -192,7 +192,7 @@ async function handleVerify() {
           </button>
         </div>
 
-        <p style={{fontFamily:'DM Mono', fontSize:'9px', color:'rgba(66,71,84,0.8)', marginTop:'24px', textTransform:'uppercase', letterSpacing:'0.2em'}}>
+        <p style={{fontFamily:'DM Mono', fontSize:'9px', color:'rgba(39,39,42,0.8)', marginTop:'24px', textTransform:'uppercase', letterSpacing:'0.2em'}}>
           Code expires in 10 minutes
         </p>
       </div>

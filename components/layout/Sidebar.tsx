@@ -53,12 +53,12 @@ export function Sidebar({ userName = 'Scholar', score = 500 }: SidebarProps) {
       style={{
         background: 'rgba(9,14,28,0.8)',
         backdropFilter: 'blur(24px)',
-        borderRight: '1px solid rgba(66,71,84,0.15)',
+        borderRight: '1px solid rgba(39,39,42,0.15)',
       }}
     >
       <div className="px-6 mb-8 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: '#25293a', border: '1px solid rgba(66,71,84,0.3)' }}>
+        <div className="w-10 h-10 rounded-md flex items-center justify-center"
+          style={{ background: '#18181b', border: '1px solid rgba(39,39,42,0.3)' }}>
           <span className="material-symbols-outlined" style={{ color: '#6bd8cb' }}>school</span>
         </div>
         <div>
@@ -78,10 +78,10 @@ export function Sidebar({ userName = 'Scholar', score = 500 }: SidebarProps) {
           const active = pathname === item.href
           return (
             <Link key={item.href} href={item.label === 'My Profile' ? profileHref : item.href}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-sm transition-all"
               style={{
-                background: active || (item.label === 'My Profile' && pathname.startsWith('/profile/')) ? 'rgba(77,142,255,0.1)' : 'transparent',
-                color: active ? '#adc6ff' : 'rgba(194,198,214,0.7)',
+                background: active || (item.label === 'My Profile' && pathname.startsWith('/profile/')) ? 'rgba(16,185,129,0.1)' : 'transparent',
+                color: active ? '#10b981' : 'rgba(194,198,214,0.7)',
               }}>
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
                 {item.icon}
@@ -103,7 +103,7 @@ export function Sidebar({ userName = 'Scholar', score = 500 }: SidebarProps) {
                 const active = pathname === href
                 return (
                   <Link key={proj.id} href={href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all ${active ? '' : 'hover:bg-emerald-500/5'}`}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-sm transition-all ${active ? '' : 'hover:bg-emerald-500/5'}`}
                     style={active 
                       ? { background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', borderRight: '4px solid #10b981' } 
                       : { color: 'rgba(16, 185, 129, 0.6)' }}

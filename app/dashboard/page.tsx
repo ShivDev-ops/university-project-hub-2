@@ -6,7 +6,9 @@ import { authOptions } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { supabaseAdmin } from '@/lib/supabase/admin'
 import Link from 'next/link'
+import Image from 'next/image'
 import DashboardNavbar from '@/components/DashboardNavbar'
+import SquaresBackground from '@/components/ui/SquaresBackground'
 import DashboardSidebar from '@/components/DashboardSidebar'
 import DashboardSearchBar from '@/components/DashboardSearchBar'
 import DashboardProjectCard from '@/components/DashboardProjectCard'
@@ -78,23 +80,26 @@ export default async function DashboardPage() {
       <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
       <style>{`
-        body { font-family: 'Manrope', sans-serif; background-color: #0e1322; color: #dee1f7; }
+        body { font-family: 'Inter', sans-serif; background-color: #09090b; color: #f4f4f5; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .glass-card { backdrop-filter: blur(16px); background: rgba(26, 31, 47, 0.6); }
-        .neon-glow-primary { box-shadow: 0 0 20px rgba(77, 142, 255, 0.15); }
-        .dot-grid {
-          background-image: radial-gradient(circle, rgba(77, 142, 255, 0.05) 1px, transparent 1px);
-          background-size: 24px 24px;
+        .glass-card { 
+          backdrop-filter: blur(12px); 
+          background: rgba(24, 24, 27, 0.4); 
+          border: 1px solid rgba(16, 185, 129, 0.1); 
         }
-        .card-hover { transition: all 0.3s; }
+        .neon-glow-primary { box-shadow: 0 0 20px rgba(16, 185, 129, 0.15); }
+        .card-hover { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .card-hover:hover {
-          transform: translateY(-6px);
-          box-shadow: 0 10px 40px -10px rgba(77, 142, 255, 0.2);
+          transform: translateY(-4px);
+          box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.2);
+          border-color: rgba(16, 185, 129, 0.3);
         }
       `}</style>
 
-      <div className="bg-[#0e1322] min-h-screen selection:bg-[#4d8eff]/30">
-
+      <div className="bg-zinc-950 min-h-screen selection:bg-emerald-500/30 relative">
+        <SquaresBackground />
+        
+        <div className="relative z-10">
         {/* Top Nav */}
         <DashboardNavbar profile={profile} />
 
@@ -111,22 +116,19 @@ export default async function DashboardPage() {
             {/* Filter + Post Button */}
             <div className="flex flex-wrap items-center justify-between gap-3 mb-8 max-w-5xl mx-auto">
               <div className="flex flex-wrap items-center gap-3">
-                <button className="px-4 py-2 rounded-full glass-card flex items-center gap-2 hover:border-[#adc6ff]/50 transition-all"
-                  style={{border:'1px solid rgba(66,71,84,0.2)', fontSize:'12px', fontFamily:'DM Mono'}}>
-                  All Departments <span className="material-symbols-outlined" style={{fontSize:'16px'}}>expand_more</span>
+                <button className="px-4 py-1.5 rounded-sm bg-zinc-900/50 border border-zinc-800 flex items-center gap-2 hover:border-emerald-500/50 transition-all font-mono text-[11px] text-zinc-300">
+                  All Departments <span className="material-symbols-outlined text-[16px]">expand_more</span>
                 </button>
-                <button className="px-4 py-2 rounded-full glass-card flex items-center gap-2 hover:border-[#adc6ff]/50 transition-all"
-                  style={{border:'1px solid rgba(66,71,84,0.2)', fontSize:'12px', fontFamily:'DM Mono'}}>
-                  All Years <span className="material-symbols-outlined" style={{fontSize:'16px'}}>expand_more</span>
+                <button className="px-4 py-1.5 rounded-sm bg-zinc-900/50 border border-zinc-800 flex items-center gap-2 hover:border-emerald-500/50 transition-all font-mono text-[11px] text-zinc-300">
+                  All Years <span className="material-symbols-outlined text-[16px]">expand_more</span>
                 </button>
-                <div className="h-4 w-px mx-2" style={{background:'rgba(66,71,84,0.3)'}} />
-                <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.6)', textTransform:'uppercase', letterSpacing:'0.1em'}}>
+                <div className="h-4 w-px mx-2 bg-zinc-800" />
+                <span className="font-mono text-[10px] text-zinc-500 uppercase tracking-widest">
                   {projectsWithOwners.length} open projects
                 </span>
               </div>
               <Link href="/projects/create">
-                <button className="px-5 py-2 rounded-lg font-medium text-sm transition-all hover:scale-105 neon-glow-primary"
-                  style={{background:'#adc6ff', color:'#002e6a', fontFamily:'DM Mono'}}>
+                <button className="px-5 py-2 rounded-sm font-mono font-bold text-[11px] uppercase tracking-widest transition-all hover:scale-105 bg-emerald-500 text-black shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                   + Post Project
                 </button>
               </Link>
@@ -140,18 +142,18 @@ export default async function DashboardPage() {
                 ))
               ) : (
                 <div className="col-span-3 text-center py-20">
-                  <span className="material-symbols-outlined" style={{fontSize:'48px', color:'#424754'}}>
+                  <span className="material-symbols-outlined" style={{fontSize:'48px', color:'#27272a'}}>
                     rocket_launch
                   </span>
-                  <p style={{fontFamily:'Syne', fontSize:'20px', fontWeight:700, color:'#c2c6d6', marginTop:'16px'}}>
+                  <p style={{fontFamily:'Inter', fontSize:'20px', fontWeight:700, color:'#d4d4d8', marginTop:'16px'}}>
                     No projects yet
                   </p>
-                  <p style={{fontFamily:'DM Mono', fontSize:'12px', color:'#8c909f', marginTop:'8px'}}>
+                  <p style={{fontFamily:'DM Mono', fontSize:'12px', color:'#71717a', marginTop:'8px'}}>
                     Be the first to post a project
                   </p>
                   <Link href="/projects/create">
-                    <button className="mt-6 px-6 py-3 rounded-lg font-medium neon-glow-primary"
-                      style={{background:'#adc6ff', color:'#002e6a', fontFamily:'DM Mono'}}>
+                    <button className="mt-6 px-6 py-3 rounded-sm font-medium neon-glow-primary"
+                      style={{background:'#10b981', color:'#000000', fontFamily:'DM Mono'}}>
                       + Post Project
                     </button>
                   </Link>
@@ -159,6 +161,7 @@ export default async function DashboardPage() {
               )}
             </div>
           </main>
+        </div>
         </div>
       </div>
     </>

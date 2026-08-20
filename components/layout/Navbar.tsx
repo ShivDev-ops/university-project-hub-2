@@ -19,21 +19,21 @@ className="fixed top-0 w-full h-[60px] flex items-center justify-between px-6 z-
 style={{
 background: 'rgba(14,19,34,0.6)',
 backdropFilter: 'blur(20px)',
-borderBottom: '1px solid rgba(66,71,84,0.15)',
-boxShadow: '0 0 20px rgba(77,142,255,0.08)',
+borderBottom: '1px solid rgba(39,39,42,0.15)',
+boxShadow: '0 0 20px rgba(16,185,129,0.08)',
 }}
 >
 <div className="flex items-center gap-8">
 <Link href="/dashboard"
-style={{ fontFamily: 'Syne', fontSize: '18px', fontWeight: 900,
-letterSpacing: '-0.05em', color: '#adc6ff' }}>
+style={{ fontFamily: 'Inter', fontSize: '18px', fontWeight: 900,
+letterSpacing: '-0.05em', color: '#10b981' }}>
 PROJECT_HUB
 </Link>
 <nav className="hidden md:flex items-center gap-6">
 {['Discover','Labs','Teams','Archive'].map(item => (
 <Link key={item} href="#"
-style={{ fontSize: '13px', fontWeight: 500, color: '#c2c6d6', fontFamily: 'DM Mono' }}
-className="hover:text-[#adc6ff] transition-colors">
+style={{ fontSize: '13px', fontWeight: 500, color: '#d4d4d8', fontFamily: 'DM Mono' }}
+className="hover:text-[#10b981] transition-colors">
 {item}
 </Link>
 ))}
@@ -41,29 +41,29 @@ className="hover:text-[#adc6ff] transition-colors">
 </div>
 <div className="flex items-center gap-3">
 <Link href="/chat">
-<button className="p-2 rounded-lg hover:bg-[#adc6ff]/10 transition-all md:hidden">
-<span className="material-symbols-outlined" style={{ color: '#c2c6d6', fontSize: '22px' }}>
+<button className="p-2 rounded-sm hover:bg-[#10b981]/10 transition-all md:hidden">
+<span className="material-symbols-outlined" style={{ color: '#d4d4d8', fontSize: '22px' }}>
 chat
 </span>
 </button>
 </Link>
 <Link href="/notifications">
-<button className="p-2 rounded-lg hover:bg-[#adc6ff]/10 transition-all">
-<span className="material-symbols-outlined" style={{ color: '#c2c6d6', fontSize: '22px' }}>
+<button className="p-2 rounded-sm hover:bg-[#10b981]/10 transition-all">
+<span className="material-symbols-outlined" style={{ color: '#d4d4d8', fontSize: '22px' }}>
 notifications
 </span>
 </button>
 </Link>
 <Link href={profile?.user_id ? `/profile/${profile.user_id}` : '/profile/edit'}>
 <div className="w-8 h-8 rounded-full border-2 overflow-hidden"
-style={{ borderColor: '#adc6ff' }}>
+style={{ borderColor: '#10b981' }}>
 {profile?.avatar_url ? (
 <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
 ) : (
 <div className="w-full h-full flex items-center justify-center"
-style={{ background: '#25293a' }}>
+style={{ background: '#18181b' }}>
 <span className="material-symbols-outlined"
-style={{ fontSize: '16px', color: '#adc6ff' }}>person</span>
+style={{ fontSize: '16px', color: '#10b981' }}>person</span>
 </div>
 )}
 </div>

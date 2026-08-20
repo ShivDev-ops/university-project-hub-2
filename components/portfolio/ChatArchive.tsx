@@ -6,7 +6,7 @@ export default function ChatArchive({ data }: { data: any }) {
 
   if (!chat || chat.length === 0) {
     return (
-      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-2xl text-center text-zinc-400 glass-panel">
+      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-md text-center text-zinc-400 glass-panel">
         <MessageSquare className="mx-auto w-12 h-12 text-zinc-700 mb-4" />
         <p className="text-lg">No AI chat history available.</p>
         <p className="text-sm mt-2 text-zinc-500">The Neural Link agent was not engaged during this project.</p>
@@ -15,7 +15,7 @@ export default function ChatArchive({ data }: { data: any }) {
   }
 
   return (
-    <div className="max-w-4xl mx-auto h-[70vh] flex flex-col bg-zinc-900/40 border border-zinc-800 rounded-2xl overflow-hidden glass-panel">
+    <div className="max-w-4xl mx-auto h-[70vh] flex flex-col bg-zinc-900/40 border border-zinc-800 rounded-md overflow-hidden glass-panel">
       <div className="p-4 border-b border-zinc-800/80 bg-zinc-950/80 flex items-center justify-between shrink-0">
         <h2 className="text-lg font-bold text-white flex items-center gap-3">
           <MessageSquare className="text-emerald-500" /> Neural Link Archive
@@ -55,7 +55,7 @@ export default function ChatArchive({ data }: { data: any }) {
                   </span>
                 </div>
                 
-                <div className={`p-4 rounded-2xl text-sm whitespace-pre-wrap ${
+                <div className={`p-4 rounded-md text-sm whitespace-pre-wrap ${
                   isModel
                     ? 'bg-zinc-950/80 border border-zinc-800/80 text-zinc-300 rounded-tl-sm'
                     : 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-50 rounded-tr-sm'

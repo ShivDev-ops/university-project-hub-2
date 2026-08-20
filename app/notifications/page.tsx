@@ -81,7 +81,7 @@ function groupByDate(notifications: any[]) {
 }
 
 const iconMap: Record<string, { icon: string; color: string }> = {
-  application: { icon: 'description',  color: '#adc6ff' },
+  application: { icon: 'description',  color: '#10b981' },
   accepted:    { icon: 'check_circle', color: '#34d399' },
   rejected:    { icon: 'cancel',       color: '#fb7185' },
   collaborator_left: { icon: 'logout', color: '#fbbf24' },
@@ -89,7 +89,7 @@ const iconMap: Record<string, { icon: string; color: string }> = {
   score:       { icon: 'star',         color: '#6bd8cb' },
   ghost:       { icon: 'warning',      color: '#fb923c' },
   endorsed:    { icon: 'thumb_up',     color: '#d0bcff' },
-  system:      { icon: 'info',         color: '#8c909f' },
+  system:      { icon: 'info',         color: '#71717a' },
 }
 
 function relativeTime(dateStr: string) {
@@ -145,10 +145,10 @@ export default async function NotificationsPage() {
 
       <style>{`
         * { box-sizing: border-box; }
-        body { font-family: 'Manrope', sans-serif; background-color: #0e1322; color: #dee1f7; margin: 0; }
+        body { font-family: 'Manrope', sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .glass-panel { background: rgba(26,31,47,0.7); backdrop-filter: blur(16px); }
-        .dot-grid { background-image: radial-gradient(circle, rgba(77,142,255,0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        .glass-panel { background: rgba(24,24,27,0.7); backdrop-filter: blur(16px); }
+        .dot-grid { background-image: radial-gradient(circle, rgba(16,185,129,0.05) 1px, transparent 1px); background-size: 24px 24px; }
         .notif-badge { position: absolute; top: 2px; right: 2px; min-width: 16px; height: 16px; border-radius: 999px; background: #fb7185; color: #fff; font-size: 9px; font-family: 'DM Mono', monospace; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 4px; }
         .notif-row { transition: all 0.15s; }
         .notif-row:hover { background: rgba(255,255,255,0.02); }
@@ -156,7 +156,7 @@ export default async function NotificationsPage() {
         .slide-in { animation: slideIn 0.3s ease forwards; }
       `}</style>
 
-      <div className="bg-[#0e1322] min-h-screen dot-grid overflow-x-hidden">
+      <div className="bg-[#09090b] min-h-screen dot-grid overflow-x-hidden">
 
         {/* ── Navbar ── */}
         <DashboardNavbar profile={profile} />
@@ -173,8 +173,8 @@ export default async function NotificationsPage() {
               {/* Header */}
             <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: '32px' }}>
               <div>
-                <h1 style={{ fontFamily: 'Syne', fontSize: '40px', fontWeight: 800, letterSpacing: '-0.04em', color: '#dee1f7', marginBottom: '4px', textTransform: 'uppercase' }}>
-                  System <span style={{ color: '#adc6ff' }}>Updates</span>
+                <h1 style={{ fontFamily: 'Inter', fontSize: '40px', fontWeight: 800, letterSpacing: '-0.04em', color: '#f4f4f5', marginBottom: '4px', textTransform: 'uppercase' }}>
+                  System <span style={{ color: '#10b981' }}>Updates</span>
                 </h1>
                 <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: 'rgba(194,198,214,0.4)', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                   {unread.length} unread · {notifications.length} total

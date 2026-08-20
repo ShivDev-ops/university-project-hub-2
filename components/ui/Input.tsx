@@ -19,11 +19,11 @@ style={{ fontFamily: 'DM Mono', color: 'rgba(194,198,214,0.5)' }}
 <input
 ref={ref}
 className={[
-'w-full rounded-xl px-4 py-3 text-sm outline-none transition-all',
-'bg-[rgba(14,19,34,0.6)] text-[#dee1f7]',
-'border border-[rgba(66,71,84,0.3)]',
-'focus:border-[#adc6ff] focus:ring-1 focus:ring-[#adc6ff]/30',
-'placeholder:text-[#8c909f]',
+'w-full rounded-md px-4 py-3 text-sm outline-none transition-all',
+'bg-[rgba(14,19,34,0.6)] text-[#f4f4f5]',
+'border border-[rgba(39,39,42,0.3)]',
+'focus:border-[#10b981] focus:ring-1 focus:ring-[#10b981]/30',
+'placeholder:text-[#71717a]',
 error ? 'border-[#fb7185]' : '',
 className,
 ].join(' ')}

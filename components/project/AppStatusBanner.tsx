@@ -26,7 +26,7 @@ export function AppStatusBanner({ status }: { status: 'pending' | 'accepted' | '
   const c = config[status]
 
   return (
-    <div className="flex items-center gap-3 p-4 rounded-xl"
+    <div className="flex items-center gap-3 p-4 rounded-md"
       style={{background: c.bg, border:`1px solid ${c.border}`}}>
       <span className="material-symbols-outlined" style={{color: c.color, fontSize:'20px'}}>{c.icon}</span>
       <span style={{fontFamily:'DM Mono', fontSize:'12px', color: c.color}}>{c.text}</span>

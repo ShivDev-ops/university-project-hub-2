@@ -46,37 +46,35 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
 
   return (
     <>
-      <header className="fixed top-0 w-full h-[60px] backdrop-blur-xl border-b flex justify-between items-center px-4 md:px-6 z-50"
-        style={{background:'rgba(14,19,34,0.6)', borderColor:'rgba(66,71,84,0.15)', boxShadow:'0 0 20px rgba(77,142,255,0.1)'}}>
+      <header className="fixed top-0 w-full h-[60px] backdrop-blur-xl border-b border-zinc-800 flex justify-between items-center px-4 md:px-6 z-50 bg-zinc-950/80 shadow-[0_0_20px_rgba(16,185,129,0.05)]">
       <div className="flex items-center gap-4 md:gap-8">
         <Link href="/dashboard">
-          <div style={{fontFamily:'Syne', fontSize:'20px', fontWeight:900, letterSpacing:'-0.05em', color:'#adc6ff', cursor:'pointer'}}>
+          <div className="font-mono tracking-widest uppercase font-bold text-emerald-500 cursor-pointer flex items-center gap-2 text-sm">
+            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
             PROJECT_HUB
           </div>
         </Link>
         <nav className="hidden md:flex items-center gap-6">
-          <Link href="/dashboard" style={{fontSize:'14px', fontWeight:500, color:'#adc6ff', borderBottom:'2px solid #adc6ff', paddingBottom:'4px'}}>Discover</Link>
+          <Link href="/dashboard" className="text-[11px] font-mono tracking-widest uppercase font-bold text-white border-b-2 border-emerald-500 pb-1">Discover</Link>
 {projectId ? (
-  <Link href={`/projects/${projectId}/lab`} style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Labs</Link>
+  <Link href={`/projects/${projectId}/lab`} className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors">Labs</Link>
 ) : (
   <div className="relative group">
-    <button style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors flex items-center gap-1">
+    <button className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
       Labs
       <span className="material-symbols-outlined" style={{fontSize:'16px'}}>expand_more</span>
     </button>
     {userProjects.length > 0 && (
-      <div className="absolute top-full left-0 mt-2 w-64 rounded-xl border border-zinc-700/50 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50"
-        style={{background:'rgba(14,19,34,0.96)'}}>
-        <div className="p-2 border-b border-zinc-700/30">
-          <span style={{fontFamily:'DM Mono', fontSize:'9px', fontWeight:700, color:'rgba(16,185,129,0.5)', textTransform:'uppercase', letterSpacing:'0.15em', padding:'4px 8px'}}>Select Project Lab</span>
+      <div className="absolute top-full left-0 mt-2 w-64 rounded-md border border-zinc-800 shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 bg-zinc-950">
+        <div className="p-2 border-b border-zinc-800">
+          <span className="font-mono text-[9px] font-bold text-emerald-500/50 uppercase tracking-[0.15em] px-2 py-1">Select Project Lab</span>
         </div>
         <div className="p-1 max-h-60 overflow-y-auto">
           {userProjects.map((proj: any) => (
             <Link key={proj.id} href={`/projects/${proj.id}/lab`}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-emerald-500/10 transition-colors"
-              style={{color:'rgba(194,198,214,0.85)'}}>
-              <span className="material-symbols-outlined" style={{fontSize:'16px', color:'#10b981'}}>terminal</span>
-              <span style={{fontFamily:'DM Mono', fontSize:'12px'}} className="truncate">{proj.title}</span>
+              className="flex items-center gap-3 px-3 py-2.5 rounded-sm hover:bg-emerald-500/10 transition-colors text-zinc-300">
+              <span className="material-symbols-outlined text-emerald-500 text-[16px]">terminal</span>
+              <span className="font-mono text-[11px] truncate">{proj.title}</span>
             </Link>
           ))}
         </div>
@@ -84,17 +82,17 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
     )}
   </div>
 )}
-          <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Teams</a>
-          <a href="#" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors">Archive</a>
-          <Link href="/portfolio" style={{fontSize:'14px', fontWeight:500, color:'#c2c6d6'}} className="hover:text-[#adc6ff] transition-colors flex items-center gap-1">
+          <a href="#" className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors">Teams</a>
+          <a href="#" className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors">Archive</a>
+          <Link href="/portfolio" className="text-[11px] font-mono tracking-widest uppercase text-zinc-400 hover:text-emerald-400 transition-colors flex items-center gap-1">
             Portfolio
           </Link>
         </nav>
       </div>
       <div className="flex items-center gap-2 md:gap-4">
         <Link href="/notifications" className="hidden md:block">
-          <button className="relative p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20" aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}>
-            <span className="material-symbols-outlined" style={{color:'#c2c6d6'}}>notifications</span>
+          <button className="relative p-2 rounded-sm transition-all hover:bg-[#10b981]/20" aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}>
+            <span className="material-symbols-outlined" style={{color:'#d4d4d8'}}>notifications</span>
             {unreadCount > 0 && (
               <span
                 style={{
@@ -121,35 +119,35 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
             )}
           </button>
         </Link>
-        <button className="hidden md:block p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20">
-          <span className="material-symbols-outlined" style={{color:'#c2c6d6'}}>terminal</span>
+        <button className="hidden md:block p-2 rounded-sm transition-all hover:bg-[#10b981]/20">
+          <span className="material-symbols-outlined" style={{color:'#d4d4d8'}}>terminal</span>
         </button>
         <Link href={profileHref}>
-          <div className="w-8 h-8 rounded-full border-2 overflow-hidden" style={{borderColor:'#adc6ff'}}>
+          <div className="w-8 h-8 rounded-full border-2 overflow-hidden" style={{borderColor:'#10b981'}}>
             {profile?.avatar_url ? (
               <img src={profile.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center" style={{background:'#25293a'}}>
-                <span className="material-symbols-outlined" style={{fontSize:'16px', color:'#adc6ff'}}>person</span>
+              <div className="w-full h-full flex items-center justify-center" style={{background:'#18181b'}}>
+                <span className="material-symbols-outlined" style={{fontSize:'16px', color:'#10b981'}}>person</span>
               </div>
             )}
           </div>
         </Link>
         <button
-          className="md:hidden p-2 rounded-lg transition-all hover:bg-[#4d8eff]/20"
+          className="md:hidden p-2 rounded-sm transition-all hover:bg-[#10b981]/20"
           onClick={() => setMobileOpen(open => !open)}
           aria-label="Toggle menu"
         >
-          <span className="material-symbols-outlined" style={{color:'#c2c6d6'}}>{mobileOpen ? 'close' : 'menu'}</span>
+          <span className="material-symbols-outlined" style={{color:'#d4d4d8'}}>{mobileOpen ? 'close' : 'menu'}</span>
         </button>
       </div>
     </header>
 
     {mobileOpen && (
       <div className="md:hidden fixed top-[60px] left-0 right-0 z-40 px-4 py-3"
-        style={{ background:'rgba(14,19,34,0.96)', borderBottom:'1px solid rgba(66,71,84,0.2)' }}>
-        <div className="rounded-xl p-3"
-          style={{ background:'rgba(26,31,47,0.8)', border:'1px solid rgba(66,71,84,0.2)' }}>
+        style={{ background:'rgba(14,19,34,0.96)', borderBottom:'1px solid rgba(39,39,42,0.2)' }}>
+        <div className="rounded-md p-3"
+          style={{ background:'rgba(24,24,27,0.8)', border:'1px solid rgba(39,39,42,0.2)' }}>
           {[
             { href: '/dashboard', label: 'Dashboard', icon: 'grid_view' },
             { href: '/projects/create', label: 'Post Project', icon: 'rocket_launch' },
@@ -158,8 +156,8 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
             { href: '/notifications', label: 'Notifications', icon: 'notifications' },
           ].map(item => (
             <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg"
-              style={pathname === item.href ? { background:'rgba(77,142,255,0.12)', color:'#adc6ff' } : { color:'rgba(194,198,214,0.85)' }}>
+              className="flex items-center gap-3 px-3 py-2.5 rounded-sm"
+              style={pathname === item.href ? { background:'rgba(16,185,129,0.12)', color:'#10b981' } : { color:'rgba(194,198,214,0.85)' }}>
               <span className="material-symbols-outlined" style={{ fontSize:'18px' }}>{item.icon}</span>
               <span style={{ fontFamily:'DM Mono', fontSize:'12px' }}>{item.label}</span>
             </Link>
@@ -176,7 +174,7 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
                   const active = pathname === href
                   return (
                     <Link key={proj.id} href={href} onClick={() => setMobileOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 rounded-lg transition-all"
+                      className="flex items-center gap-3 px-3 py-2 rounded-sm transition-all"
                       style={active 
                         ? { background:'rgba(16, 185, 129, 0.12)', color:'#10b981' } 
                         : { color:'rgba(16, 185, 129, 0.8)' }}>

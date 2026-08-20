@@ -10,7 +10,7 @@ duration?: number
 const config: Record<ToastType, { color: string; icon: string; bg: string }> = {
 success: { color: '#34d399', icon: 'check_circle', bg: 'rgba(52,211,153,0.08)' },
 error: { color: '#fb7185', icon: 'cancel', bg: 'rgba(251,113,133,0.08)' },
-info: { color: '#adc6ff', icon: 'info', bg: 'rgba(173,198,255,0.08)' },
+info: { color: '#10b981', icon: 'info', bg: 'rgba(16,185,129,0.08)' },
 }
 export function Toast({ type, message, onClose, duration = 3500 }: ToastProps) {
 useEffect(() => {
@@ -20,7 +20,7 @@ return () => clearTimeout(t)
 const c = config[type]
 return (
 <div
-className="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl"
+className="fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-5 py-3 rounded-md shadow-xl"
 style={{
 background: c.bg,
 border: `1px solid ${c.color}30`,
@@ -31,11 +31,11 @@ minWidth: '260px',
 <span className="material-symbols-outlined" style={{ color: c.color, fontSize: '20px' }}>
 {c.icon}
 </span>
-<p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#dee1f7', flex: 1 }}>
+<p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#f4f4f5', flex: 1 }}>
 {message}
 </p>
 <button onClick={onClose}>
-<span className="material-symbols-outlined" style={{ color: '#8c909f', fontSize: '16px' }}>
+<span className="material-symbols-outlined" style={{ color: '#71717a', fontSize: '16px' }}>
 close
 </span>
 </button>

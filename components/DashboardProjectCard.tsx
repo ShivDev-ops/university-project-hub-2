@@ -26,71 +26,64 @@ export default function DashboardProjectCard({ project }: { project: ProjectWith
   const scoreColor = score >= 600 ? '#34d399' : score >= 400 ? '#fbbf24' : '#fb7185'
 
   return (
-    <div className="card-hover relative rounded-2xl overflow-hidden"
-      style={{background:'rgba(26,31,47,0.4)', backdropFilter:'blur(16px)', border:'1px solid rgba(66,71,84,0.15)'}}>
+    <div className="card-hover relative rounded-md overflow-hidden border border-zinc-800 bg-zinc-900/40 backdrop-blur-md">
       <div className="p-6">
 
         {/* Header */}
         <div className="flex justify-between items-start mb-4">
           <div className="flex flex-wrap gap-2">
-            <span style={{padding:'2px 8px', borderRadius:'4px', background: spotsLeft > 0 ? 'rgba(173,198,255,0.1)' : 'rgba(66,71,84,0.2)', color: spotsLeft > 0 ? '#adc6ff' : '#8c909f', fontSize:'10px', fontWeight:700, fontFamily:'DM Mono', textTransform:'uppercase'}}>
+            <span className={`px-2 py-0.5 rounded-sm text-[10px] font-bold font-mono uppercase ${spotsLeft > 0 ? 'bg-emerald-500/10 text-emerald-400' : 'bg-zinc-800/50 text-zinc-500'}`}>
               {spotsLeft > 0 ? 'Open' : 'Full'}
             </span>
-            <span style={{fontSize:'10px', color:'rgba(194,198,214,0.6)', fontFamily:'DM Mono'}}>
+            <span className="text-[10px] text-zinc-500 font-mono mt-0.5">
               {new Date(project.created_at).toLocaleDateString()}
             </span>
           </div>
-          <div className="flex items-center gap-1" style={{fontSize:'10px', color:'rgba(194,198,214,0.6)', fontFamily:'DM Mono'}}>
-            <span className="material-symbols-outlined" style={{fontSize:'14px'}}>group</span>
-            {spotsLeft} left
-          </div>
+          <span className="material-symbols-outlined text-zinc-600 hover:text-emerald-500 cursor-pointer transition-colors" style={{fontSize:'20px'}}>bookmark_add</span>
         </div>
 
         {/* Title + desc */}
-        <h3 style={{fontFamily:'Syne', fontSize:'20px', fontWeight:700, marginBottom:'8px', lineHeight:1.2, color:'#dee1f7'}}>
+        <h3 className="font-sans text-xl font-bold mb-2 text-zinc-100">
           {project.title}
         </h3>
-        <p style={{color:'#c2c6d6', fontSize:'14px', marginBottom:'16px', lineHeight:1.6, display:'-webkit-box', WebkitLineClamp:2, WebkitBoxOrient:'vertical', overflow:'hidden'}}>
+        <p className="text-zinc-400 text-sm mb-4 line-clamp-2">
           {project.description}
         </p>
 
         {/* Skills */}
         <div className="flex flex-wrap gap-2 mb-6">
           {project.required_skills?.slice(0, 3).map((skill: string) => (
-            <span key={skill} style={{padding:'4px 8px', borderRadius:'6px', background:'#25293a', fontSize:'10px', fontFamily:'DM Mono', color:'#c2c6d6'}}>
+            <span key={skill} className="px-2 py-1 rounded-sm bg-zinc-800 text-[10px] font-mono text-zinc-300 border border-zinc-700/50">
               {skill}
             </span>
           ))}
           {(project.required_skills?.length ?? 0) > 3 && (
-            <span style={{padding:'4px 8px', borderRadius:'6px', background:'#25293a', fontSize:'10px', fontFamily:'DM Mono', color:'#8c909f'}}>
-              +{project.required_skills.length - 3} more
+            <span className="px-2 py-1 rounded-sm bg-zinc-800/50 text-[10px] font-mono text-zinc-500 border border-zinc-800">
+              +{(project.required_skills?.length ?? 0) - 3}
             </span>
           )}
         </div>
 
         {/* Footer */}
-        <div className="pt-4 flex items-center justify-between"
-          style={{borderTop:'1px solid rgba(66,71,84,0.1)'}}>
+        <div className="pt-4 flex items-center justify-between border-t border-zinc-800">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center"
-              style={{background:'#25293a', border:'1px solid rgba(66,71,84,0.3)'}}>
+            <div className="w-6 h-6 rounded-full overflow-hidden flex items-center justify-center bg-zinc-800 border border-zinc-700">
               {project.owner?.avatar_url ? (
                 <img src={project.owner.avatar_url} className="w-full h-full object-cover" alt={project.owner.full_name} />
               ) : (
-                <span className="material-symbols-outlined" style={{fontSize:'14px', color:'#adc6ff'}}>person</span>
+                <span className="material-symbols-outlined text-[14px] text-zinc-500">person</span>
               )}
             </div>
-            <span style={{fontFamily:'DM Mono', fontSize:'10px', color:'rgba(194,198,214,0.7)'}}>
+            <span className="font-mono text-[10px] text-zinc-400">
               {project.owner?.full_name ?? 'Unknown'}
             </span>
-            <span style={{fontFamily:'DM Mono', fontSize:'9px', fontWeight:700, padding:'1px 6px', borderRadius:'999px', background:`${scoreColor}20`, color: scoreColor}}>
+            <span className="font-mono text-[9px] font-bold px-1.5 py-0.5 rounded-full" style={{background:`${scoreColor}20`, color: scoreColor}}>
               {score}
             </span>
           </div>
           <Link href={`/projects/${project.id}`}>
-            <button className="flex items-center gap-1 text-xs font-bold hover:gap-2 transition-all"
-              style={{color:'#adc6ff', fontFamily:'DM Mono'}}>
-              View <span className="material-symbols-outlined" style={{fontSize:'16px'}}>arrow_forward</span>
+            <button className="flex items-center gap-1 text-[11px] font-mono font-bold text-emerald-500 hover:text-emerald-400 hover:gap-2 transition-all">
+              View <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
             </button>
           </Link>
         </div>

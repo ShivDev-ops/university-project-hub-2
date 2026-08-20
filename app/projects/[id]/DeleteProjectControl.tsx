@@ -53,15 +53,15 @@ export function DeleteProjectControl({ projectId, projectTitle }: DeleteProjectC
 
   return (
     <section className="glass-panel" style={{ padding: '20px', border: '1px solid rgba(251,113,133,0.28)' }}>
-      <h3 style={{ fontFamily: 'Syne', fontSize: '15px', fontWeight: 700, color: '#fb7185', textTransform: 'uppercase', marginBottom: '10px' }}>
+      <h3 style={{ fontFamily: 'Inter', fontSize: '15px', fontWeight: 700, color: '#fb7185', textTransform: 'uppercase', marginBottom: '10px' }}>
         Danger Zone
       </h3>
       <p style={{ fontSize: '12px', color: 'rgba(194,198,214,0.75)', lineHeight: 1.6, marginBottom: '12px' }}>
         This will remove this project from active listings. To confirm, type the exact project name.
       </p>
 
-      <div style={{ marginBottom: '10px', fontFamily: 'DM Mono', fontSize: '10px', color: '#c2c6d6' }}>
-        Type: <span style={{ color: '#dee1f7' }}>{projectTitle}</span>
+      <div style={{ marginBottom: '10px', fontFamily: 'DM Mono', fontSize: '10px', color: '#d4d4d8' }}>
+        Type: <span style={{ color: '#f4f4f5' }}>{projectTitle}</span>
       </div>
 
       <form onSubmit={handleDelete} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -73,8 +73,8 @@ export function DeleteProjectControl({ projectId, projectTitle }: DeleteProjectC
             width: '100%',
             padding: '9px 10px',
             background: 'rgba(14,19,34,0.7)',
-            border: '1px solid rgba(66,71,84,0.4)',
-            color: '#dee1f7',
+            border: '1px solid rgba(39,39,42,0.4)',
+            color: '#f4f4f5',
             fontFamily: 'DM Mono',
             fontSize: '11px',
             outline: 'none',
@@ -88,8 +88,8 @@ export function DeleteProjectControl({ projectId, projectTitle }: DeleteProjectC
             width: '100%',
             padding: '9px 10px',
             border: '1px solid rgba(251,113,133,0.35)',
-            background: canDelete ? 'rgba(251,113,133,0.18)' : 'rgba(66,71,84,0.2)',
-            color: canDelete ? '#fb7185' : '#8c909f',
+            background: canDelete ? 'rgba(251,113,133,0.18)' : 'rgba(39,39,42,0.2)',
+            color: canDelete ? '#fb7185' : '#71717a',
             fontFamily: 'DM Mono',
             fontSize: '11px',
             textTransform: 'uppercase',

@@ -329,14 +329,14 @@ export default async function ProjectDetailPage({
 
       <style>{`
         *, *::before, *::after { box-sizing: border-box; }
-        body { font-family: 'Manrope', sans-serif; background-color: #0e1322; color: #dee1f7; margin: 0; }
+        body { font-family: 'Manrope', sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .glass-panel { background: rgba(26,31,47,0.7); backdrop-filter: blur(16px); }
-        .ghost-border { border: 1px solid rgba(66,71,84,0.15); }
-        .dot-grid { background-image: radial-gradient(circle, rgba(77,142,255,0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        .glass-panel { background: rgba(24,24,27,0.7); backdrop-filter: blur(16px); }
+        .ghost-border { border: 1px solid rgba(39,39,42,0.15); }
+        .dot-grid { background-image: radial-gradient(circle, rgba(16,185,129,0.05) 1px, transparent 1px); background-size: 24px 24px; }
         .vault-blur { filter: blur(4px); user-select: none; pointer-events: none; }
         .skill-pill { padding: 4px 12px; border-radius: 999px; background: rgba(107,216,203,0.08); color: #6bd8cb; border: 1px solid rgba(107,216,203,0.2); font-size: 11px; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: 0.05em; }
-        .tag-pill { padding: 4px 12px; border-radius: 999px; background: rgba(173,198,255,0.08); color: #adc6ff; border: 1px solid rgba(173,198,255,0.2); font-size: 11px; font-family: 'DM Mono', monospace; }
+        .tag-pill { padding: 4px 12px; border-radius: 999px; background: rgba(16,185,129,0.08); color: #10b981; border: 1px solid rgba(16,185,129,0.2); font-size: 11px; font-family: 'DM Mono', monospace; }
 
         /* ── Layout ── */
         .page-wrapper {
@@ -381,7 +381,7 @@ export default async function ProjectDetailPage({
           font-weight: 800;
           letter-spacing: -0.04em;
           line-height: 1;
-          color: #dee1f7;
+          color: #f4f4f5;
           margin-bottom: 16px;
           text-transform: uppercase;
           word-break: break-word;
@@ -461,7 +461,7 @@ export default async function ProjectDetailPage({
           gap: 12px;
           padding: 12px;
           background: rgba(14,19,34,0.6);
-          border: 1px solid rgba(66,71,84,0.25);
+          border: 1px solid rgba(39,39,42,0.25);
         }
 
         .activity-copy {
@@ -540,7 +540,7 @@ export default async function ProjectDetailPage({
         }
       `}</style>
 
-      <div className="bg-[#0e1322] page-wrapper dot-grid overflow-x-hidden">
+      <div className="bg-[#09090b] page-wrapper dot-grid overflow-x-hidden">
 
         {/* ── Navbar ── */}
         <DashboardNavbar profile={profile} />
@@ -554,11 +554,11 @@ export default async function ProjectDetailPage({
 
             {/* Breadcrumb */}
             <nav className="breadcrumb">
-              <Link href="/dashboard" style={{ color: '#adc6ff' }}>Dashboard</Link>
+              <Link href="/dashboard" style={{ color: '#10b981' }}>Dashboard</Link>
               <span>›</span>
               <span>Projects</span>
               <span>›</span>
-              <span style={{ color: '#dee1f7', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
+              <span style={{ color: '#f4f4f5', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '200px' }}>
                 {project.title}
               </span>
             </nav>
@@ -569,9 +569,9 @@ export default async function ProjectDetailPage({
                 <span style={{
                   padding: '3px 10px', fontSize: '10px', fontFamily: 'DM Mono',
                   fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em',
-                  background: spotsLeft > 0 ? 'rgba(173,198,255,0.1)' : 'rgba(66,71,84,0.3)',
-                  color: spotsLeft > 0 ? '#adc6ff' : '#8c909f',
-                  border: spotsLeft > 0 ? '1px solid rgba(173,198,255,0.25)' : '1px solid rgba(66,71,84,0.3)',
+                  background: spotsLeft > 0 ? 'rgba(16,185,129,0.1)' : 'rgba(39,39,42,0.3)',
+                  color: spotsLeft > 0 ? '#10b981' : '#71717a',
+                  border: spotsLeft > 0 ? '1px solid rgba(16,185,129,0.25)' : '1px solid rgba(39,39,42,0.3)',
                 }}>
                   {project.status === 'open' && spotsLeft > 0
                     ? '● Open'
@@ -596,16 +596,16 @@ export default async function ProjectDetailPage({
               <h1 className="project-title">
                 {project.title.split(' ').map((word: string, i: number) => (
                   i === 1
-                    ? <span key={i} style={{ color: '#adc6ff', fontStyle: 'italic' }}>{word} </span>
+                    ? <span key={i} style={{ color: '#10b981', fontStyle: 'italic' }}>{word} </span>
                     : <span key={i}>{word} </span>
                 ))}
               </h1>
 
-              <p style={{ fontSize: 'clamp(14px, 2vw, 17px)', color: '#c2c6d6', maxWidth: '680px', lineHeight: 1.7 }}>
+              <p style={{ fontSize: 'clamp(14px, 2vw, 17px)', color: '#d4d4d8', maxWidth: '680px', lineHeight: 1.7 }}>
                 {project.description}
               </p>
 
-              <div style={{ height: '3px', width: '120px', background: 'linear-gradient(to right, #adc6ff, #6bd8cb, transparent)', marginTop: '24px' }} />
+              <div style={{ height: '3px', width: '120px', background: 'linear-gradient(to right, #10b981, #6bd8cb, transparent)', marginTop: '24px' }} />
             </header>
 
             {/* Two-column grid */}
@@ -617,8 +617,8 @@ export default async function ProjectDetailPage({
                 {/* Full Details */}
                 <section className="glass-panel ghost-border" style={{ padding: 'clamp(16px, 3vw, 28px)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
-                    <h3 style={{ fontFamily: 'Syne', fontSize: 'clamp(16px, 2.5vw, 20px)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7', margin: 0 }}>
-                      <span className="material-symbols-outlined" style={{ color: '#adc6ff' }}>description</span>
+                    <h3 style={{ fontFamily: 'Inter', fontSize: 'clamp(16px, 2.5vw, 20px)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#f4f4f5', margin: 0 }}>
+                      <span className="material-symbols-outlined" style={{ color: '#10b981' }}>description</span>
                       Full Details
                     </h3>
                     <div className="tag-row">
@@ -629,7 +629,7 @@ export default async function ProjectDetailPage({
                   </div>
 
                   {project.timeline && (
-                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#8c909f', marginBottom: '14px' }}>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#71717a', marginBottom: '14px' }}>
                       Timeline: {project.timeline}
                     </p>
                   )}
@@ -638,7 +638,7 @@ export default async function ProjectDetailPage({
 
                   {project.required_skills?.length > 0 && (
                     <div style={{ marginTop: '18px' }}>
-                      <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '10px' }}>
+                      <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '10px' }}>
                         Required Skills
                       </p>
                       <div className="skills-row">
@@ -653,7 +653,7 @@ export default async function ProjectDetailPage({
                 {/* ── Vault Section ── */}
                 <section className="glass-panel" style={{ padding: 'clamp(16px, 3vw, 32px)', border: '1px dashed rgba(208,188,255,0.2)', position: 'relative' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', gap: '12px', flexWrap: 'wrap' }}>
-                    <h3 style={{ fontFamily: 'Syne', fontSize: 'clamp(16px, 2.5vw, 20px)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#dee1f7', margin: 0 }}>
+                    <h3 style={{ fontFamily: 'Inter', fontSize: 'clamp(16px, 2.5vw, 20px)', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '10px', color: '#f4f4f5', margin: 0 }}>
                       <span className="material-symbols-outlined" style={{ color: '#d0bcff' }}>encrypted</span>
                       The Vault
                     </h3>
@@ -670,7 +670,7 @@ export default async function ProjectDetailPage({
                           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: 0 }}>
                             <span className="material-symbols-outlined" style={{ color: '#d0bcff', flexShrink: 0 }}>code</span>
                             <div style={{ minWidth: 0 }}>
-                              <div style={{ fontFamily: 'DM Mono', fontSize: '13px', color: '#dee1f7' }}>GitHub Repository</div>
+                              <div style={{ fontFamily: 'DM Mono', fontSize: '13px', color: '#f4f4f5' }}>GitHub Repository</div>
                               <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '240px' }}>
                                 {project.github_repo.replace('https://github.com/', '')}
                               </div>
@@ -699,7 +699,7 @@ export default async function ProjectDetailPage({
                                 <img
                                   src={url}
                                   alt={displayFileName(url, i)}
-                                  style={{ width: '44px', height: '44px', objectFit: 'cover', borderRadius: '8px', border: '1px solid rgba(208,188,255,0.25)', flexShrink: 0 }}
+                                  style={{ width: '44px', height: '44px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(208,188,255,0.25)', flexShrink: 0 }}
                                 />
                               ) : (
                                 <span className="material-symbols-outlined" style={{ color: 'rgba(208,188,255,0.5)', flexShrink: 0 }}>
@@ -707,7 +707,7 @@ export default async function ProjectDetailPage({
                                 </span>
                               )}
                               <div style={{ minWidth: 0 }}>
-                                <div style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#c2c6d6', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <div style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#d4d4d8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {displayFileName(url, i)}
                                 </div>
                                 <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', textTransform: 'uppercase', marginTop: '2px' }}>
@@ -721,7 +721,7 @@ export default async function ProjectDetailPage({
                                 {isImage ? 'View' : isPdf ? 'View PDF' : 'Open'}
                               </a>
                               <a href={url} target="_blank" rel="noopener noreferrer" download
-                                style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.8)', border: '1px solid rgba(66,71,84,0.4)', padding: '4px 10px', textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none' }}>
+                                style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.8)', border: '1px solid rgba(39,39,42,0.4)', padding: '4px 10px', textTransform: 'uppercase', letterSpacing: '0.08em', textDecoration: 'none' }}>
                                 Download
                               </a>
                             </div>
@@ -730,7 +730,7 @@ export default async function ProjectDetailPage({
                       })}
 
                       {!project.github_repo && vaultAssets.length === 0 && (
-                        <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f' }}>
+                        <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#71717a' }}>
                           No vault assets added yet.
                         </p>
                       )}
@@ -745,7 +745,7 @@ export default async function ProjectDetailPage({
                                 {i === 1 ? 'terminal' : 'neurology'}
                               </span>
                               <div>
-                                <div style={{ fontFamily: 'DM Mono', fontSize: '13px', color: '#c2c6d6' }}>project-file-{i}.zip</div>
+                                <div style={{ fontFamily: 'DM Mono', fontSize: '13px', color: '#d4d4d8' }}>project-file-{i}.zip</div>
                                 <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.4)' }}>github.com/private/repository/src</div>
                               </div>
                             </div>
@@ -788,17 +788,17 @@ export default async function ProjectDetailPage({
 
                 {/* Project Lead */}
                 <section className="glass-panel ghost-border" style={{ padding: '24px' }}>
-                  <h3 style={{ fontFamily: 'Syne', fontSize: '16px', fontWeight: 700, marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#dee1f7' }}>
+                  <h3 style={{ fontFamily: 'Inter', fontSize: '16px', fontWeight: 700, marginBottom: '20px', textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#f4f4f5' }}>
                     Project Lead
                   </h3>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '20px', flexWrap: 'wrap' }}>
                     <div style={{ position: 'relative', flexShrink: 0 }}>
-                      <div style={{ width: '56px', height: '56px', borderRadius: '12px', padding: '2px', background: 'linear-gradient(135deg, #adc6ff, #d0bcff)', overflow: 'hidden' }}>
-                        <div style={{ width: '100%', height: '100%', borderRadius: '10px', overflow: 'hidden', background: '#25293a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: '56px', height: '56px', borderRadius: '4px', padding: '2px', background: 'linear-gradient(135deg, #10b981, #d0bcff)', overflow: 'hidden' }}>
+                        <div style={{ width: '100%', height: '100%', borderRadius: '4px', overflow: 'hidden', background: '#18181b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {project.owner?.avatar_url ? (
                             <img src={project.owner.avatar_url} alt={project.owner.full_name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           ) : (
-                            <span className="material-symbols-outlined" style={{ color: '#adc6ff', fontSize: '24px' }}>person</span>
+                            <span className="material-symbols-outlined" style={{ color: '#10b981', fontSize: '24px' }}>person</span>
                           )}
                         </div>
                       </div>
@@ -815,7 +815,7 @@ export default async function ProjectDetailPage({
                       </div>
                     </div>
                     <div style={{ minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: '15px', color: '#dee1f7', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontWeight: 700, fontSize: '15px', color: '#f4f4f5', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {project.owner?.full_name ?? 'Unknown'}
                       </div>
                       <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.5)', marginTop: '2px' }}>
@@ -833,7 +833,7 @@ export default async function ProjectDetailPage({
                         {project.owner?.score ?? 0}
                       </span>
                     </div>
-                    <div style={{ height: '2px', background: 'rgba(66,71,84,0.4)', marginTop: '8px', overflow: 'hidden' }}>
+                    <div style={{ height: '2px', background: 'rgba(39,39,42,0.4)', marginTop: '8px', overflow: 'hidden' }}>
                       <div style={{
                         height: '100%',
                         background: scoreColor(project.owner?.score ?? 0),
@@ -845,9 +845,9 @@ export default async function ProjectDetailPage({
                   {session && (
                     <Link href={`/profile/${project.owner_id}`}>
                       <button style={{
-                        width: '100%', padding: '8px', borderRadius: '8px', cursor: 'pointer',
-                        border: '1px solid rgba(66,71,84,0.2)', background: 'transparent',
-                        fontFamily: 'DM Mono', fontSize: '11px', color: '#c2c6d6',
+                        width: '100%', padding: '8px', borderRadius: '4px', cursor: 'pointer',
+                        border: '1px solid rgba(39,39,42,0.2)', background: 'transparent',
+                        fontFamily: 'DM Mono', fontSize: '11px', color: '#d4d4d8',
                         transition: 'background 0.2s',
                       }}>
                         View Full Profile
@@ -866,12 +866,12 @@ export default async function ProjectDetailPage({
                       {spotsLeft} / {project.slots} open
                     </span>
                   </div>
-                  <div style={{ height: '4px', background: 'rgba(66,71,84,0.3)', overflow: 'hidden', marginBottom: '8px' }}>
+                  <div style={{ height: '4px', background: 'rgba(39,39,42,0.3)', overflow: 'hidden', marginBottom: '8px' }}>
                     <div style={{
                       height: '100%',
-                      background: spotsLeft > 0 ? '#adc6ff' : '#fb7185',
+                      background: spotsLeft > 0 ? '#10b981' : '#fb7185',
                       width: `${fillPct}%`,
-                      boxShadow: `0 0 8px ${spotsLeft > 0 ? 'rgba(173,198,255,0.5)' : 'rgba(251,113,133,0.5)'}`,
+                      boxShadow: `0 0 8px ${spotsLeft > 0 ? 'rgba(16,185,129,0.5)' : 'rgba(251,113,133,0.5)'}`,
                       transition: 'width 0.5s ease',
                     }} />
                   </div>
@@ -889,7 +889,7 @@ export default async function ProjectDetailPage({
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', gap: '10px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <span className="material-symbols-outlined" style={{ color: '#6bd8cb' }}>history</span>
-                      <h3 style={{ fontFamily: 'Syne', fontSize: '16px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#dee1f7', margin: 0 }}>
+                      <h3 style={{ fontFamily: 'Inter', fontSize: '16px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#f4f4f5', margin: 0 }}>
                         Activity Feed
                       </h3>
                     </div>
@@ -916,7 +916,7 @@ export default async function ProjectDetailPage({
                               ? '#fb7185'
                               : type === 'collaborator_left'
                                 ? '#fbbf24'
-                                : '#adc6ff'
+                                : '#10b981'
                           const actorName =
                             (activity.metadata?.applicant_name as string | undefined) ||
                             (activity.metadata?.collaborator_name as string | undefined) ||
@@ -937,7 +937,7 @@ export default async function ProjectDetailPage({
                                 {icon}
                               </span>
                               <div className="activity-copy">
-                                <div style={{ fontSize: '13px', lineHeight: 1.5, color: '#dee1f7' }}>
+                                <div style={{ fontSize: '13px', lineHeight: 1.5, color: '#f4f4f5' }}>
                                   <span style={{ color, fontWeight: 700 }}>{actorName}</span> {summary}
                                 </div>
                                 {type === 'collaborator_left' && typeof activity.metadata?.reason === 'string' && activity.metadata.reason && (
@@ -954,12 +954,12 @@ export default async function ProjectDetailPage({
                         })}
                       </div>
                     ) : (
-                      <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f', margin: 0 }}>
+                      <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#71717a', margin: 0 }}>
                         No recent activity yet.
                       </p>
                     )
                   ) : (
-                    <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f', margin: 0 }}>
+                    <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#71717a', margin: 0 }}>
                       Join the team to view project activity.
                     </p>
                   )}
@@ -978,7 +978,7 @@ export default async function ProjectDetailPage({
           </div>
         </main>
 
-        <div style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '1px', background: 'linear-gradient(to right, transparent, rgba(173,198,255,0.2), transparent)', zIndex: 50 }} />
+        <div style={{ position: 'fixed', bottom: 0, left: 0, width: '100%', height: '1px', background: 'linear-gradient(to right, transparent, rgba(16,185,129,0.2), transparent)', zIndex: 50 }} />
       </div>
     </>
   )

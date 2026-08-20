@@ -21,8 +21,8 @@ export default async function RootLayout({
   const session = await getServerSession(authOptions)
 
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="dark">
+      <body className={`${inter.className} bg-zinc-950 text-zinc-100 selection:bg-emerald-500/30`}>
         <SessionProviderWrapper session={session}>
           {children}
         </SessionProviderWrapper>

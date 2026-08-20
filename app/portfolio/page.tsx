@@ -50,7 +50,7 @@ export default function PortfolioPage() {
         </h1>
 
         {portfolios.length === 0 ? (
-          <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-2xl text-center text-zinc-400 glass-panel">
+          <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-md text-center text-zinc-400 glass-panel">
             <p className="text-lg">No portfolios imported yet.</p>
             <p className="text-sm mt-3 text-zinc-500">Export your work from Hack-Flow to see it here.</p>
           </div>
@@ -60,7 +60,7 @@ export default function PortfolioPage() {
               const team = event.imported_teams?.[0];
               return (
                 <Link href={`/portfolio/${event.id}`} key={event.id}>
-                  <div className="group bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/50 p-6 rounded-2xl transition-all cursor-pointer h-full flex flex-col relative overflow-hidden glass-panel rim-light">
+                  <div className="group bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/50 p-6 rounded-md transition-all cursor-pointer h-full flex flex-col relative overflow-hidden glass-panel rim-light">
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500/0 via-emerald-500 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity" />
                     
                     <h2 className="text-xl font-bold text-white mb-2">{event.event_name}</h2>

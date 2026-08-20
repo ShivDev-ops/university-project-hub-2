@@ -9,9 +9,9 @@ loading?: boolean
 children: ReactNode
 }
 const variantStyles: Record<Variant, string> = {
-primary: 'bg-[#adc6ff] text-[#002e6a] hover:bg-[#c0d4ff]',
-secondary: 'bg-[#25293a] text-[#dee1f7] hover:bg-[#2f3447] border border-[#2a2f42]',
-ghost: 'bg-transparent text-[#adc6ff] hover:bg-[#adc6ff]/10',
+primary: 'bg-[#10b981] text-[#000000] hover:bg-[#c0d4ff]',
+secondary: 'bg-[#18181b] text-[#f4f4f5] hover:bg-[#2f3447] border border-[#2a2f42]',
+ghost: 'bg-transparent text-[#10b981] hover:bg-[#10b981]/10',
 danger: 'bg-[#fb7185]/10 text-[#fb7185] hover:bg-[#fb7185]/20 border border-[#fb7185]/30',
 }
 const sizeStyles: Record<Size, string> = {
@@ -32,7 +32,7 @@ return (
 <button
 disabled={disabled || loading}
 className={[
-'rounded-lg font-bold transition-all duration-200',
+'rounded-sm font-bold transition-all duration-200',
 'disabled:opacity-50 disabled:cursor-not-allowed',
 'font-[DM_Mono]',
 variantStyles[variant],

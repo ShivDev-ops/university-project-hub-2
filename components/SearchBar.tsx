@@ -23,18 +23,18 @@ setLoading(false)
 return (
 <div className="relative group">
 <div
-className="absolute -inset-1 rounded-2xl blur opacity-20 transition duration-500 group-focus-within:opacity-60"
-style={{ background: 'linear-gradient(to right, rgba(173,198,255,0.3), rgba(208,188,255,0.3))' }}
+className="absolute -inset-1 rounded-md blur opacity-20 transition duration-500 group-focus-within:opacity-60"
+style={{ background: 'linear-gradient(to right, rgba(16,185,129,0.3), rgba(208,188,255,0.3))' }}
 />
 <div
-className="relative flex items-center rounded-xl px-6 py-4"
+className="relative flex items-center rounded-md px-6 py-4"
 style={{
 background: 'rgba(22,27,43,0.8)',
 backdropFilter: 'blur(16px)',
-border: '1px solid rgba(66,71,84,0.2)',
+border: '1px solid rgba(39,39,42,0.2)',
 }}
 >
-<span className="material-symbols-outlined mr-4" style={{ color: '#8c909f' }}>
+<span className="material-symbols-outlined mr-4" style={{ color: '#71717a' }}>
 {loading ? 'hourglass_empty' : 'search'}
 </span>
 <input
@@ -43,7 +43,7 @@ placeholder="Search projects by skill or description..."
 value={query}
 onChange={e => setQuery(e.target.value)}
 onKeyDown={e => e.key === 'Enter' && handleSearch(query)}
-style={{ color: '#dee1f7', outline: 'none', fontFamily: 'Manrope', fontSize: '14px' }}
+style={{ color: '#f4f4f5', outline: 'none', fontFamily: 'Inter', fontSize: '14px' }}
 />
 <div
 className="flex items-center gap-2 px-3 py-1 rounded-full"

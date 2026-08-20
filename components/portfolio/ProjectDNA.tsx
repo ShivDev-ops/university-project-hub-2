@@ -6,7 +6,7 @@ export default function ProjectDNA({ data }: { data: any }) {
 
   if (!dna || dna.length === 0) {
     return (
-      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-2xl text-center text-zinc-400 glass-panel">
+      <div className="bg-zinc-900/30 border border-zinc-800/50 p-12 rounded-md text-center text-zinc-400 glass-panel">
         <Cpu className="mx-auto w-12 h-12 text-zinc-700 mb-4" />
         <p className="text-lg">No Project DNA found.</p>
         <p className="text-sm mt-2 text-zinc-500">AI milestone synthesis was not generated for this project.</p>
@@ -29,7 +29,7 @@ export default function ProjectDNA({ data }: { data: any }) {
         <h2 className="text-2xl font-bold text-white flex items-center gap-3">
           <Cpu className="text-emerald-500" /> Synthesized Milestones
         </h2>
-        <div className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-3 py-1.5 rounded-lg border border-zinc-800">
+        <div className="text-xs font-mono font-bold text-zinc-500 uppercase tracking-widest bg-zinc-900/50 px-3 py-1.5 rounded-sm border border-zinc-800">
           {dna.length} Core Nodes
         </div>
       </div>
@@ -40,7 +40,7 @@ export default function ProjectDNA({ data }: { data: any }) {
           const StatusIcon = statusConfig.icon;
 
           return (
-            <div key={milestone.id} className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 glass-panel relative overflow-hidden flex flex-col">
+            <div key={milestone.id} className="bg-zinc-900/40 border border-zinc-800 rounded-md p-6 glass-panel relative overflow-hidden flex flex-col">
               {/* Weight indicator background bar */}
               <div 
                 className="absolute top-0 left-0 h-1 bg-emerald-500/30"
@@ -48,7 +48,7 @@ export default function ProjectDNA({ data }: { data: any }) {
               />
               
               <div className="flex justify-between items-start mb-4">
-                <div className={`p-2 rounded-lg border ${statusConfig.bg} ${statusConfig.border} shrink-0`}>
+                <div className={`p-2 rounded-sm border ${statusConfig.bg} ${statusConfig.border} shrink-0`}>
                   <StatusIcon size={20} className={`${statusConfig.color} ${statusConfig.animate || ''}`} />
                 </div>
                 <div className="text-right">
@@ -64,7 +64,7 @@ export default function ProjectDNA({ data }: { data: any }) {
               
               <div className="mt-auto">
                 <div className="text-xs font-bold text-zinc-500 uppercase tracking-widest mb-2">Verification Criteria</div>
-                <div className="bg-zinc-950/50 p-4 rounded-xl border border-zinc-800/50 text-xs text-zinc-300 font-mono leading-relaxed">
+                <div className="bg-zinc-950/50 p-4 rounded-md border border-zinc-800/50 text-xs text-zinc-300 font-mono leading-relaxed">
                   {milestone.verification_criteria}
                 </div>
               </div>

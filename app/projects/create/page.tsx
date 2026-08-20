@@ -245,47 +245,47 @@ export default function CreateProjectPage() {
       />
 
       <style>{`
-        body { font-family: 'Manrope', sans-serif; background-color: #0e1322; color: #dee1f7; margin: 0; }
+        body { font-family: 'Manrope', sans-serif; background-color: #09090b; color: #f4f4f5; margin: 0; }
         .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .glass-panel { background: rgba(26,31,47,0.7); backdrop-filter: blur(16px); }
-        .ghost-border { border: 1px solid rgba(66,71,84,0.15); }
-        .neon-glow-primary { box-shadow: 0 0 40px -10px rgba(173,198,255,0.15); }
+        .glass-panel { background: rgba(24,24,27,0.7); backdrop-filter: blur(16px); }
+        .ghost-border { border: 1px solid rgba(39,39,42,0.15); }
+        .neon-glow-primary { box-shadow: 0 0 40px -10px rgba(16,185,129,0.15); }
         .dot-grid {
-          background-image: radial-gradient(circle, rgba(77,142,255,0.05) 1px, transparent 1px);
+          background-image: radial-gradient(circle, rgba(16,185,129,0.05) 1px, transparent 1px);
           background-size: 24px 24px;
         }
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4d8eff; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
         .input-underline {
           background: transparent;
           border: none;
-          border-bottom: 2px solid rgba(66,71,84,0.3);
+          border-bottom: 2px solid rgba(39,39,42,0.3);
           outline: none;
-          color: #dee1f7;
+          color: #f4f4f5;
           transition: border-color 0.2s;
           width: 100%;
           padding: 8px 0;
         }
-        .input-underline:focus { border-bottom-color: #adc6ff; }
+        .input-underline:focus { border-bottom-color: #10b981; }
         .input-box {
           background: rgba(14,19,34,0.6);
-          border: 1px solid rgba(66,71,84,0.3);
+          border: 1px solid rgba(39,39,42,0.3);
           outline: none;
-          color: #dee1f7;
+          color: #f4f4f5;
           transition: border-color 0.2s;
           width: 100%;
           padding: 10px 14px;
         }
-        .input-box:focus { border-color: #adc6ff; }
+        .input-box:focus { border-color: #10b981; }
         textarea.input-box { resize: none; font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.7; }
         @keyframes ping { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
         .animate-ping { animation: ping 2s ease-in-out infinite; }
         .card-preview-hover { transition: all 0.3s; }
-        .card-preview-hover:hover { box-shadow: 0 0 60px -10px rgba(173,198,255,0.25); }
+        .card-preview-hover:hover { box-shadow: 0 0 60px -10px rgba(16,185,129,0.25); }
       `}</style>
 
-      <div className="bg-[#0e1322] min-h-screen dot-grid overflow-x-hidden">
+      <div className="bg-[#09090b] min-h-screen dot-grid overflow-x-hidden">
 
         {/* ── Top Nav ── */}
         <DashboardNavbar profile={userProfile} />
@@ -306,21 +306,21 @@ export default function CreateProjectPage() {
                 <header className="mb-6">
                   <div className="flex justify-between items-end mb-4">
                     <h1 style={{
-                      fontFamily: 'Syne', fontSize: 'clamp(36px,5vw,60px)',
-                      fontWeight: 800, color: '#adc6ff', letterSpacing: '-0.04em',
+                      fontFamily: 'Inter', fontSize: 'clamp(36px,5vw,60px)',
+                      fontWeight: 800, color: '#10b981', letterSpacing: '-0.04em',
                       textTransform: 'uppercase',
-                      textShadow: '0 0 40px rgba(173,198,255,0.2)',
+                      textShadow: '0 0 40px rgba(16,185,129,0.2)',
                       lineHeight: 1,
                     }}>
                       New_Experiment
                     </h1>
                   </div>
-                  <div style={{ height: '3px', width: '120px', background: 'linear-gradient(to right, #adc6ff, #6bd8cb, transparent)' }} />
+                  <div style={{ height: '3px', width: '120px', background: 'linear-gradient(to right, #10b981, #6bd8cb, transparent)' }} />
                 </header>
 
                 {/* ── 2-Project Limit Banner ── */}
                 {atProjectLimit && (
-                  <div className="flex items-center gap-3 px-5 py-4 rounded-xl"
+                  <div className="flex items-center gap-3 px-5 py-4 rounded-md"
                     style={{ background: 'rgba(251,146,60,0.08)', border: '1px solid rgba(251,146,60,0.25)' }}>
                     <span className="material-symbols-outlined" style={{ color: '#fb923c', fontSize: '22px' }}>warning</span>
                     <div>
@@ -345,7 +345,7 @@ export default function CreateProjectPage() {
 
                   {/* Title */}
                   <div className="relative">
-                    <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
+                    <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
                       Project Title <span style={{ color: '#fb7185' }}>*</span>
                     </label>
                     <input
@@ -355,7 +355,7 @@ export default function CreateProjectPage() {
                       maxLength={80}
                       disabled={atProjectLimit}
                       className="input-underline"
-                      style={{ fontFamily: 'Syne', fontSize: '28px', fontWeight: 700, letterSpacing: '-0.02em', opacity: atProjectLimit ? 0.4 : 1 }}
+                      style={{ fontFamily: 'Inter', fontSize: '28px', fontWeight: 700, letterSpacing: '-0.02em', opacity: atProjectLimit ? 0.4 : 1 }}
                     />
                     <span style={{ position: 'absolute', right: 0, bottom: '10px', fontFamily: 'DM Mono', fontSize: '10px', color: title.length > 70 ? '#fbbf24' : 'rgba(194,198,214,0.4)' }}>
                       {title.length} / 80
@@ -364,8 +364,8 @@ export default function CreateProjectPage() {
 
                   {/* Short Description */}
                   <div className="relative">
-                    <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
-                      Short Description <span style={{ color: '#8c909f' }}>(the hook)</span> <span style={{ color: '#fb7185' }}>*</span>
+                    <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
+                      Short Description <span style={{ color: '#71717a' }}>(the hook)</span> <span style={{ color: '#fb7185' }}>*</span>
                     </label>
                     <textarea
                       value={shortDesc}
@@ -375,7 +375,7 @@ export default function CreateProjectPage() {
                       maxLength={160}
                       disabled={atProjectLimit}
                       className="input-underline"
-                      style={{ resize: 'none', fontFamily: 'Manrope', fontSize: '15px', lineHeight: 1.6, opacity: atProjectLimit ? 0.4 : 1 }}
+                      style={{ resize: 'none', fontFamily: 'Inter', fontSize: '15px', lineHeight: 1.6, opacity: atProjectLimit ? 0.4 : 1 }}
                     />
                     <span style={{ position: 'absolute', right: 0, bottom: '10px', fontFamily: 'DM Mono', fontSize: '10px', color: shortDesc.length > 140 ? '#fbbf24' : 'rgba(194,198,214,0.4)' }}>
                       {shortDesc.length} / 160
@@ -396,10 +396,10 @@ export default function CreateProjectPage() {
 
                     {/* Skill Matrix */}
                     <div className="space-y-4">
-                      <label style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>
+                      <label style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>
                         Skill Matrix <span style={{ color: '#fb7185' }}>*</span>
                       </label>
-                      <div style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(66,71,84,0.3)', padding: '16px' }} className="space-y-4">
+                      <div style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(39,39,42,0.3)', padding: '16px' }} className="space-y-4">
                         {/* Selected chips */}
                         {selectedSkills.length > 0 && (
                           <div className="flex flex-wrap gap-2">
@@ -446,20 +446,20 @@ export default function CreateProjectPage() {
                             disabled={atProjectLimit}
                             style={{
                               width: '100%', paddingLeft: '36px', paddingRight: '12px', paddingTop: '8px', paddingBottom: '8px',
-                              background: 'rgba(26,31,47,0.8)', border: '1px solid rgba(66,71,84,0.3)',
-                              color: '#dee1f7', fontSize: '12px', fontFamily: 'DM Mono', outline: 'none',
+                              background: 'rgba(24,24,27,0.8)', border: '1px solid rgba(39,39,42,0.3)',
+                              color: '#f4f4f5', fontSize: '12px', fontFamily: 'DM Mono', outline: 'none',
                             }}
                           />
                           {/* Suggestions dropdown */}
                           {skillSuggestions.length > 0 && (
                             <div style={{
                               position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 20,
-                              background: '#1a1f2f', border: '1px solid rgba(66,71,84,0.3)',
+                              background: '#1a1f2f', border: '1px solid rgba(39,39,42,0.3)',
                             }}>
                               {skillSuggestions.slice(0, 6).map(s => (
                                 <button key={s} onClick={() => addSkill(s)}
-                                  className="w-full text-left hover:bg-[#25293a] transition-colors"
-                                  style={{ padding: '8px 14px', fontFamily: 'DM Mono', fontSize: '11px', color: '#dee1f7', display: 'block' }}>
+                                  className="w-full text-left hover:bg-[#18181b] transition-colors"
+                                  style={{ padding: '8px 14px', fontFamily: 'DM Mono', fontSize: '11px', color: '#f4f4f5', display: 'block' }}>
                                   {s}
                                 </button>
                               ))}
@@ -477,34 +477,34 @@ export default function CreateProjectPage() {
 
                     {/* Vacancies counter */}
                     <div className="space-y-4">
-                      <label style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>
-                        Vacancies <span style={{ color: '#8c909f' }}>(1–10)</span>
+                      <label style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em', display: 'block' }}>
+                        Vacancies <span style={{ color: '#71717a' }}>(1–10)</span>
                       </label>
                       <div className="flex items-center justify-between px-6 py-4"
-                        style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(66,71,84,0.3)' }}>
+                        style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(39,39,42,0.3)' }}>
                         <button
                           onClick={() => setSlots(s => Math.max(1, s - 1))}
                           disabled={slots <= 1 || atProjectLimit}
-                          className="flex items-center justify-center hover:border-[#adc6ff] hover:text-[#adc6ff] transition-all disabled:opacity-30"
-                          style={{ width: '40px', height: '40px', background: 'rgba(26,31,47,0.8)', border: '1px solid rgba(66,71,84,0.3)' }}>
+                          className="flex items-center justify-center hover:border-[#10b981] hover:text-[#10b981] transition-all disabled:opacity-30"
+                          style={{ width: '40px', height: '40px', background: 'rgba(24,24,27,0.8)', border: '1px solid rgba(39,39,42,0.3)' }}>
                           <span className="material-symbols-outlined">remove</span>
                         </button>
-                        <span style={{ fontFamily: 'Syne', fontSize: '48px', fontWeight: 800, color: '#adc6ff', lineHeight: 1 }}>
+                        <span style={{ fontFamily: 'Inter', fontSize: '48px', fontWeight: 800, color: '#10b981', lineHeight: 1 }}>
                           {String(slots).padStart(2, '0')}
                         </span>
                         <button
                           onClick={() => setSlots(s => Math.min(10, s + 1))}
                           disabled={slots >= 10 || atProjectLimit}
-                          className="flex items-center justify-center hover:border-[#adc6ff] hover:text-[#adc6ff] transition-all disabled:opacity-30"
-                          style={{ width: '40px', height: '40px', background: 'rgba(26,31,47,0.8)', border: '1px solid rgba(66,71,84,0.3)' }}>
+                          className="flex items-center justify-center hover:border-[#10b981] hover:text-[#10b981] transition-all disabled:opacity-30"
+                          style={{ width: '40px', height: '40px', background: 'rgba(24,24,27,0.8)', border: '1px solid rgba(39,39,42,0.3)' }}>
                           <span className="material-symbols-outlined">add</span>
                         </button>
                       </div>
 
                       {/* Tech Stack (bonus field) */}
                       <div className="mt-6">
-                        <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
-                          Tech Stack <span style={{ color: '#8c909f' }}>(optional, comma-separated)</span>
+                        <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
+                          Tech Stack <span style={{ color: '#71717a' }}>(optional, comma-separated)</span>
                         </label>
                         <input
                           value={techStack}
@@ -518,8 +518,8 @@ export default function CreateProjectPage() {
 
                       {/* Timeline */}
                       <div>
-                        <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
-                          Timeline <span style={{ color: '#8c909f' }}>(optional)</span>
+                        <label style={{ display: 'block', fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.7)', textTransform: 'uppercase', marginBottom: '8px', letterSpacing: '0.1em' }}>
+                          Timeline <span style={{ color: '#71717a' }}>(optional)</span>
                         </label>
                         <input
                           value={timeline}
@@ -544,13 +544,13 @@ export default function CreateProjectPage() {
                       </h3>
                     </div>
                     {/* Write / Preview tabs */}
-                    <div className="flex" style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(66,71,84,0.3)', padding: '4px' }}>
+                    <div className="flex" style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(39,39,42,0.3)', padding: '4px' }}>
                       {(['write', 'preview'] as const).map(tab => (
                         <button key={tab} onClick={() => setEditorTab(tab)}
                           style={{
                             padding: '4px 16px', fontSize: '10px', fontFamily: 'DM Mono', textTransform: 'uppercase',
-                            background: editorTab === tab ? 'rgba(173,198,255,0.15)' : 'transparent',
-                            color: editorTab === tab ? '#adc6ff' : 'rgba(140,144,159,0.5)',
+                            background: editorTab === tab ? 'rgba(16,185,129,0.15)' : 'transparent',
+                            color: editorTab === tab ? '#10b981' : 'rgba(140,144,159,0.5)',
                             border: 'none', cursor: 'pointer', transition: 'all 0.2s',
                           }}>
                           {tab}
@@ -559,29 +559,29 @@ export default function CreateProjectPage() {
                     </div>
                   </div>
 
-                  <div style={{ border: '1px solid rgba(66,71,84,0.3)', overflow: 'hidden' }}>
+                  <div style={{ border: '1px solid rgba(39,39,42,0.3)', overflow: 'hidden' }}>
                     {/* Toolbar */}
-                    <div className="flex gap-4 p-3" style={{ background: 'rgba(26,31,47,0.6)', borderBottom: '1px solid rgba(66,71,84,0.2)' }}>
-                      <button type="button" onClick={() => insertMarkdown('**', '**', 'bold text')} disabled={atProjectLimit} title="Bold" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                    <div className="flex gap-4 p-3" style={{ background: 'rgba(24,24,27,0.6)', borderBottom: '1px solid rgba(39,39,42,0.2)' }}>
+                      <button type="button" onClick={() => insertMarkdown('**', '**', 'bold text')} disabled={atProjectLimit} title="Bold" className="material-symbols-outlined hover:text-[#10b981] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
                         format_bold
                       </button>
-                      <button type="button" onClick={() => insertMarkdown('*', '*', 'italic text')} disabled={atProjectLimit} title="Italic" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                      <button type="button" onClick={() => insertMarkdown('*', '*', 'italic text')} disabled={atProjectLimit} title="Italic" className="material-symbols-outlined hover:text-[#10b981] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
                         format_italic
                       </button>
-                      <button type="button" onClick={() => insertMarkdown('[', '](https://example.com)', 'link text')} disabled={atProjectLimit} title="Link" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                      <button type="button" onClick={() => insertMarkdown('[', '](https://example.com)', 'link text')} disabled={atProjectLimit} title="Link" className="material-symbols-outlined hover:text-[#10b981] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
                         link
                       </button>
-                      <button type="button" onClick={() => insertMarkdown('![', '](https://example.com/image.png)', 'image alt')} disabled={atProjectLimit} title="Image" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                      <button type="button" onClick={() => insertMarkdown('![', '](https://example.com/image.png)', 'image alt')} disabled={atProjectLimit} title="Image" className="material-symbols-outlined hover:text-[#10b981] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
                         image
                       </button>
-                      <span style={{ display: 'inline-block', width: '1px', height: '16px', background: 'rgba(66,71,84,0.5)', margin: '0 4px', verticalAlign: 'middle' }} />
-                      <button type="button" onClick={() => insertLinePrefix('## ')} disabled={atProjectLimit} title="Heading 2" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                      <span style={{ display: 'inline-block', width: '1px', height: '16px', background: 'rgba(39,39,42,0.5)', margin: '0 4px', verticalAlign: 'middle' }} />
+                      <button type="button" onClick={() => insertLinePrefix('## ')} disabled={atProjectLimit} title="Heading 2" className="material-symbols-outlined hover:text-[#10b981] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
                         title
                       </button>
-                      <button type="button" onClick={() => insertLinePrefix('- ')} disabled={atProjectLimit} title="Bullet list" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                      <button type="button" onClick={() => insertLinePrefix('- ')} disabled={atProjectLimit} title="Bullet list" className="material-symbols-outlined hover:text-[#10b981] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
                         format_list_bulleted
                       </button>
-                      <button type="button" onClick={() => insertMarkdown('`', '`', 'inline code')} disabled={atProjectLimit} title="Inline code" className="material-symbols-outlined hover:text-[#adc6ff] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
+                      <button type="button" onClick={() => insertMarkdown('`', '`', 'inline code')} disabled={atProjectLimit} title="Inline code" className="material-symbols-outlined hover:text-[#10b981] transition-colors cursor-pointer" style={{ fontSize: '18px', color: 'rgba(140,144,159,0.7)', background: 'none', border: 'none' }}>
                         terminal
                       </button>
                     </div>
@@ -609,17 +609,17 @@ Add headings like ## this, bold text, links, and lists.`}
                         disabled={atProjectLimit}
                         style={{
                           width: '100%', background: 'rgba(14,19,34,0.4)', border: 'none', outline: 'none',
-                          color: '#dee1f7', fontFamily: 'DM Mono', fontSize: '13px',
+                          color: '#f4f4f5', fontFamily: 'DM Mono', fontSize: '13px',
                           padding: '24px', lineHeight: 1.7, resize: 'none',
                           boxSizing: 'border-box', opacity: atProjectLimit ? 0.4 : 1,
                         }}
                       />
                     ) : (
-                      <div style={{ minHeight: '200px', padding: '24px', background: 'rgba(14,19,34,0.4)', color: '#c2c6d6', fontSize: '14px', lineHeight: 1.8 }}>
+                      <div style={{ minHeight: '200px', padding: '24px', background: 'rgba(14,19,34,0.4)', color: '#d4d4d8', fontSize: '14px', lineHeight: 1.8 }}>
                         {fullDesc.trim() ? (
                           <MarkdownView content={fullDesc} />
                         ) : (
-                          <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#424754' }}>Nothing to preview yet.</p>
+                          <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#27272a' }}>Nothing to preview yet.</p>
                         )}
                       </div>
                     )}
@@ -668,7 +668,7 @@ Add headings like ## this, bold text, links, and lists.`}
                     onDragLeave={() => setDragOver(false)}
                     onDrop={handleDrop}
                     style={{
-                      border: `2px dashed ${dragOver ? '#d0bcff' : 'rgba(66,71,84,0.35)'}`,
+                      border: `2px dashed ${dragOver ? '#d0bcff' : 'rgba(39,39,42,0.35)'}`,
                       padding: '40px', display: 'flex', flexDirection: 'column',
                       alignItems: 'center', justifyContent: 'center', gap: '16px',
                       background: dragOver ? 'rgba(208,188,255,0.06)' : 'rgba(208,188,255,0.02)',
@@ -688,7 +688,7 @@ Add headings like ## this, bold text, links, and lists.`}
                       <span className="material-symbols-outlined" style={{ color: '#d0bcff', fontSize: '28px' }}>upload_file</span>
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <p style={{ fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#dee1f7' }}>
+                      <p style={{ fontFamily: 'DM Mono', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#f4f4f5' }}>
                         Drop encrypted assets here
                       </p>
                       <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(140,144,159,0.6)', marginTop: '4px', textTransform: 'uppercase' }}>
@@ -702,10 +702,10 @@ Add headings like ## this, bold text, links, and lists.`}
                     <div className="space-y-2">
                       {uploadedFiles.map((f, i) => (
                         <div key={i} className="flex items-center gap-3 px-4 py-2.5"
-                          style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(66,71,84,0.2)' }}>
+                          style={{ background: 'rgba(14,19,34,0.6)', border: '1px solid rgba(39,39,42,0.2)' }}>
                           <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#d0bcff' }}>description</span>
-                          <span style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#c2c6d6', flex: 1 }}>{f.name}</span>
-                          <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f' }}>
+                          <span style={{ fontFamily: 'DM Mono', fontSize: '11px', color: '#d4d4d8', flex: 1 }}>{f.name}</span>
+                          <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#71717a' }}>
                             {(f.size / 1024 / 1024).toFixed(1)}MB
                           </span>
                           <button onClick={() => setUploadedFiles(prev => prev.filter((_, idx) => idx !== i))}
@@ -720,7 +720,7 @@ Add headings like ## this, bold text, links, and lists.`}
 
                 {/* ── Error message ── */}
                 {error && (
-                  <div className="flex items-center gap-3 px-5 py-3 rounded-xl"
+                  <div className="flex items-center gap-3 px-5 py-3 rounded-md"
                     style={{ background: 'rgba(251,113,133,0.08)', border: '1px solid rgba(251,113,133,0.2)' }}>
                     <span className="material-symbols-outlined" style={{ color: '#fb7185' }}>error</span>
                     <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#fb7185' }}>{error}</p>
@@ -738,7 +738,7 @@ Add headings like ## this, bold text, links, and lists.`}
                         background: 'transparent', cursor: 'pointer',
                         transition: 'all 0.2s',
                       }}
-                      className="hover:bg-[#25293a] transition-colors">
+                      className="hover:bg-[#18181b] transition-colors">
                       Abort_Process
                     </button>
                   </Link>
@@ -747,12 +747,12 @@ Add headings like ## this, bold text, links, and lists.`}
                     disabled={!isValid || loading || atProjectLimit}
                     style={{
                       padding: '14px 36px',
-                      background: (!isValid || loading || atProjectLimit) ? 'rgba(173,198,255,0.3)' : '#adc6ff',
-                      color: (!isValid || loading || atProjectLimit) ? 'rgba(0,46,106,0.5)' : '#002e6a',
-                      fontFamily: 'Syne', fontWeight: 800, fontSize: '14px',
+                      background: (!isValid || loading || atProjectLimit) ? 'rgba(16,185,129,0.3)' : '#10b981',
+                      color: (!isValid || loading || atProjectLimit) ? 'rgba(0,46,106,0.5)' : '#000000',
+                      fontFamily: 'Inter', fontWeight: 800, fontSize: '14px',
                       textTransform: 'uppercase', letterSpacing: '-0.02em',
                       border: 'none', cursor: (!isValid || loading || atProjectLimit) ? 'not-allowed' : 'pointer',
-                      boxShadow: (!isValid || loading || atProjectLimit) ? 'none' : '0 0 30px rgba(173,198,255,0.3)',
+                      boxShadow: (!isValid || loading || atProjectLimit) ? 'none' : '0 0 30px rgba(16,185,129,0.3)',
                       transition: 'all 0.2s',
                     }}>
                     {loading ? 'Initiating...' : 'Initiate_Protocol'}
@@ -763,7 +763,7 @@ Add headings like ## this, bold text, links, and lists.`}
               {/* ── Right Column: Live Preview ── */}
               <aside className="w-full xl:w-[380px] xl:sticky xl:top-24 space-y-6 h-fit">
                 <div className="flex items-center justify-between px-2">
-                  <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textTransform: 'uppercase', letterSpacing: '0.4em' }}>
+                  <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#10b981', textTransform: 'uppercase', letterSpacing: '0.4em' }}>
                     Live Output Stream
                   </p>
                   <div className="flex gap-1.5">
@@ -776,10 +776,10 @@ Add headings like ## this, bold text, links, and lists.`}
                 {/* Preview Card */}
                 <div className="glass-panel ghost-border overflow-hidden relative card-preview-hover neon-glow-primary">
                   <div className="absolute -top-20 -right-20 w-52 h-52 rounded-full blur-[80px]"
-                    style={{ background: 'rgba(173,198,255,0.08)' }} />
+                    style={{ background: 'rgba(16,185,129,0.08)' }} />
 
                   {/* Card top bar */}
-                  <div style={{ height: '8px', background: 'linear-gradient(to right, #adc6ff, #6bd8cb, #d0bcff)' }} />
+                  <div style={{ height: '8px', background: 'linear-gradient(to right, #10b981, #6bd8cb, #d0bcff)' }} />
 
                   <div className="p-8">
                     <div className="flex justify-between items-start mb-6">
@@ -787,20 +787,20 @@ Add headings like ## this, bold text, links, and lists.`}
                         <div className="flex items-center gap-2 mb-2">
                           <span style={{
                             padding: '2px 8px', fontSize: '10px', fontFamily: 'DM Mono', fontWeight: 700,
-                            textTransform: 'uppercase', background: 'rgba(173,198,255,0.1)', color: '#adc6ff',
+                            textTransform: 'uppercase', background: 'rgba(16,185,129,0.1)', color: '#10b981',
                           }}>
                             {preview.slots} SLOTS OPEN
                           </span>
                         </div>
                         <h4 style={{
-                          fontFamily: 'Syne', fontSize: '22px', fontWeight: 800,
-                          color: preview.title === '[Project_Title]' ? 'rgba(222,225,247,0.3)' : '#dee1f7',
+                          fontFamily: 'Inter', fontSize: '22px', fontWeight: 800,
+                          color: preview.title === '[Project_Title]' ? 'rgba(222,225,247,0.3)' : '#f4f4f5',
                           lineHeight: 1.1, textTransform: 'uppercase', letterSpacing: '-0.02em',
                           wordBreak: 'break-word',
                         }}>
                           {preview.title}
                         </h4>
-                        <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(173,198,255,0.6)', marginTop: '6px', textTransform: 'uppercase' }}>
+                        <p style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(16,185,129,0.6)', marginTop: '6px', textTransform: 'uppercase' }}>
                           Lead: {userProfile?.full_name || session?.user?.name || 'You'}
                         </p>
                       </div>
@@ -825,7 +825,7 @@ Add headings like ## this, bold text, links, and lists.`}
                       </div>
                     ) : (
                       <p style={{
-                        fontSize: '13px', color: preview.description.startsWith('Project summary') ? 'rgba(194,198,214,0.35)' : '#c2c6d6',
+                        fontSize: '13px', color: preview.description.startsWith('Project summary') ? 'rgba(194,198,214,0.35)' : '#d4d4d8',
                         lineHeight: 1.7, marginBottom: '24px', fontStyle: preview.description.startsWith('Project summary') ? 'italic' : 'normal',
                         display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden',
                       }}>
@@ -834,9 +834,9 @@ Add headings like ## this, bold text, links, and lists.`}
                     )}
 
                     {/* Skills */}
-                    <div style={{ borderTop: '1px solid rgba(66,71,84,0.2)', paddingTop: '16px', marginBottom: '16px' }}>
+                    <div style={{ borderTop: '1px solid rgba(39,39,42,0.2)', paddingTop: '16px', marginBottom: '16px' }}>
                       <div className="flex items-center justify-between mb-3">
-                        <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                        <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                           Required Skills
                         </span>
                         <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#6bd8cb' }}>
@@ -862,19 +862,19 @@ Add headings like ## this, bold text, links, and lists.`}
                       </div>
 
                       {/* Slot progress bar */}
-                      <div style={{ marginTop: '16px', height: '2px', background: 'rgba(66,71,84,0.3)', overflow: 'hidden' }}>
-                        <div style={{ height: '100%', background: '#adc6ff', width: '0%', boxShadow: '0 0 10px rgba(173,198,255,0.6)' }} />
+                      <div style={{ marginTop: '16px', height: '2px', background: 'rgba(39,39,42,0.3)', overflow: 'hidden' }}>
+                        <div style={{ height: '100%', background: '#10b981', width: '0%', boxShadow: '0 0 10px rgba(16,185,129,0.6)' }} />
                       </div>
                     </div>
 
                     {/* Creator + vault hint */}
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <div style={{ width: '24px', height: '24px', borderRadius: '4px', background: '#25293a', border: '1px solid rgba(66,71,84,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '4px', background: '#18181b', border: '1px solid rgba(39,39,42,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                           {userProfile?.avatar_url ? (
                             <img src={userProfile.avatar_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           ) : (
-                            <span className="material-symbols-outlined" style={{ fontSize: '14px', color: '#adc6ff' }}>person</span>
+                            <span className="material-symbols-outlined" style={{ fontSize: '14px', color: '#10b981' }}>person</span>
                           )}
                         </div>
                         <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.6)' }}>
@@ -902,7 +902,7 @@ Add headings like ## this, bold text, links, and lists.`}
                 {/* Technical Specs Panel */}
                 <div className="glass-panel ghost-border p-5 space-y-4">
                   <div className="flex justify-between items-center">
-                    <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
+                    <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#71717a', textTransform: 'uppercase', letterSpacing: '0.2em' }}>
                       Form completion
                     </span>
                     <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#6bd8cb' }}>
@@ -916,7 +916,7 @@ Add headings like ## this, bold text, links, and lists.`}
                       })()}
                     </span>
                   </div>
-                  <div style={{ height: '2px', background: 'rgba(66,71,84,0.3)', overflow: 'hidden' }}>
+                  <div style={{ height: '2px', background: 'rgba(39,39,42,0.3)', overflow: 'hidden' }}>
                     <div style={{
                       height: '100%', background: '#6bd8cb',
                       boxShadow: '0 0 10px #6bd8cb',
@@ -944,11 +944,11 @@ Add headings like ## this, bold text, links, and lists.`}
                       <div key={item.label} className="flex items-center gap-2">
                         <span className="material-symbols-outlined" style={{
                           fontSize: '14px',
-                          color: item.done ? '#34d399' : 'rgba(66,71,84,0.6)',
+                          color: item.done ? '#34d399' : 'rgba(39,39,42,0.6)',
                         }}>
                           {item.done ? 'check_circle' : 'radio_button_unchecked'}
                         </span>
-                        <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: item.done ? '#c2c6d6' : '#8c909f' }}>
+                        <span style={{ fontFamily: 'DM Mono', fontSize: '10px', color: item.done ? '#d4d4d8' : '#71717a' }}>
                           {item.label}
                         </span>
                       </div>
@@ -962,7 +962,7 @@ Add headings like ## this, bold text, links, and lists.`}
 
         {/* Background particles */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" style={{ opacity: 0.25 }}>
-          <div className="animate-ping" style={{ position: 'absolute', top: '25%', left: '25%', width: '2px', height: '2px', background: '#adc6ff', borderRadius: '50%' }} />
+          <div className="animate-ping" style={{ position: 'absolute', top: '25%', left: '25%', width: '2px', height: '2px', background: '#10b981', borderRadius: '50%' }} />
           <div style={{ position: 'absolute', top: '75%', right: '33%', width: '4px', height: '4px', background: '#6bd8cb', borderRadius: '50%', animation: 'ping 3s ease-in-out infinite' }} />
           <div style={{ position: 'absolute', bottom: '25%', left: '50%', width: '2px', height: '2px', background: '#d0bcff', borderRadius: '50%' }} />
         </div>

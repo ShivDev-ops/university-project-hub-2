@@ -110,7 +110,7 @@ export default function PortfolioDetailPage() {
             <div className="text-xs font-mono text-emerald-500">TEAM {data.team?.team_name?.toUpperCase()}</div>
           </div>
         </div>
-        <div className="flex gap-2 bg-zinc-900/50 p-1 rounded-lg border border-zinc-800">
+        <div className="flex gap-2 bg-zinc-900/50 p-1 rounded-sm border border-zinc-800">
           {TABS.map(tab => (
             <button
               key={tab.id}

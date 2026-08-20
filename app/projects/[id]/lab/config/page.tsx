@@ -128,7 +128,7 @@ export default function LabConfigPage() {
           
           {/* Main Form */}
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-6 backdrop-blur-sm">
+            <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-md p-6 backdrop-blur-sm">
               <div className="mb-6 flex items-center gap-2 border-b border-zinc-800/50 pb-4">
                 <Activity className="h-5 w-5 text-zinc-400" />
                 <h2 className="text-lg font-semibold text-white">Environment Settings</h2>
@@ -197,7 +197,7 @@ export default function LabConfigPage() {
 
           {/* Webhook Guide */}
           <div className="space-y-6">
-            <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-6 backdrop-blur-sm">
+            <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-md p-6 backdrop-blur-sm">
               <div className="mb-6 flex items-center gap-2 border-b border-zinc-800/50 pb-4">
                 <Github className="h-5 w-5 text-zinc-400" />
                 <h2 className="text-lg font-semibold text-white">Webhook Setup Guide</h2>

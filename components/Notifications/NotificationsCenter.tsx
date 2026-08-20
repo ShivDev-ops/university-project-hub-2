@@ -42,7 +42,7 @@ const tabs = [
 ]
 
 const iconMap: Record<string, { icon: string; color: string }> = {
-  application: { icon: 'description', color: '#adc6ff' },
+  application: { icon: 'description', color: '#10b981' },
   accepted: { icon: 'check_circle', color: '#34d399' },
   rejected: { icon: 'cancel', color: '#fb7185' },
   collaborator_left: { icon: 'logout', color: '#fbbf24' },
@@ -50,7 +50,7 @@ const iconMap: Record<string, { icon: string; color: string }> = {
   score: { icon: 'star', color: '#6bd8cb' },
   ghost: { icon: 'warning', color: '#fb923c' },
   endorsed: { icon: 'thumb_up', color: '#d0bcff' },
-  system: { icon: 'info', color: '#8c909f' },
+  system: { icon: 'info', color: '#71717a' },
 }
 
 function groupByDate(notifications: NotificationItem[]) {
@@ -118,7 +118,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
 
   return (
     <>
-      <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid rgba(66,71,84,0.2)', marginBottom: '32px', overflowX: 'auto' }}>
+      <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid rgba(39,39,42,0.2)', marginBottom: '32px', overflowX: 'auto' }}>
         {tabs.map(tab => (
           <button
             key={tab.key}
@@ -133,8 +133,8 @@ export function NotificationsCenter({ notifications, applications, applicationSt
               border: 'none',
               cursor: 'pointer',
               whiteSpace: 'nowrap',
-              color: activeTab === tab.key ? '#adc6ff' : 'rgba(194,198,214,0.5)',
-              borderBottom: activeTab === tab.key ? '2px solid #adc6ff' : '2px solid transparent',
+              color: activeTab === tab.key ? '#10b981' : 'rgba(194,198,214,0.5)',
+              borderBottom: activeTab === tab.key ? '2px solid #10b981' : '2px solid transparent',
               marginBottom: '-1px',
             }}
           >
@@ -146,9 +146,9 @@ export function NotificationsCenter({ notifications, applications, applicationSt
       {activeTab === 'applied' ? (
         applications.length === 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0', gap: '16px' }}>
-            <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#424754' }}>work_outline</span>
-            <h3 style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 700, color: '#c2c6d6' }}>No applications yet</h3>
-            <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f' }}>Your applied projects will appear here.</p>
+            <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#27272a' }}>work_outline</span>
+            <h3 style={{ fontFamily: 'Inter', fontSize: '20px', fontWeight: 700, color: '#d4d4d8' }}>No applications yet</h3>
+            <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#71717a' }}>Your applied projects will appear here.</p>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -166,7 +166,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', minWidth: 0, flex: 1 }}>
                       <span className="material-symbols-outlined" style={{ color: cfg.color, flexShrink: 0 }}>{cfg.icon}</span>
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: '14px', lineHeight: 1.5, color: '#dee1f7', fontWeight: 600 }}>
+                        <div style={{ fontSize: '14px', lineHeight: 1.5, color: '#f4f4f5', fontWeight: 600 }}>
                           {application.project?.title ?? 'Unknown Project'}
                         </div>
                         <div style={{ fontFamily: 'DM Mono', fontSize: '10px', color: 'rgba(194,198,214,0.4)', marginTop: '4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
@@ -178,7 +178,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
                       </div>
                     </div>
                     {application.project?.id && (
-                      <Link href={`/projects/${application.project.id}`} style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#adc6ff', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                      <Link href={`/projects/${application.project.id}`} style={{ fontFamily: 'DM Mono', fontSize: '10px', color: '#10b981', textDecoration: 'none', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                         View Project
                       </Link>
                     )}
@@ -190,9 +190,9 @@ export function NotificationsCenter({ notifications, applications, applicationSt
         )
       ) : filteredNotifications.length === 0 ? (
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '80px 0', gap: '16px' }}>
-          <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#424754' }}>notifications_none</span>
-          <h3 style={{ fontFamily: 'Syne', fontSize: '20px', fontWeight: 700, color: '#c2c6d6' }}>All caught up</h3>
-          <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#8c909f' }}>No notifications yet.</p>
+          <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#27272a' }}>notifications_none</span>
+          <h3 style={{ fontFamily: 'Inter', fontSize: '20px', fontWeight: 700, color: '#d4d4d8' }}>All caught up</h3>
+          <p style={{ fontFamily: 'DM Mono', fontSize: '12px', color: '#71717a' }}>No notifications yet.</p>
         </div>
       ) : (
         Object.entries(grouped).map(([dateLabel, groupedItems]) => (
@@ -201,7 +201,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
               <h2 style={{ fontFamily: 'DM Mono', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.2em', color: 'rgba(194,198,214,0.4)', whiteSpace: 'nowrap' }}>
                 {dateLabel}
               </h2>
-              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, rgba(66,71,84,0.3), transparent)' }} />
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(to right, rgba(39,39,42,0.3), transparent)' }} />
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
@@ -220,7 +220,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
                     key={notif.id}
                     className="notif-row slide-in glass-panel"
                     style={{
-                      border: notif.read ? '1px solid rgba(66,71,84,0.12)' : `1px solid ${cfg.color}25`,
+                      border: notif.read ? '1px solid rgba(39,39,42,0.12)' : `1px solid ${cfg.color}25`,
                       padding: '16px 20px',
                       position: 'relative',
                       animationDelay: `${idx * 40}ms`,
@@ -236,7 +236,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
 
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
                       <div style={{
-                        width: '40px', height: '40px', borderRadius: '10px', flexShrink: 0,
+                        width: '40px', height: '40px', borderRadius: '4px', flexShrink: 0,
                         background: `${cfg.color}12`, border: `1px solid ${cfg.color}25`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                       }}>
@@ -246,7 +246,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <p style={{
                           fontSize: '14px', lineHeight: 1.5,
-                          color: notif.read ? '#c2c6d6' : '#dee1f7',
+                          color: notif.read ? '#d4d4d8' : '#f4f4f5',
                           fontWeight: notif.read ? 400 : 600,
                           marginBottom: '4px',
                         }}>
@@ -279,7 +279,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
                         </p>
 
                         {isApplication && !isActionableApplication && applicationStatus && applicationStatus !== 'pending' && (
-                          <div style={{ marginTop: '12px', padding: '8px 12px', border: '1px solid rgba(66,71,84,0.2)', background: 'rgba(66,71,84,0.08)', fontFamily: 'DM Mono', fontSize: '10px', color: '#8c909f' }}>
+                          <div style={{ marginTop: '12px', padding: '8px 12px', border: '1px solid rgba(39,39,42,0.2)', background: 'rgba(39,39,42,0.08)', fontFamily: 'DM Mono', fontSize: '10px', color: '#71717a' }}>
                             Application already {applicationStatus}.
                           </div>
                         )}
@@ -303,8 +303,8 @@ export function NotificationsCenter({ notifications, applications, applicationSt
                           title="Delete notification"
                           aria-label="Delete notification"
                           style={{
-                            width: '32px', height: '32px', borderRadius: '8px',
-                            background: 'transparent', border: '1px solid rgba(66,71,84,0.3)',
+                            width: '32px', height: '32px', borderRadius: '4px',
+                            background: 'transparent', border: '1px solid rgba(39,39,42,0.3)',
                             color: 'rgba(194,198,214,0.6)', cursor: 'pointer',
                             display: 'flex', alignItems: 'center', justifyContent: 'center',
                           }}
@@ -318,7 +318,7 @@ export function NotificationsCenter({ notifications, applications, applicationSt
                         {notif.link && (
                           <Link href={notif.link}>
                             <span
-                              className="material-symbols-outlined hover:text-[#adc6ff] transition-colors"
+                              className="material-symbols-outlined hover:text-[#10b981] transition-colors"
                               style={{ color: 'rgba(194,198,214,0.3)', fontSize: '18px', cursor: 'pointer' }}
                             >
                               chevron_right

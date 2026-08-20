@@ -13,7 +13,6 @@ import {
 } from '@/components/lab/LabComponents';
 import KanbanBoard from '@/components/lab/KanbanBoard';
 import NeuralLinkOverlay from '@/components/lab/NeuralLinkOverlay';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LabPage() {
   const params = useParams();
@@ -23,6 +22,7 @@ export default function LabPage() {
   const [tasks, setTasks] = useState<LabTask[]>([]);
   const [commits, setCommits] = useState<LabCommit[]>([]);
   const [logs, setLogs] = useState<LabLog[]>([]);
+  const [githubRepo, setGithubRepo] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   
   // Wiring State
@@ -47,6 +47,12 @@ export default function LabPage() {
         setTasks(Array.isArray(tasksRes.data) ? tasksRes.data : []);
         setCommits(Array.isArray(commitsRes.data) ? commitsRes.data : []);
         setLogs(Array.isArray(logsRes.data) ? logsRes.data : []);
+
+        const projectRes = await fetch(`/api/projects/${projectId}`);
+        if (projectRes.ok) {
+          const project = await projectRes.json();
+          setGithubRepo(project.github_repo || null);
+        }
       } catch (err) {
         console.error('Error fetching lab data:', err);
       } finally {
@@ -180,15 +186,22 @@ export default function LabPage() {
         <div className="col-span-4 h-full border-r border-emerald-500/10">
           <AuditPulse logs={logs} />
         </div>
-        <div className="col-span-8 h-full bg-black relative group">
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 z-10">
-            <span className="text-[10px] font-mono text-emerald-500 uppercase tracking-widest px-4 py-2 border border-emerald-500/20 bg-emerald-500/5 rounded">Live Uplink Active</span>
+        <div className="col-span-8 h-full bg-black flex items-center justify-center px-6 text-center">
+          <div className="space-y-2">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">Live preview unavailable</p>
+            {githubRepo ? (
+              <a
+                href={githubRepo}
+                target="_blank"
+                rel="noreferrer"
+                className="text-[10px] font-mono uppercase tracking-widest text-emerald-500 hover:text-emerald-400"
+              >
+                Open repository
+              </a>
+            ) : (
+              <p className="text-xs text-zinc-700">Connect a repository to preview this project.</p>
+            )}
           </div>
-          <iframe 
-            src={`https://example-project-${projectId}.netlify.app`} 
-            className="w-full h-full border-none grayscale-[0.5] contrast-[1.2] hover:grayscale-0 transition-all duration-700"
-            title="Project Live Preview"
-          />
         </div>
       </footer>
 

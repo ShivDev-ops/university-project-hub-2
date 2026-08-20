@@ -53,7 +53,7 @@ export default function ImportPortfolioPage() {
           </p>
         </div>
 
-        <div className="bg-zinc-900/40 border border-zinc-800 p-8 rounded-2xl glass-panel relative overflow-hidden">
+        <div className="bg-zinc-900/40 border border-zinc-800 p-8 rounded-md glass-panel relative overflow-hidden">
           {status === 'success' && (
             <div className="absolute inset-0 bg-emerald-950/90 flex flex-col items-center justify-center z-10 backdrop-blur-sm">
               <CheckCircle className="text-emerald-500 w-16 h-16 mb-4" />
@@ -63,7 +63,7 @@ export default function ImportPortfolioPage() {
           )}
 
           <div 
-            className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center transition-colors ${
+            className={`border-2 border-dashed rounded-md p-10 flex flex-col items-center justify-center transition-colors ${
               file ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-zinc-700 bg-zinc-900/50 hover:border-zinc-500'
             }`}
           >
@@ -95,7 +95,7 @@ export default function ImportPortfolioPage() {
           </div>
 
           {status === 'error' && (
-            <div className="mt-6 flex items-start gap-3 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+            <div className="mt-6 flex items-start gap-3 p-4 rounded-sm bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
               <AlertTriangle className="shrink-0 w-5 h-5" />
               <div>{errorMessage}</div>
             </div>
@@ -104,14 +104,14 @@ export default function ImportPortfolioPage() {
           <div className="mt-8 flex justify-end gap-4">
             <button 
               onClick={() => router.back()}
-              className="px-6 py-2 rounded-lg text-zinc-400 hover:text-white transition-colors text-sm font-bold"
+              className="px-6 py-2 rounded-sm text-zinc-400 hover:text-white transition-colors text-sm font-bold"
             >
               Cancel
             </button>
             <button 
               onClick={handleUpload}
               disabled={!file || status === 'uploading'}
-              className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 disabled:bg-zinc-800 disabled:text-zinc-600 text-zinc-950 font-bold rounded-lg transition-colors flex items-center gap-2 text-sm"
+              className="px-6 py-2 bg-emerald-500 hover:bg-emerald-400 disabled:bg-zinc-800 disabled:text-zinc-600 text-zinc-950 font-bold rounded-sm transition-colors flex items-center gap-2 text-sm"
             >
               {status === 'uploading' ? (
                 <>

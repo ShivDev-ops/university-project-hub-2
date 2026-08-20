@@ -82,7 +82,7 @@ export const TaskCard = ({ task, onPortClick, onDelete, onDisconnect }: { task: 
     layoutId={task.id}
     whileDrag={{ scale: 0.8 }}
     transition={{ type: "spring", stiffness: 500, damping: 30 }}
-    className="group relative p-4 rounded-lg bg-zinc-900 border border-zinc-800 hover:border-emerald-500/30 transition-shadow glass-panel rim-light"
+    className="group relative p-4 rounded-sm bg-zinc-900 border border-zinc-800 hover:border-emerald-500/30 transition-shadow glass-panel rim-light"
   >
     <div className="flex items-start justify-between mb-2">
       <div className="w-2 h-2 rounded-full bg-zinc-800 border border-zinc-700 cursor-crosshair hover:bg-emerald-500 transition-colors"
