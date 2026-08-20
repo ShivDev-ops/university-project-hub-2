@@ -44,6 +44,8 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
     return () => { active = false }
   }, [profile?.user_id])
 
+  const mobileLabHref = currentLabHref ?? (userProjects[0] ? `/projects/${userProjects[0].id}/lab` : null)
+
   return (
     <>
       <header className="fixed top-0 left-0 right-0 h-[60px] flex items-center px-[18px] z-50 pointer-events-none">
@@ -151,6 +153,7 @@ export default function DashboardNavbar({ profile }: { profile: any }) {
           style={{ background:'rgba(24,24,27,0.8)', border:'1px solid rgba(39,39,42,0.2)' }}>
           {[
             { href: '/dashboard', label: 'Dashboard', icon: 'grid_view' },
+            ...(mobileLabHref ? [{ href: mobileLabHref, label: 'Labs', icon: 'terminal' }] : []),
             { href: '/projects/create', label: 'Post Project', icon: 'rocket_launch' },
             { href: profileHref, label: 'My Profile', icon: 'manage_accounts' },
             { href: '/chat', label: 'Chat', icon: 'chat' },
